@@ -7,6 +7,7 @@ import dscp.dragon_realm.kingdoms.Kingdom;
 import dscp.dragon_realm.kingdoms.KingdomException;
 import dscp.dragon_realm.kingdoms.gui.KingdomGUI;
 import dscp.dragon_realm.kingdoms.gui.KingdomGUIEvents;
+import dscp.dragon_realm.stringDecoder.StringDecoder;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -139,6 +140,9 @@ public final class Dragon_Realm extends JavaPlugin {
                                     break;
                                 case "gui":
                                     player.openInventory(KingdomGUI.kingdomMembersGUI(player));
+
+                                case "color":
+                                    player.sendMessage(StringDecoder.colorDecode(args[1]));
                             }
                             break;
 
