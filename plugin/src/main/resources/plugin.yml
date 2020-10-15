@@ -1,0 +1,20 @@
+name: Dragon_Realm
+version: ${project.version}
+main: dscp.dragon_realm.Dragon_Realm
+api-version: 1.16
+authors: [Jasper]
+description: plugin for the DSCP Minecraft server
+commands:
+  kingdom:
+    description: main command for kingdoms
+    usage: /kingdom
+  k:
+    description: alt for kingdom command
+    usage: /k
+  settlement:
+    description: used to manage settlements
+  help:
+  test:
+  feed:
+  book:
+
