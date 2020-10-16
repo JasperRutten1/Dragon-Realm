@@ -2,11 +2,11 @@ package dscp.dragon_realm.customEnchants.events;
 
 import dscp.dragon_realm.Dragon_Realm_API;
 import dscp.dragon_realm.customEnchants.CustomEnchants;
+import dscp.dragon_realm.customEnchants.EnchantException;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,6 +31,7 @@ public class EnchantsEvents implements Listener {
     private Map<Material, Material> materialMap;
     private static Map<Integer, String> enchantLevelMap;
     private Map<Player, Double> capacitorChargeMap;
+    private Map<Player, Long> lightningChargeMap;
 
     public EnchantsEvents(){
         this.enderEdgeTimeOutMap = new HashMap<>();
@@ -47,6 +48,7 @@ public class EnchantsEvents implements Listener {
         materialMap.put(Material.GOLD_ORE, Material.GOLD_INGOT);
 
         this.capacitorChargeMap = new HashMap<>();
+        this.lightningChargeMap = new HashMap<>();
     }
 
 
@@ -82,6 +84,40 @@ public class EnchantsEvents implements Listener {
         else if((!damagedWeapon.getType().equals(Material.AIR)) && damagedWeaponMeta != null && damagedWeaponMeta.hasEnchant(CustomEnchants.REPULSOR)){
             this.capacitorChargeMap.putIfAbsent(damaged, 0.0);
             this.capacitorChargeMap.put(damaged, Math.min(CustomEnchants.REPULSOR_MAX_CHARGE, this.capacitorChargeMap.get(damaged) + (event.getDamage() / 2)));
+        }
+
+
+    }
+
+    @EventHandler
+    public void EntityDamagedByPlayer(EntityDamageByEntityEvent event) throws EnchantException {
+        if(!(event.getDamager() instanceof Player)) return;
+        if(!(event.getEntity() instanceof LivingEntity)) return;
+
+        System.out.println("player hit living entity");
+
+        Player player = (Player) event.getDamager();
+        LivingEntity entity = (LivingEntity) event.getEntity();
+
+        ItemStack damagerWeapon = player.getInventory().getItemInMainHand();
+        ItemMeta damagerWeaponMeta = damagerWeapon.getItemMeta();
+
+        // lightning link effect
+        if(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).hasEnchant(CustomEnchants.LIGHTNING_LINK)){
+            System.out.println(lightningChargeMap);
+            if(!lightningChargeMap.containsKey(player) || lightningChargeMap.get(player) < System.currentTimeMillis()){
+                lightningChargeMap.remove(player);
+                return;
+            }
+
+            player.sendMessage("you hear the air crackle with energy");
+
+            int range = CustomEnchants.LIGHTNING_LINK_RANGE;
+            ArrayList<Entity> inRangeEntities = new ArrayList<>(entity.getWorld().getNearbyEntities(entity.getLocation(), range, range, range, LivingEntity.class::isInstance));
+
+            LightningLink.lightningChainDamage(event.getDamage(), LightningLink.getShortestLink(inRangeEntities, entity));
+            event.setDamage(0);
+            lightningChargeMap.remove(player);
         }
     }
 
@@ -281,7 +317,7 @@ public class EnchantsEvents implements Listener {
     }
 
     @EventHandler
-    public void playerHitByArrow(EntityDamageByEntityEvent event) {
+    public void playerHitByArrow(EntityDamageByEntityEvent event){
         if(!(event.getDamager() instanceof Arrow)) return;
         if(!(event.getEntity() instanceof Player)) return;
         System.out.println("player got hit by arrow");
@@ -289,6 +325,7 @@ public class EnchantsEvents implements Listener {
         Player player = (Player) event.getEntity();
         Arrow arrow = (Arrow) event.getDamager();
 
+        // arrow deflect effect
         if(getTotalLevelOfEnchantmentFromArmor(player, CustomEnchants.DEFLECT) > 0){
             if(getTotalLevelOfEnchantmentFromArmor(player, CustomEnchants.DEFLECT) < Math.floor(Math.random()*100)) return;
             Arrow newArrow = player.getWorld().spawnArrow(arrow.getLocation(), arrow.getVelocity().normalize().multiply(-1), (float) arrow.getVelocity().length(), 0);
@@ -296,6 +333,24 @@ public class EnchantsEvents implements Listener {
             event.setCancelled(true);
             newArrow.setVelocity(arrow.getVelocity().multiply(-0.5));
             player.sendMessage(ChatColor.GRAY + "deflected arrow");
+        }
+    }
+
+    @EventHandler
+    public void playerHitByLightning(EntityDamageByEntityEvent event){
+        if(!(event.getDamager() instanceof LightningStrike)) return;
+        if(!(event.getEntity() instanceof Player)) return;
+        System.out.println("player hit by lightning");
+
+        Player player = (Player) event.getEntity();
+        LightningStrike lightning = (LightningStrike) event.getDamager();
+
+        player.sendMessage("lightning hit you");
+
+        // lightning link charge
+        if(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).hasEnchant(CustomEnchants.LIGHTNING_LINK)){
+            lightningChargeMap.put(player, System.currentTimeMillis() + CustomEnchants.LIGHTNING_LINK_MAX_CHARGE_TIME);
+            player.sendMessage("sword is charged with lightning");
         }
     }
 
@@ -357,7 +412,7 @@ public class EnchantsEvents implements Listener {
     private double getTotalLevelOfEnchantmentFromArmor(Player player, Enchantment enchantment){
         double count = 0;
         for(ItemStack armorPiece : player.getInventory().getArmorContents()){
-            if(armorPiece != null &&armorPiece.getItemMeta() != null) {
+            if(armorPiece != null && armorPiece.getItemMeta() != null) {
                 if(armorPiece.getItemMeta().hasEnchant(enchantment)){
                     count = count + armorPiece.getItemMeta().getEnchantLevel(enchantment);
                 }

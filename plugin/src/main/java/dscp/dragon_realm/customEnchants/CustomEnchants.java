@@ -39,6 +39,11 @@ public class CustomEnchants {
     public static final Enchantment REPULSOR = new EnchantWrapper("repulsor", "Repulsor", 1, EnchantmentTarget.WEAPON);
     public static final int REPULSOR_MAX_CHARGE = 50;
 
+    public static final Enchantment LIGHTNING_LINK = new EnchantWrapper("lightning-link", "Lightning Link", 1, EnchantmentTarget.WEAPON);
+    public static final int LIGHTNING_LINK_MAX_CHARGE_TIME = 6000;
+    public static final int LIGHTNING_LINK_MAX_TARGETS = 10;
+    public static final int LIGHTNING_LINK_RANGE = 5;
+
     public static List<Enchantment> getCustomEnchants(){
         List<Enchantment> list = new ArrayList<>();
         list.add(MAVERICKS_NUDES);
@@ -48,6 +53,7 @@ public class CustomEnchants {
         list.add(VELOCITY);
         list.add(DEFLECT);
         list.add(REPULSOR);
+        list.add(LIGHTNING_LINK);
 
         return list;
     }

@@ -6,6 +6,6 @@ public class StringDecoder {
         StringBuilder sb = new StringBuilder();
         String[] splitOnOpenBracket = string.split("[{}]");
         
-        return
+        return null;
     }
 }
