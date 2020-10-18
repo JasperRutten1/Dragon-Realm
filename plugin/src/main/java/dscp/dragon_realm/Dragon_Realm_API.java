@@ -98,7 +98,7 @@ public abstract class Dragon_Realm_API {
         if(loc1.distance(loc2) < 0.5) return;
         assert loc1.getWorld() != null;
         if(!loc1.getWorld().equals(loc2.getWorld())) throw new IllegalArgumentException("locations must be in the same world");
-        Vector vector = loc2.toVector().subtract(loc1.toVector()).multiply(0.1);
+        Vector vector = loc2.toVector().subtract(loc1.toVector()).multiply(multiplier);
 
         for(Location loc = new Location(loc1.getWorld(), loc1.getX(), loc1.getY(), loc1.getZ()) ; loc1.distance(loc) < loc1.distance(loc2) ; loc.add(vector)){
             assert loc.getWorld() != null;

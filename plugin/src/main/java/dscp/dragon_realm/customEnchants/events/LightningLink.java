@@ -63,33 +63,46 @@ public class LightningLink {
         }
     }
 
-    public static LightningLink getShortestLink(ArrayList<Entity> entities, Entity startingEntity){
-        LightningLink shortestLink = null;
+    public static LightningLink createLink(Entity startingEntity, int range, ArrayList<Entity> entitiesInLink){
+        if(entitiesInLink == null) {
+            entitiesInLink = new ArrayList<>();
+            entitiesInLink.add(startingEntity);
+        }
+        ArrayList<Entity> inRangeEntities = new ArrayList<>(startingEntity.getWorld().getNearbyEntities(startingEntity.getLocation() ,range, range, range, LivingEntity.class::isInstance));
 
-        if(entities.size() <= 2){
-            if(entities.size() == 0) return new LightningLink(startingEntity);
-            else if(entities.size() == 1) return new LightningLink(startingEntity, new LightningLink(entities.get(0)), null);
-            else {
-                return new LightningLink(startingEntity, new LightningLink(entities.get(0)), new LightningLink(entities.get(1)));
-            }
+        //return link with no branches when range is 0
+        if(range == 0) return new LightningLink(startingEntity);
+
+        //remove entities that are already in link
+        for(Entity entity : entitiesInLink){
+            inRangeEntities.remove(entity);
         }
 
-        for(int i = 0 ; i < entities.size() ; i++){
-            for(int j = i + 1 ; j < entities.size() ; j++){
-                ArrayList<Entity> link1Array = new ArrayList<>(entities);
-                ArrayList<Entity> link2Array = new ArrayList<>(entities);
-
-                link1Array.remove(i);
-                link2Array.remove(j);
-
-                LightningLink link = new LightningLink(startingEntity, getShortestLink(link1Array, entities.get(i)), getShortestLink(link2Array, entities.get(j)));
-                if(shortestLink == null) shortestLink = link;
-                else if(link.getTotalDistanceOfLinks() < shortestLink.getTotalDistanceOfLinks()) shortestLink = link;
-            }
+        //remove all entities except for 2 (random)
+        while(inRangeEntities.size() > 2){
+            inRangeEntities.remove((int) Math.round(Math.random() * inRangeEntities.size()));
         }
 
-        return shortestLink;
+        //create new LightningLink object with starting entity and new range
+        LightningLink link = new LightningLink(startingEntity);
+        int newRange = Math.max(0, range - 1);
 
+        //branch off
+        switch (inRangeEntities.size()){
+            case 2:
+                LivingEntity entity1 = (LivingEntity) inRangeEntities.get(0);
+                LivingEntity entity2 = (LivingEntity) inRangeEntities.get(1);
+                entitiesInLink.add(entity1);
+                entitiesInLink.add(entity2);
+                link.setLink1(createLink(entity1, newRange, entitiesInLink));
+                link.setLink2(createLink(entity2, newRange, entitiesInLink));
+                break;
+            case 1:
+                entitiesInLink.add(inRangeEntities.get(0));
+                link.setLink1(createLink( (LivingEntity) inRangeEntities.get(0), newRange, entitiesInLink));
+        }
+
+        return link;
     }
 
     public static void lightningChainDamage(double damage, LightningLink link) throws EnchantException {
@@ -109,5 +122,15 @@ public class LightningLink {
             loc.setY((Math.random() * 2) + loc.getY());
             Dragon_Realm_API.spawnParticlesBetween(entity.getLocation(), loc, Particle.CRIT, 0.1, 10);
         }
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.entity.getUniqueId().toString()).append("\n");
+        if(this.link1 != null) sb.append("link1: ").append(link1.toString()).append("\n");
+        if(this.link2 != null) sb.append("link2: ").append(link2.toString()).append("\n");
+
+        return sb.toString();
     }
 }

@@ -115,7 +115,8 @@ public class EnchantsEvents implements Listener {
             int range = CustomEnchants.LIGHTNING_LINK_RANGE;
             ArrayList<Entity> inRangeEntities = new ArrayList<>(entity.getWorld().getNearbyEntities(entity.getLocation(), range, range, range, LivingEntity.class::isInstance));
 
-            LightningLink.lightningChainDamage(event.getDamage(), LightningLink.getShortestLink(inRangeEntities, entity));
+            // LightningLink.lightningChainDamage(event.getDamage(), LightningLink.createLink(entity, 5, null));
+            player.sendMessage(LightningLink.createLink(entity, 5, null).toString());
             event.setDamage(0);
             lightningChargeMap.remove(player);
         }
