@@ -8,6 +8,7 @@ import dscp.dragon_realm.kingdoms.KingdomException;
 import dscp.dragon_realm.kingdoms.gui.KingdomGUI;
 import dscp.dragon_realm.kingdoms.gui.KingdomGUIEvents;
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -139,6 +140,10 @@ public final class Dragon_Realm extends JavaPlugin {
                                     break;
                                 case "gui":
                                     player.openInventory(KingdomGUI.kingdomMembersGUI(player));
+                                    break;
+                                case "particle":
+                                    player.sendMessage(ChatColor.GOLD + "particles");
+                                    Dragon_Realm_API.spawnParticlesBetween(player.getLocation(), player.getLocation().add(10, 1, 1), Particle.BUBBLE_POP, 0.1, 10);
                             }
                             break;
 

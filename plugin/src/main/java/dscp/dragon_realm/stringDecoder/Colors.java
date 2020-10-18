@@ -1,4 +1,4 @@
-package dscp.dragon_realm.colorDecoder;
+package dscp.dragon_realm.stringDecoder;
 
 import org.bukkit.ChatColor;
 
