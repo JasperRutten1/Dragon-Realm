@@ -80,7 +80,7 @@ public class LightningLink {
 
         //remove all entities except for 2 (random)
         while(inRangeEntities.size() > 2){
-            inRangeEntities.remove((int) Math.round(Math.random() * inRangeEntities.size()));
+            inRangeEntities.remove((int) Math.floor(Math.random() * inRangeEntities.size()));
         }
 
         //create new LightningLink object with starting entity and new range
@@ -109,18 +109,30 @@ public class LightningLink {
         if(!(link.getEntity() instanceof LivingEntity)) throw new  EnchantException("exception in link damage, wrong entity type");
         LivingEntity entity = (LivingEntity) link.getEntity();
 
+        //damage
         entity.damage(damage);
         if(link.getLink1() != null){
             lightningChainDamage(damage/2, link.getLink1());
-            Location loc = link.getLink1().getEntity().getLocation();
-            loc.setY((Math.random() * 2) + loc.getY());
-            Dragon_Realm_API.spawnParticlesBetween(entity.getLocation(), loc, Particle.CRIT, 0.1, 10);
         }
         if(link.getLink2() != null) {
             lightningChainDamage(damage/2, link.getLink2());
-            Location loc = link.getLink2().getEntity().getLocation();
-            loc.setY((Math.random() * 2) + loc.getY());
-            Dragon_Realm_API.spawnParticlesBetween(entity.getLocation(), loc, Particle.CRIT, 0.1, 10);
+        }
+
+        //particles
+        for(int i = 0 ; i < 3 ; i++){
+            Location startLoc = entity.getLocation();
+            startLoc.setY((Math.random() * 2) + startLoc.getY());
+
+            if(link.getLink1() != null){
+                Location loc = link.getLink1().getEntity().getLocation();
+                loc.setY((Math.random() * 2) + loc.getY());
+                Dragon_Realm_API.spawnParticlesBetween(startLoc, loc, Particle.BUBBLE_POP, 0.1, 10);
+            }
+            if(link.getLink2() != null) {
+                Location loc = link.getLink2().getEntity().getLocation();
+                loc.setY((Math.random() * 2) + loc.getY());
+                Dragon_Realm_API.spawnParticlesBetween(startLoc, loc, Particle.BUBBLE_POP, 0.1, 10);
+            }
         }
     }
 

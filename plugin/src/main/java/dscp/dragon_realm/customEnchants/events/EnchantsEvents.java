@@ -110,13 +110,12 @@ public class EnchantsEvents implements Listener {
                 return;
             }
 
-            player.sendMessage("you hear the air crackle with energy");
+            player.sendMessage(ChatColor.DARK_GRAY + "you hear the air crackle with energy");
 
             int range = CustomEnchants.LIGHTNING_LINK_RANGE;
             ArrayList<Entity> inRangeEntities = new ArrayList<>(entity.getWorld().getNearbyEntities(entity.getLocation(), range, range, range, LivingEntity.class::isInstance));
 
-            // LightningLink.lightningChainDamage(event.getDamage(), LightningLink.createLink(entity, 5, null));
-            player.sendMessage(LightningLink.createLink(entity, 5, null).toString());
+            LightningLink.lightningChainDamage(event.getDamage(), LightningLink.createLink(entity, 5, null));
             event.setDamage(0);
             lightningChargeMap.remove(player);
         }
@@ -346,12 +345,10 @@ public class EnchantsEvents implements Listener {
         Player player = (Player) event.getEntity();
         LightningStrike lightning = (LightningStrike) event.getDamager();
 
-        player.sendMessage("lightning hit you");
-
         // lightning link charge
         if(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).hasEnchant(CustomEnchants.LIGHTNING_LINK)){
             lightningChargeMap.put(player, System.currentTimeMillis() + CustomEnchants.LIGHTNING_LINK_MAX_CHARGE_TIME);
-            player.sendMessage("sword is charged with lightning");
+            player.sendMessage(ChatColor.GRAY + "sword is charged with lightning");
         }
     }
 
