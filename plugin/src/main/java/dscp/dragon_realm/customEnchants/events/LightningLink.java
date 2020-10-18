@@ -101,13 +101,13 @@ public class LightningLink {
             lightningChainDamage(damage/2, link.getLink1());
             Location loc = link.getLink1().getEntity().getLocation();
             loc.setY((Math.random() * 2) + loc.getY());
-            Dragon_Realm_API.spawnParticlesBetween(entity.getLocation(), loc, Particle.CRIT, 0.01);
+            Dragon_Realm_API.spawnParticlesBetween(entity.getLocation(), loc, Particle.CRIT, 0.1, 10);
         }
         if(link.getLink2() != null) {
             lightningChainDamage(damage/2, link.getLink2());
             Location loc = link.getLink2().getEntity().getLocation();
             loc.setY((Math.random() * 2) + loc.getY());
-            Dragon_Realm_API.spawnParticlesBetween(entity.getLocation(), loc, Particle.CRIT, 0.01);
+            Dragon_Realm_API.spawnParticlesBetween(entity.getLocation(), loc, Particle.CRIT, 0.1, 10);
         }
     }
 }

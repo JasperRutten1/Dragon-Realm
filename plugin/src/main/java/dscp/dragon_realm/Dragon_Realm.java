@@ -142,7 +142,8 @@ public final class Dragon_Realm extends JavaPlugin {
                                     player.openInventory(KingdomGUI.kingdomMembersGUI(player));
                                     break;
                                 case "particle":
-                                    Dragon_Realm_API.spawnParticlesBetween(player.getLocation(), player.getLocation().add(1, 1, 1), Particle.DRAGON_BREATH, 0.1);
+                                    player.sendMessage(ChatColor.GOLD + "particles");
+                                    Dragon_Realm_API.spawnParticlesBetween(player.getLocation(), player.getLocation().add(10, 1, 1), Particle.BUBBLE_POP, 0.1, 10);
                             }
                             break;
 

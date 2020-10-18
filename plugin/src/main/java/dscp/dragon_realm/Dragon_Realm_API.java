@@ -92,17 +92,17 @@ public abstract class Dragon_Realm_API {
         return null;
     }
 
-    public static void spawnParticlesBetween(Location loc1, Location loc2, Particle particle, double multiplier){
+    public static void spawnParticlesBetween(Location loc1, Location loc2, Particle particle, double multiplier, int count){
         if(loc1 == null) throw new IllegalArgumentException("location 1 can't be null");
         if(loc2 == null) throw new IllegalArgumentException("location 2 can't be null");
         if(loc1.distance(loc2) < 0.5) return;
         assert loc1.getWorld() != null;
         if(!loc1.getWorld().equals(loc2.getWorld())) throw new IllegalArgumentException("locations must be in the same world");
-        Vector vector = new Vector(loc2.getX() - loc1.getX(), loc2.getY() - loc1.getY(), loc2.getZ() - loc1.getZ());
+        Vector vector = loc2.toVector().subtract(loc1.toVector()).multiply(0.1);
 
-        for(Location loc = new Location(loc1.getWorld(), loc1.getX(), loc1.getY(), loc1.getZ()) ; loc.distance(loc2) < loc1.distance(loc2) ; loc.add(vector.multiply(multiplier))){
+        for(Location loc = new Location(loc1.getWorld(), loc1.getX(), loc1.getY(), loc1.getZ()) ; loc1.distance(loc) < loc1.distance(loc2) ; loc.add(vector)){
             assert loc.getWorld() != null;
-            loc.getWorld().spawnParticle(particle, loc, 1);
+            loc.getWorld().spawnParticle(particle, loc, count, 0, 0, 0, 0);
         }
     }
 }
