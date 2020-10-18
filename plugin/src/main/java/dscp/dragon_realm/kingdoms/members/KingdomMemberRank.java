@@ -1,4 +1,4 @@
-package dscp.dragon_realm.kingdoms.members.ranks;
+package dscp.dragon_realm.kingdoms.members;
 
 public enum KingdomMemberRank {
     KING(6),

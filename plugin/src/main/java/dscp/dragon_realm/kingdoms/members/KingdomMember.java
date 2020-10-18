@@ -1,7 +1,6 @@
 package dscp.dragon_realm.kingdoms.members;
 
 import dscp.dragon_realm.kingdoms.Kingdom;
-import dscp.dragon_realm.kingdoms.members.ranks.KingdomMemberRank;
 import org.bukkit.OfflinePlayer;
 
 public class KingdomMember {
