@@ -1,8 +1,10 @@
 package dscp.dragon_realm.kingdoms.members;
 
 import dscp.dragon_realm.kingdoms.Kingdom;
+import dscp.dragon_realm.kingdoms.KingdomException;
 import org.bukkit.OfflinePlayer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -164,6 +166,34 @@ public class KingdomMembers {
     public static boolean isMemberOfKingdom(Kingdom kingdom, OfflinePlayer player){
         if(kingdom == null) throw new IllegalArgumentException("kingdom can't be null");
         return kingdom.getMembers().isMemberOfKingdom(player);
+    }
+
+    // get members with rank
+
+    /**
+     * get the king of the kingdom
+     * @return the KingdomMember that is king of the kingdom
+     * @throws KingdomException
+     * throws if the kingdom has no king
+     */
+    public KingdomMember getKing() throws KingdomException {
+        for(Map.Entry<UUID, KingdomMember> entry : members.entrySet()){
+            if(entry.getValue().hasPermission(KingdomMemberRank.KING)) return entry.getValue();
+        }
+        throw new KingdomException("a kingdom must have a king at all times");
+    }
+
+    /**
+     * get all the members with a given rank in the kingdom
+     * @param rankNeeded the rank the members need
+     * @return a arraylist of all the members that have the rank
+     */
+    public ArrayList<KingdomMember> getMembersWithRank(KingdomMemberRank rankNeeded){
+        ArrayList<KingdomMember> membersWithRank = new ArrayList<>();
+        for(Map.Entry<UUID, KingdomMember> entry : members.entrySet()){
+            if(entry.getValue().getRank() == rankNeeded) membersWithRank.add(entry.getValue());
+        }
+        return membersWithRank;
     }
 
 }

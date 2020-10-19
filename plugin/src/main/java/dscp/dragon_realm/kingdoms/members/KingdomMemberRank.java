@@ -25,4 +25,25 @@ public enum KingdomMemberRank {
         }
         return null;
     }
+
+    public boolean isHighestRank(){
+        for(KingdomMemberRank rank : values()){
+            if(rank.getRankValue() > this.rankValue) return false;
+        }
+        return true;
+    }
+
+    public boolean isLowestRank(){
+        return rankValue == 0;
+    }
+
+    public KingdomMemberRank getHigherRank(){
+        if(isHighestRank()) return null;
+        else return getRankFromValue(rankValue + 1);
+    }
+
+    public KingdomMemberRank getLowerRank(){
+        if(isLowestRank()) return null;
+        else return getRankFromValue(rankValue - 1);
+    }
 }

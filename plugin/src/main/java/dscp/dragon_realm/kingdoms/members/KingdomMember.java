@@ -44,7 +44,6 @@ public class KingdomMember {
 
     // getters
 
-
     public Kingdom getKingdom() {
         return kingdom;
     }
@@ -56,6 +55,14 @@ public class KingdomMember {
     public OfflinePlayer getPlayer() {
         return player;
     }
+
+    // ranks and permission
+
+    public boolean hasPermission(KingdomMemberRank neededRank){
+        return this.rank.getRankValue() >= neededRank.getRankValue();
+    }
+
+
 
 
 }
