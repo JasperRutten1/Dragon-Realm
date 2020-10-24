@@ -4,6 +4,7 @@ import dscp.dragon_realm.kingdoms.Kingdom;
 import dscp.dragon_realm.kingdoms.KingdomException;
 import org.bukkit.OfflinePlayer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,9 @@ import java.util.UUID;
 /**
  * class for kingdom members
  */
-public class KingdomMembers {
+public class KingdomMembers implements Serializable {
+    private static final long serialVersionUID = 7680294706878414282L;
+
     Kingdom kingdom;
     Map<UUID, KingdomMember> members;
 
@@ -32,31 +35,31 @@ public class KingdomMembers {
 
     /**
      * add a member to the members of the kingdom
-     * @param player
-     * the player that will be added as a KingdomMember to the members
+     * @param playerUUID
+     * the UUID of the player that will be added as a KingdomMember to the members
      * @return the KingdomMember of the given player, null if member already in members
      */
-    public KingdomMember addMember(OfflinePlayer player){
-        if(player == null) throw new IllegalArgumentException("player can't be null");
-        if(members.containsKey(player.getUniqueId())) return null;
-        KingdomMember newMember = new KingdomMember(this.kingdom, player);
-        members.put(player.getUniqueId(), newMember);
+    public KingdomMember addMember(UUID playerUUID){
+        if(playerUUID == null) throw new IllegalArgumentException("player can't be null");
+        if(members.containsKey(playerUUID)) return null;
+        KingdomMember newMember = new KingdomMember(this.kingdom, playerUUID);
+        members.put(playerUUID, newMember);
         return newMember;
     }
 
     /**
      * add a member to the members of the kingdom
-     * @param player
-     * the player that will be added as a KingdomMember to the members
+     * @param playerUUID
+     * the UUID of the player that will be added as a KingdomMember to the members
      * @param rank
      * the rank the member will receive
      * @return the KingdomMember of the given player, null if member already in members
      */
-    public KingdomMember addMember(OfflinePlayer player, KingdomMemberRank rank){
-        if(player == null) throw new IllegalArgumentException("player can't be null");
-        if(members.containsKey(player.getUniqueId())) return null;
-        KingdomMember newMember = new KingdomMember(this.kingdom, player, rank);
-        members.put(player.getUniqueId(), newMember);
+    public KingdomMember addMember(UUID playerUUID, KingdomMemberRank rank){
+        if(playerUUID == null) throw new IllegalArgumentException("player can't be null");
+        if(members.containsKey(playerUUID)) return null;
+        KingdomMember newMember = new KingdomMember(this.kingdom, playerUUID, rank);
+        members.put(playerUUID, newMember);
         return newMember;
     }
 
@@ -64,28 +67,28 @@ public class KingdomMembers {
      * add a member to the members of a kingdom
      * @param kingdom
      * the kingdom teh member will be added to
-     * @param player
-     * the player that will be added as a KingdomMember to the members
+     * @param playerUUID
+     * the UUID of the player that will be added as a KingdomMember to the members
      * @return the KingdomMember of the given player, null is member already in member
      */
-    public static KingdomMember addMember(Kingdom kingdom, OfflinePlayer player){
+    public static KingdomMember addMember(Kingdom kingdom, UUID playerUUID){
         if(kingdom == null) throw new IllegalArgumentException("kingdom can't be null");
-        return kingdom.getMembers().addMember(player);
+        return kingdom.getMembers().addMember(playerUUID);
     }
 
     /**
      * add a member to the members of a kingdom
      * @param kingdom
      * the kingdom teh member will be added to
-     * @param player
-     * the player that will be added as a KingdomMember to the members
+     * @param playerUUID
+     * the UUID of the player that will be added as a KingdomMember to the members
      * @param rank
      * the rank the member will receive
      * @return the KingdomMember of the given player, null if member is already in members
      */
-    public static KingdomMember addMember(Kingdom kingdom, OfflinePlayer player, KingdomMemberRank rank){
+    public static KingdomMember addMember(Kingdom kingdom, UUID playerUUID, KingdomMemberRank rank){
         if(kingdom == null) throw new IllegalArgumentException("kingdom can't be null");
-        return kingdom.getMembers().addMember(player, rank);
+        return kingdom.getMembers().addMember(playerUUID, rank);
     }
 
     // remove member from members

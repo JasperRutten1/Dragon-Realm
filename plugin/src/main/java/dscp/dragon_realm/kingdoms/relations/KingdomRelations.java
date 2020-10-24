@@ -1,5 +1,6 @@
 package dscp.dragon_realm.kingdoms.relations;
 
+import dscp.dragon_realm.kingdoms.Kingdom;
 import dscp.dragon_realm.kingdoms.KingdomException;
 
 import java.io.Serializable;
