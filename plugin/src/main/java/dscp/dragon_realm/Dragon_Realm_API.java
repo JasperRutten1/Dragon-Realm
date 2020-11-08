@@ -105,4 +105,8 @@ public abstract class Dragon_Realm_API {
             loc.getWorld().spawnParticle(particle, loc, count, 0, 0, 0, 0);
         }
     }
+
+    public static String capitalizeFirstLetter(String string){
+        return string.substring(0,1).toUpperCase() + string.substring(1).toLowerCase();
+    }
 }

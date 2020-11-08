@@ -1,18 +1,17 @@
 package dscp.dragon_realm;
 
+import dscp.dragon_realm.commands.DRCommands;
 import dscp.dragon_realm.customEnchants.CustomEnchants;
 import dscp.dragon_realm.customEnchants.CustomEnchantsCraftingRecipes;
 import dscp.dragon_realm.customEnchants.events.EnchantsEvents;
 import dscp.dragon_realm.kingdoms.Kingdom;
-import dscp.dragon_realm.kingdoms.KingdomException;
 import org.bukkit.ChatColor;
-import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.Objects;
 
 public final class Dragon_Realm extends JavaPlugin {
 
@@ -54,45 +53,26 @@ public final class Dragon_Realm extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Kingdom.SaveKingdoms(new File(getDataFolder(), "kingdoms"));
+        Kingdom.saveKingdoms(new File(getDataFolder(), "kingdoms"));
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         try{
-            if(sender instanceof Player){
-                Player player = (Player) sender;
-
-                switch (command.getName()){
-                    case "kingdom":
-
-                        switch (args[0]){
-                            case "create":
-                                Kingdom.createKingdom(args[1], player);
-                                break;
-                        }
-                        break;
-                    case "test":
-
-                        switch (args[0]){
-                            case "kingdoms":
-                                player.sendMessage(Kingdom.kingdoms.size() + "");
-                                break;
-                        }
+            DRCommands.handleCommand(sender, command.getName(), args);
+            if(command.getName().equals("test")){
+                for(Kingdom kingdom : Kingdom.kingdoms){
+                    sender.sendMessage(Objects.requireNonNull(kingdom.getMembers().getKing().getPlayer().getName()));
                 }
             }
-        }
-        catch (ArrayIndexOutOfBoundsException e){
-            sender.sendMessage(ChatColor.RED + "missing arguments");
-        }
-        catch (KingdomException e){
-            sender.sendMessage(ChatColor.RED + e.getMessage());
         }
         catch (Exception e){
             e.printStackTrace();
             System.out.println("exception in command");
             sender.sendMessage(ChatColor.RED + e.getMessage());
         }
+        Kingdom.saveKingdoms(new File(getDataFolder(), "kingdoms"));
+        Kingdom.moveRemovedKingdoms(new File(getDataFolder(), "kingdoms"), new File(getDataFolder(), "removed_kingdoms"));
         return true;
     }
 }

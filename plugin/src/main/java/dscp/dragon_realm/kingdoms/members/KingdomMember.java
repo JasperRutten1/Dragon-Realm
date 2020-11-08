@@ -26,7 +26,7 @@ public class KingdomMember implements Serializable {
      */
     public KingdomMember(Kingdom kingdom, UUID playerUUID){
         if(kingdom == null) throw new IllegalArgumentException("kingdom can't be null");
-        if(playerUUID == null) throw new IllegalArgumentException("player can't be nul");
+        if(playerUUID == null) throw new IllegalArgumentException("playerID can't be nul");
 
         this.kingdom = kingdom;
         this.playerUUID = playerUUID;

@@ -23,7 +23,7 @@ public class ObjectIO {
         try{
             if(!file.exists()){
                 file.createNewFile();
-                System.out.println("error in creating new file at " + file.getPath());
+                System.out.println("created new file at " + file.getPath());
             }
         }
         catch (IOException e){

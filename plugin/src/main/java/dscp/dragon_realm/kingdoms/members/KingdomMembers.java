@@ -31,6 +31,16 @@ public class KingdomMembers implements Serializable {
         this.members = new HashMap<>();
     }
 
+    //getters
+
+    public Kingdom getKingdom() {
+        return kingdom;
+    }
+
+    public Map<UUID, KingdomMember> getMembers() {
+        return members;
+    }
+
     // add member to members
 
     /**

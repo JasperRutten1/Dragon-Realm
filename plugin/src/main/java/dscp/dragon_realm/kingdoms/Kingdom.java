@@ -1,10 +1,16 @@
 package dscp.dragon_realm.kingdoms;
 
+import dscp.dragon_realm.Dragon_Realm_API;
 import dscp.dragon_realm.ObjectIO;
 import dscp.dragon_realm.kingdoms.claims.KingdomClaim;
 import dscp.dragon_realm.kingdoms.members.KingdomMember;
 import dscp.dragon_realm.kingdoms.members.KingdomMemberRank;
 import dscp.dragon_realm.kingdoms.members.KingdomMembers;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -12,9 +18,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  *
@@ -23,16 +27,19 @@ public class Kingdom implements Serializable {
     private static final long serialVersionUID = -7307977757795245408L;
 
     public static List<Kingdom> kingdoms;
+    public static List<Kingdom> removedKingdoms = new ArrayList<>();
 
     private KingdomMembers members;
     private String name;
     private KingdomClaim claim;
 
+    private final Map<UUID, Long> joinInvitations = new HashMap<>();
+
     public Kingdom(String name, Player king){
         if(name == null) throw new IllegalArgumentException("name can't be null");
         if(king == null) throw new IllegalArgumentException("king can't be null");
 
-        this.name = name;
+        this.name = Dragon_Realm_API.capitalizeFirstLetter(name);
         this.members = new KingdomMembers(this);
         this.members.addMember(king.getUniqueId(), KingdomMemberRank.KING);
         this.claim = new KingdomClaim(this);
@@ -50,6 +57,10 @@ public class Kingdom implements Serializable {
 
     public KingdomClaim getClaim() {
         return claim;
+    }
+
+    public Map<UUID, Long> getJoinInvitations() {
+        return joinInvitations;
     }
 
     //create and remove kingdom
@@ -71,7 +82,6 @@ public class Kingdom implements Serializable {
             }
         }
         Kingdom kingdom = new Kingdom(name, king);
-        king.sendMessage(ChatColor.GOLD + "created kingdom with name " + ChatColor.DARK_PURPLE + kingdom.getName());
         kingdoms.add(kingdom);
         return kingdom;
     }
@@ -89,10 +99,10 @@ public class Kingdom implements Serializable {
         if(kingdom == null) throw new KingdomException("you are not part of a kingdom");
         KingdomMember member = kingdom.getMembers().getMember(player);
         if(member == null) throw new KingdomException("you are not part of a kingdom");
-        if(member.equals(kingdom.getMembers().getKing())) throw new KingdomException("only the king of the kingdom can remove the kingdom");
+        if(!kingdom.getMembers().getKing().equals(member)) throw new KingdomException("only the king of the kingdom can remove the kingdom");
 
         kingdoms.remove(kingdom);
-        player.sendMessage(ChatColor.GREEN + "Removed kingdom");
+        removedKingdoms.add(kingdom);
         return kingdom;
     }
 
@@ -110,8 +120,106 @@ public class Kingdom implements Serializable {
         return null;
     }
 
+    /**
+     * checks if a player (member) is part of a kingdom
+     * @param player the player that will be checked
+     * @return true is player is a member of a kingdom, false if not
+     */
+    public static boolean isMemberOfKingdom(Player player){
+        for(Kingdom kingdom : kingdoms){
+            if(kingdom.getMembers().isMemberOfKingdom(player)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * adds a member to the members class of this kingdom
+     * @param player the player that will be added as a KingdomMember to the members class
+     * @return the added KingdomMember
+     * @throws KingdomException thrown if the player is already part of a kingdom
+     */
+    public KingdomMember addMemberToKingdom(Player player) throws KingdomException {
+        if(player == null) throw new IllegalArgumentException("player can't be null");
+        if(isMemberOfKingdom(player)) throw new KingdomException("player is already part of a kingdom");
+
+        return members.addMember(player.getUniqueId());
+    }
+
+    /**
+     * remove a KingdomMember from the members class
+     * @param player the player (OfflinePlayer) that will be removed from the members class
+     * @return the KingdomMember that got removed from the members class
+     * @throws KingdomException thrown if the member is not part of this kingdom
+     */
+    public KingdomMember removeKingdomMember(OfflinePlayer player) throws KingdomException {
+        if(player == null) throw new IllegalArgumentException("player ca,'t be null");
+        if(members.isMemberOfKingdom(player)) throw new KingdomException("player is not part of this kingdom");
+
+        return members.removeMember(player);
+    }
+
+    /**
+     * sends a message to all online members of this kingdom
+     * @param message the message that will be send to all the kingdom members
+     */
+    public void sendMembersMessage(String message){
+        for(Player player : Bukkit.getOnlinePlayers()){
+            if(members.isMemberOfKingdom(player)){
+                player.sendMessage(message);
+            }
+        }
+    }
+
+    public void invitePlayerToKingdom(Player inviteSender, Player inviteReceiver){
+        if(inviteSender == null) throw new IllegalArgumentException("sender can't be null");
+        if(inviteReceiver == null) throw new IllegalArgumentException("receiver can't be null");
+
+        inviteReceiver.sendMessage(ChatColor.GREEN + "you have been invited by "
+                + ChatColor.DARK_AQUA + inviteSender.getName() + ChatColor.GREEN + " to join the " +
+                ChatColor.GOLD + this.name + ChatColor.GREEN + " kingdom");
+
+        TextComponent clickToAcceptMessage = new TextComponent(ChatColor.BLUE + "click here to accept");
+        TextComponent hoverText = new TextComponent(ChatColor.GREEN + "click to join the " + ChatColor.GOLD + this.name + ChatColor.GREEN + " kingdom");
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{hoverText});
+        ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "kingdom acceptinvite " + this.name);
+        clickToAcceptMessage.setHoverEvent(hoverEvent);
+        clickToAcceptMessage.setClickEvent(clickEvent);
+        inviteReceiver.spigot().sendMessage(clickToAcceptMessage);
+
+        joinInvitations.put(inviteReceiver.getUniqueId(), System.currentTimeMillis() + 60000);
+    }
+
+    /**
+     * adds a member to the kingdom if the member is invited to it
+     * @param player the player that will join the kingdom
+     * @throws KingdomException thrown if the player is not invited or the player is already part of a kingdom
+     */
+    public void inviteAcceptation(Player player) throws KingdomException {
+        if(!joinInvitations.containsKey(player.getUniqueId())) throw new KingdomException("you where not invited to join this kingdom");
+        if(joinInvitations.get(player.getUniqueId()) < System.currentTimeMillis()){
+            joinInvitations.remove(player.getUniqueId());
+            throw new KingdomException("you are not invited to this kingdom");
+        }
+        if(Kingdom.isMemberOfKingdom(player)) throw new KingdomException("you are already part of a kingdom");
+
+        members.addMember(player.getUniqueId());
+        joinInvitations.remove(player.getUniqueId());
+    }
+
     // claims
 
+
+    // misc
+    public static Kingdom getKingdomFromName(String name){
+        for(Kingdom kingdom : kingdoms){
+            if(kingdom.name.toLowerCase().equals(name.toLowerCase())) return kingdom;
+        }
+        return null;
+    }
+
+    public static boolean kingdomExists(String name){
+        return !(getKingdomFromName(name) == null);
+    }
 
     //load in kingdom
 
@@ -156,7 +264,7 @@ public class Kingdom implements Serializable {
      * saves all the kingdom objects to a directory in separated data files
      * @param dir the dir where the kingdom objects will be saved
      */
-    public static void SaveKingdoms(File dir){
+    public static void saveKingdoms(File dir){
         if(Kingdom.kingdoms == null || Kingdom.kingdoms.size() == 0){
             System.out.println("no kingdoms to save");
             return;
@@ -170,8 +278,31 @@ public class Kingdom implements Serializable {
         }
     }
 
-    // equals and to hash override
+    // move removed kingdom files
 
+    public static void moveRemovedKingdoms(File kingdomsDir, File removedDir){
+        if(Kingdom.removedKingdoms == null || Kingdom.removedKingdoms.size() == 0){
+            return;
+        }
+        if(!kingdomsDir.exists() || !kingdomsDir.isDirectory()){
+            kingdomsDir.mkdir();
+        }
+        if(!removedDir.exists() || !removedDir.isDirectory()){
+            removedDir.mkdir();
+        }
+        for(File file : Objects.requireNonNull(kingdomsDir.listFiles())){
+            for(Kingdom removedKingdom : removedKingdoms){
+                if(file.getName().equals(removedKingdom.name + ".dat")){
+                    file.delete();
+                    File kingdomFile = new File(removedDir, removedKingdom.getName() + ".dat");
+                    ObjectIO.writeObjectToFile(kingdomFile, removedKingdom);
+                }
+            }
+        }
+        removedKingdoms.clear();
+    }
+
+    // equals and to hash override
 
     @Override
     public boolean equals(Object o) {
