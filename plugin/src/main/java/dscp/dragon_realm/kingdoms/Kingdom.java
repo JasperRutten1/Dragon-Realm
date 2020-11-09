@@ -181,7 +181,7 @@ public class Kingdom implements Serializable {
         TextComponent clickToAcceptMessage = new TextComponent(ChatColor.BLUE + "click here to accept");
         TextComponent hoverText = new TextComponent(ChatColor.GREEN + "click to join the " + ChatColor.GOLD + this.name + ChatColor.GREEN + " kingdom");
         HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{hoverText});
-        ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "kingdom acceptinvite " + this.name);
+        ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kingdom acceptinvite " + this.name);
         clickToAcceptMessage.setHoverEvent(hoverEvent);
         clickToAcceptMessage.setClickEvent(clickEvent);
         inviteReceiver.spigot().sendMessage(clickToAcceptMessage);

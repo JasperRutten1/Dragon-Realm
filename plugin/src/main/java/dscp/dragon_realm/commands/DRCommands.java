@@ -12,7 +12,7 @@ public enum DRCommands {
     KINGDOM_CREATE("kingdom", new String[]{"create"}, new KingdomCreateCommand("dscp.dr.kingdom.create")),
     KINGDOM_REMOVE("kingdom", new String[]{"remove"}, new KingdomRemoveCommand("dscp.dr.kingdom.default")),
     KINGDOM_INVITE("kingdom", new String[]{"invite"}, new KingdomInviteCommand("dscp.dr.kingdom.default")),
-    Kingdom_INVITEACCEPT("kingdom", new String[]{"inviteaccept"}, new KingdomInviteAcceptCommand("dscp.dr.kingdom.default"));
+    Kingdom_INVITEACCEPT("kingdom", new String[]{"acceptinvite"}, new KingdomInviteAcceptCommand("dscp.dr.kingdom.default"));
 
     String commandName;
     String[] args;
