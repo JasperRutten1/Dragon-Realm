@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +21,7 @@ public class KingdomClaim implements Serializable {
     private static final long serialVersionUID = -4244201835422078128L;
 
     private Kingdom kingdom;
-    private Map<ChunkCoordinates, Chunk> claimedChunks;
+    private Map<Integer, List<Integer>> claimedChunks;
 
     /**
      * constructor for KingdomClaim class
@@ -36,45 +37,61 @@ public class KingdomClaim implements Serializable {
 
     //getters
 
-    public Map<ChunkCoordinates, Chunk> getClaimedChunks() {
+    public Map<Integer, List<Integer>> getClaimedChunks() {
         return claimedChunks;
     }
 
-    public KingdomClaim claimChunk(Player player) throws KingdomException {
-        if(player == null) throw new IllegalArgumentException("player can't be null");
-        World world = player.getLocation().getWorld();
-        assert world != null;
-        if(world.getEnvironment() != World.Environment.NORMAL) throw new KingdomException("a kingdom can only claim land in the overworld");
+    // claim chunks and check if claimed
 
-        Chunk chunk = world.getChunkAt(player.getLocation());
-
-        ChunkCoordinates coordinates = new ChunkCoordinates(chunk.getX(), chunk.getZ());
-        if(claimedChunks.containsKey(coordinates)){
-            player.sendMessage(ChatColor.GRAY + "this chunk is already claimed by your kingdom");
-            return this;
+    /**
+     * save the chunk to this kingdom
+     * @param x the x coordinate of the chunk
+     * @param z the z coordinate of the chunk
+     * @return this object
+     */
+    public boolean claimChunk(int x, int z){
+        if(isClaimed(x, z)) return false;
+        if(claimedChunks.get(x) == null){
+            claimedChunks.put(x, new ArrayList<>());
         }
-        else if(chunkHasBeenClaimed(coordinates)){
-            player.sendMessage(ChatColor.RED + "this chunk has already been claimed by another kingdom");
-            return this;
-        }
-
-        this.getClaimedChunks().put(coordinates, chunk);
-        return this;
+        claimedChunks.get(x).add(z);
+        return true;
     }
 
-    public static boolean chunkHasBeenClaimed(ChunkCoordinates chunkCoordinates){
+    /**
+     * check if a kingdom has claimed a chunk
+     * @param x the x coordinate of the chunk
+     * @param z the z coordinate of the chunk
+     * @return true if already claimed, false if not
+     */
+    public static boolean isClaimed(int x, int z){
         for(Kingdom kingdom : Kingdom.kingdoms){
-            if(kingdom.getClaim().getClaimedChunks().containsKey(chunkCoordinates)) return true;
+            if(kingdom.getClaim().claimedChunks.containsKey(x) && kingdom.getClaim().claimedChunks.get(x).contains(z)) return true;
         }
         return false;
     }
 
-    public static Kingdom getKingdomFromChunk(ChunkCoordinates chunkCoordinates){
+    /**
+     * get the kingdom that claimed a chunk
+     * @param x the x coordinate of the chunk
+     * @param z the z coordinate of the chunk
+     * @return the kingdom that claimed the chunk, null if not claimed
+     */
+    public static Kingdom claimedBy(int x, int z){
         for(Kingdom kingdom : Kingdom.kingdoms){
-            if(kingdom.getClaim().getClaimedChunks().containsKey(chunkCoordinates)) return kingdom;
+            if(kingdom.getClaim().claimedChunks.containsKey(x) && kingdom.getClaim().claimedChunks.get(x).contains(z)) return kingdom;
         }
         return null;
     }
 
-
+    /**
+     * get the chunk object of the chunk at x, z
+     * @param x the x coordinate of the chunk
+     * @param z the z coordinate of the chunk
+     * @param world the world where the chunk is in
+     * @return the chunk object with coords x and z
+     */
+    public static Chunk getChunkObject(int x, int z, World world){
+        return world.getChunkAt(x, z);
+    }
 }
