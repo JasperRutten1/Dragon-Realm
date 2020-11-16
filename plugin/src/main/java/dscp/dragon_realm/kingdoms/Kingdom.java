@@ -3,9 +3,11 @@ package dscp.dragon_realm.kingdoms;
 import dscp.dragon_realm.Dragon_Realm_API;
 import dscp.dragon_realm.ObjectIO;
 import dscp.dragon_realm.kingdoms.claims.KingdomClaim;
+import dscp.dragon_realm.kingdoms.claims.settlements.Settlement;
 import dscp.dragon_realm.kingdoms.members.KingdomMember;
 import dscp.dragon_realm.kingdoms.members.KingdomMemberRank;
 import dscp.dragon_realm.kingdoms.members.KingdomMembers;
+import dscp.dragon_realm.kingdoms.vault.KingdomVault;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -16,7 +18,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -32,6 +33,7 @@ public class Kingdom implements Serializable {
     private KingdomMembers members;
     private String name;
     private KingdomClaim claim;
+    private KingdomVault vault;
 
     private final Map<UUID, Long> joinInvitations = new HashMap<>();
 
@@ -43,6 +45,7 @@ public class Kingdom implements Serializable {
         this.members = new KingdomMembers(this);
         this.members.addMember(king.getUniqueId(), KingdomMemberRank.KING);
         this.claim = new KingdomClaim(this);
+        this.vault = new KingdomVault(this);
     }
 
     //getters
@@ -61,6 +64,10 @@ public class Kingdom implements Serializable {
 
     public Map<UUID, Long> getJoinInvitations() {
         return joinInvitations;
+    }
+
+    public KingdomVault getVault() {
+        return vault;
     }
 
     //create and remove kingdom
@@ -315,5 +322,33 @@ public class Kingdom implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        try{
+            sb.append(name).append("\n")
+                    .append("King: ").append(getMembers().getKing().getPlayer().getName()).append("\n");
+            sb.append("Claimed chunks: ").append(getClaim().size()).append("\n");
+            if(getClaim().getSettlements().size() > 0){
+                sb.append("Settlements: \n");
+                if(getClaim().getCapital() != null){
+                    sb.append(" - ").append(getClaim().getCapital().getName()).append(", Capital \n");
+                }
+                for(Settlement settlement : getClaim().getSettlements()){
+                    if(!settlement.isCapital()){
+                        sb.append(" - ").append(settlement.getName()).append(", ")
+                                .append(settlement.getLevel().getName()).append("\n");
+                    }
+                }
+            }
+        }
+        catch (KingdomException e){
+            sb.append(e.getMessage());
+        }
+
+        return sb.toString();
     }
 }

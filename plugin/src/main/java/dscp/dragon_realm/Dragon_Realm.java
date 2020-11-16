@@ -62,7 +62,7 @@ public final class Dragon_Realm extends JavaPlugin {
             DRCommands.handleCommand(sender, command.getName(), args);
             if(command.getName().equals("test")){
                 for(Kingdom kingdom : Kingdom.kingdoms){
-                    sender.sendMessage(Objects.requireNonNull(kingdom.getMembers().getKing().getPlayer().getName()));
+                    sender.sendMessage(kingdom.toString());
                 }
             }
         }

@@ -1,18 +1,24 @@
 package dscp.dragon_realm.commands;
 
-import dscp.dragon_realm.commands.customCommands.KingdomCreateCommand;
-import dscp.dragon_realm.commands.customCommands.KingdomInviteAcceptCommand;
-import dscp.dragon_realm.commands.customCommands.KingdomInviteCommand;
-import dscp.dragon_realm.commands.customCommands.KingdomRemoveCommand;
+import dscp.dragon_realm.commands.customCommands.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public enum DRCommands {
+    KINGDOM_MAP("kingdom", new String[]{"map"}, new KingdomMapCommand("dscp.dr.kingdom.default")),
+    KINGDOM_CLAIM("kingdom", new String[]{"claim"}, new KingdomClaimCommand("dscp.dr.kingdom.default")),
     KINGDOM_CREATE("kingdom", new String[]{"create"}, new KingdomCreateCommand("dscp.dr.kingdom.create")),
+    KINGDOM_SETTLEMENT_CREATE("kingdom", new String[]{"settlement", "create"}, new KingdomCreateSettlementCommand("dscp.dr.kingdom.default")),
+    KINGDOM_SETTLEMENT_REMOVE("kingdom", new String[]{"settlement", "remove"}, new KingdomCreateSettlementCommand("dscp.dr.kingdom.default")),
     KINGDOM_REMOVE("kingdom", new String[]{"remove"}, new KingdomRemoveCommand("dscp.dr.kingdom.default")),
     KINGDOM_INVITE("kingdom", new String[]{"invite"}, new KingdomInviteCommand("dscp.dr.kingdom.default")),
-    Kingdom_INVITEACCEPT("kingdom", new String[]{"acceptinvite"}, new KingdomInviteAcceptCommand("dscp.dr.kingdom.default"));
+    Kingdom_INVITEACCEPT("kingdom", new String[]{"acceptinvite"}, new KingdomInviteAcceptCommand("dscp.dr.kingdom.default")),
+    KINGDOM_GIVE_COINS("kingdom", new String[]{"coins", "give"} , new KingdomGiveCoinsCommand("dscp.dr.admin")),
+    KINGDOM_VAULT_COINS("kingdom", new String[]{"vault", "coins"}, new KingdomVaultCoinsCommand("dscp.dr.kingdom.default")),
+    KINGDOM_UNCLAIM("kingdom", new String[]{"unclaim"}, new KingdomUnclaimCommand("dscp.dr.kingdom.default")),
+    KINGDOM_ASSIGN_GOVERNOR("kingdom", new String[]{"settlement", "assign"}, new KingdomAssignGovernorCommand("dscp.dr.kingdom.default")),
+    KINGDOM_SETTLEMENT_LEVLEUP("kingdom", new String[]{"settlement", "levelup"}, new KingdomLevelUpSettlement("dscp.dr.kingdom.default"));
 
     String commandName;
     String[] args;

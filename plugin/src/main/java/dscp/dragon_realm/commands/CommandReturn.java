@@ -1,6 +1,7 @@
 package dscp.dragon_realm.commands;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -9,16 +10,16 @@ import java.util.List;
 public class CommandReturn {
     List<String> returnMessages;
     List<Exception> exceptionList;
-    Player player;
+    CommandSender sneder;
 
     /**
      * constructor for a CommandReturn object
-     * @param player the player that this CommandReturn object is bound to
+     * @param sender the player that this CommandReturn object is bound to
      */
-    public CommandReturn(Player player){
-        if(player == null) throw new IllegalArgumentException("player can't be null");
+    public CommandReturn(CommandSender sender){
+        if(sender == null) throw new IllegalArgumentException("player can't be null");
 
-        this.player = player;
+        this.sneder = sender;
         this.returnMessages = new ArrayList<>();
         this.exceptionList = new ArrayList<>();
     }
@@ -49,11 +50,11 @@ public class CommandReturn {
      * Send the player the messages (strings) in the message reaction list
      * @return this object
      */
-    public CommandReturn sendPlayerMessages(){
+    public CommandReturn sendMessages(){
         if(this.returnMessages.isEmpty()) return this;
 
         for(String message : this.returnMessages){
-            player.sendMessage(message);
+            sneder.sendMessage(message);
         }
         return this;
     }
@@ -62,10 +63,10 @@ public class CommandReturn {
      * Send the player the message from the exceptions thrown executing the command
      * @return this object
      */
-    public CommandReturn sendPlayerExceptionMessages(){
+    public CommandReturn sendExceptionMessages(){
         if(exceptionList.isEmpty()) return this;
         for(Exception exception : this.exceptionList){
-            player.sendMessage(ChatColor.RED + exception.getMessage());
+            sneder.sendMessage(ChatColor.RED + exception.getMessage());
         }
         return this;
     }
@@ -76,9 +77,9 @@ public class CommandReturn {
      */
     public CommandReturn sendExceptionsOrMessages(){
         if(this.exceptionList.isEmpty()){
-            this.sendPlayerMessages();
+            this.sendMessages();
         }else {
-            this.sendPlayerExceptionMessages();
+            this.sendExceptionMessages();
         }
         return this;
     }

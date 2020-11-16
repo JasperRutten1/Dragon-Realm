@@ -1,20 +1,20 @@
 package dscp.dragon_realm.commands.customCommands;
 
-import dscp.dragon_realm.Dragon_Realm_API;
 import dscp.dragon_realm.commands.CommandHelpGenerator;
 import dscp.dragon_realm.commands.CommandReturn;
 import dscp.dragon_realm.commands.CustomCommand;
 import dscp.dragon_realm.commands.CustomCommandException;
 import dscp.dragon_realm.kingdoms.Kingdom;
 import dscp.dragon_realm.kingdoms.KingdomException;
+import dscp.dragon_realm.kingdoms.claims.KingdomClaim;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class KingdomInviteAcceptCommand extends CustomCommand {
-
-    public KingdomInviteAcceptCommand(String permission) {
+public class KingdomMapCommand extends CustomCommand {
+    public KingdomMapCommand(String permission) {
         super(permission);
     }
 
@@ -25,11 +25,7 @@ public class KingdomInviteAcceptCommand extends CustomCommand {
         CommandReturn commandReturn = new CommandReturn(player);
 
         //code
-        Kingdom kingdom = Kingdom.getKingdomFromName(args[1]);
-        if(kingdom == null) throw new CustomCommandException("could not find this kingdom");
-        kingdom.inviteAcceptation(player);
-        commandReturn.addReturnMessage(ChatColor.GREEN + "successfully joined kingdom");
-        kingdom.sendMembersMessage(ChatColor.GOLD + "player '" + ChatColor.DARK_AQUA + player.getName() + ChatColor.GOLD + "' joined the kingdom");
+        player.sendMessage(KingdomClaim.generateClaimMap(player));
 
         //return
         return commandReturn;
@@ -37,8 +33,7 @@ public class KingdomInviteAcceptCommand extends CustomCommand {
 
     @Override
     public String getHelp() {
-        return new CommandHelpGenerator("kingdom inviteaccept [kingdom]", "accept an invitation from a kingdom")
-                .addArgument("kingdom", "the name of the kingdom you want to accept the invitation from")
+        return new CommandHelpGenerator("/kingdom map", "get a map of the chunks around you, the map claimed chunks")
                 .generateHelp();
     }
 }
