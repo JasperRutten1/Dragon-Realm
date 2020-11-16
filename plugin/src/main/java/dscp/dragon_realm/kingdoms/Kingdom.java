@@ -328,25 +328,20 @@ public class Kingdom implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        try{
-            sb.append(name).append("\n")
-                    .append("King: ").append(getMembers().getKing().getPlayer().getName()).append("\n");
-            sb.append("Claimed chunks: ").append(getClaim().size()).append("\n");
-            if(getClaim().getSettlements().size() > 0){
-                sb.append("Settlements: \n");
-                if(getClaim().getCapital() != null){
-                    sb.append(" - ").append(getClaim().getCapital().getName()).append(", Capital \n");
-                }
-                for(Settlement settlement : getClaim().getSettlements()){
-                    if(!settlement.isCapital()){
-                        sb.append(" - ").append(settlement.getName()).append(", ")
-                                .append(settlement.getLevel().getName()).append("\n");
-                    }
+        sb.append(name).append("\n")
+                .append("King: ").append(getMembers().getKing().getPlayer().getName()).append("\n");
+        sb.append("Claimed chunks: ").append(getClaim().size()).append("\n");
+        if(getClaim().getSettlements().size() > 0){
+            sb.append("Settlements: \n");
+            if(getClaim().getCapital() != null){
+                sb.append(" - ").append(getClaim().getCapital().getName()).append(", Capital \n");
+            }
+            for(Settlement settlement : getClaim().getSettlements()){
+                if(!settlement.isCapital()){
+                    sb.append(" - ").append(settlement.getName()).append(", ")
+                            .append(settlement.getLevel().getName()).append("\n");
                 }
             }
-        }
-        catch (KingdomException e){
-            sb.append(e.getMessage());
         }
 
         return sb.toString();
