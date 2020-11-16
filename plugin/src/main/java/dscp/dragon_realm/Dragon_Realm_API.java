@@ -1,8 +1,6 @@
 package dscp.dragon_realm;
 
-import dscp.dragon_realm.kingdoms.claims.ChunkCoordinates;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
@@ -66,10 +64,6 @@ public abstract class Dragon_Realm_API {
         }
     }
 
-    public static int distanceBetweenChunks(ChunkCoordinates chunk1, ChunkCoordinates chunk2){
-        return (int) Math.max(Math.abs(chunk1.getX() - chunk2.getX()),Math.abs(chunk1.getZ() - chunk2.getZ()));
-    }
-
     public static double distanceBetweenBlocks(Location loc1, Location loc2){
         return loc1.distance(loc2);
     }
@@ -104,5 +98,9 @@ public abstract class Dragon_Realm_API {
             assert loc.getWorld() != null;
             loc.getWorld().spawnParticle(particle, loc, count, 0, 0, 0, 0);
         }
+    }
+
+    public static String capitalizeFirstLetter(String string){
+        return string.substring(0,1).toUpperCase() + string.substring(1).toLowerCase();
     }
 }

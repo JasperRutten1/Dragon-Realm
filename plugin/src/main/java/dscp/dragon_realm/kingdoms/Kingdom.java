@@ -1,357 +1,354 @@
 package dscp.dragon_realm.kingdoms;
 
 import dscp.dragon_realm.Dragon_Realm_API;
-import dscp.dragon_realm.kingdoms.claims.Capital;
-import dscp.dragon_realm.kingdoms.claims.ChunkCoordinates;
-import dscp.dragon_realm.kingdoms.claims.ClaimedLand;
-import dscp.dragon_realm.kingdoms.members.KingdomInvite;
+import dscp.dragon_realm.ObjectIO;
+import dscp.dragon_realm.kingdoms.claims.KingdomClaim;
+import dscp.dragon_realm.kingdoms.claims.settlements.Settlement;
 import dscp.dragon_realm.kingdoms.members.KingdomMember;
-import dscp.dragon_realm.kingdoms.members.KingdomRank;
+import dscp.dragon_realm.kingdoms.members.KingdomMemberRank;
+import dscp.dragon_realm.kingdoms.members.KingdomMembers;
+import dscp.dragon_realm.kingdoms.vault.KingdomVault;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ *
+ */
 public class Kingdom implements Serializable {
-    private static final long serialVersionUID = 4633922922867195577L;
+    private static final long serialVersionUID = -7307977757795245408L;
 
+    public static List<Kingdom> kingdoms;
+    public static List<Kingdom> removedKingdoms = new ArrayList<>();
+
+    private KingdomMembers members;
     private String name;
-    private Map<UUID, KingdomMember> members;
-    private static Kingdoms kingdoms;
-    private Map<UUID, KingdomInvite> inviteMap = new HashMap<>();
+    private KingdomClaim claim;
+    private KingdomVault vault;
 
-    private ClaimedLand claimedLand;
-    private Capital capital;
+    private final Map<UUID, Long> joinInvitations = new HashMap<>();
 
-    private double power;
-    private double maxPower;
-    private double coins;
-    private double draconic_essence;
+    public Kingdom(String name, Player king){
+        if(name == null) throw new IllegalArgumentException("name can't be null");
+        if(king == null) throw new IllegalArgumentException("king can't be null");
 
-    private static final int startingPower = 2000;
-
-    // constructor
-
-    public Kingdom(String name, KingdomMember creator) throws KingdomException {
-        if(name == null) throw new KingdomException("name can not be null");
-        if(creator == null) throw new KingdomException("creator can't be null");
-
-        String cleanName = "";
-        cleanName = cleanName + name.charAt(0);
-        cleanName = cleanName.toUpperCase();
-        name = name.toLowerCase();
-        cleanName = cleanName + name.substring(1);
-
-        if(kingdomExists(cleanName)) throw new KingdomException("a kingdom with this name already exists");
-
-        this.name = cleanName;
-        this.members = new HashMap<>();
-        this.members.put(creator.getPlayer().getUniqueId(), creator);
-        this.maxPower = Kingdom.startingPower;
-        this.power = this.maxPower;
-        this.claimedLand = new ClaimedLand();
+        this.name = Dragon_Realm_API.capitalizeFirstLetter(name);
+        this.members = new KingdomMembers(this);
+        this.members.addMember(king.getUniqueId(), KingdomMemberRank.KING);
+        this.claim = new KingdomClaim(this);
+        this.vault = new KingdomVault(this);
     }
 
-    public static void initiateKingdomsIfNull(){
-        if(kingdoms == null) kingdoms = new Kingdoms();
-    }
-
-    // getters
+    //getters
 
     public String getName() {
         return name;
     }
-    public double getPower() {
-        return power;
-    }
-    public Map<UUID, KingdomMember> getMembers() {
+
+    public KingdomMembers getMembers() {
         return members;
     }
-    public static Kingdoms getKingdoms() {
-        return kingdoms;
-    }
-    public Capital getCapital() {
-        return capital;
-    }
-    public ClaimedLand getClaimedLand() {
-        return claimedLand;
+
+    public KingdomClaim getClaim() {
+        return claim;
     }
 
-    // kingdom
-
-    public KingdomMember getKing(){
-        final KingdomMember[] king = {null};
-        this.members.forEach( (u, m) -> {
-            if(m.getRank() == KingdomRank.KING) king[0] = m;
-        });
-        return king[0];
-    }
-    public static KingdomMember getKing(Kingdom kingdom){
-        return kingdom.getKing();
+    public Map<UUID, Long> getJoinInvitations() {
+        return joinInvitations;
     }
 
-    public static void createKingdom(Player player, String name) throws KingdomException {
-        if(name == null) throw new KingdomException("name can not be null");
-        initiateKingdomsIfNull();
+    public KingdomVault getVault() {
+        return vault;
+    }
 
-        //check if the player is already part of another kingdom and if name already exists
-        for(Kingdom kingdom : kingdoms.getKingdomsList()){
-            if(kingdom.isMemberOfKingdom(player)) throw new KingdomException("you are already part of another kingdom");
-            if(kingdom.getName().equals(name)) throw new KingdomException("a kingdom with this name already exists");
+    //create and remove kingdom
+
+    /**
+     * create a new kingdom object and add it to the static kingdoms array list
+     * @param name the name of the new kingdom
+     * @param king the player that will be king of the new kingdom
+     * @return the new kingdom object
+     * @throws KingdomException thrown if kingdom with this name already exists or if player is already part of a kingdom
+     */
+    public static Kingdom createKingdom(String name, Player king) throws KingdomException {
+        for(Kingdom kingdom : kingdoms){
+            if(kingdom.getName().equals(name)){
+                throw new KingdomException("a kingdom with this name already exists");
+            }
+            if(kingdom.getMembers().isMemberOfKingdom(king)){
+                throw new KingdomException("you are already part of a kingdom");
+            }
         }
-
-        KingdomMember king = new KingdomMember(player, KingdomRank.KING);
-
-        player.sendMessage(ChatColor.GREEN + "Started new kingdom: " + name);
-        kingdoms.add(new Kingdom(name, king));
+        Kingdom kingdom = new Kingdom(name, king);
+        kingdoms.add(kingdom);
+        return kingdom;
     }
 
-    public static Kingdom getKingdom(OfflinePlayer player){
-        initiateKingdomsIfNull();
-        for(Kingdom kingdom : kingdoms.getKingdomsList()){
-            if(kingdom.members.containsKey(player.getUniqueId())) return kingdom;
+    /**
+     * remove a kingdom from the static kingdoms array list
+     * @param player the player that is king of the kingdom
+     * @return the removed kingdom
+     * @throws KingdomException thrown if member is not part of a kingdom or if member isn't the king of his kingdom
+     */
+    public static Kingdom removeKingdom(Player player) throws KingdomException {
+        if (player == null) throw new IllegalArgumentException("player");
+
+        Kingdom kingdom = getKingdomFromPlayer(player);
+        if(kingdom == null) throw new KingdomException("you are not part of a kingdom");
+        KingdomMember member = kingdom.getMembers().getMember(player);
+        if(member == null) throw new KingdomException("you are not part of a kingdom");
+        if(!kingdom.getMembers().getKing().equals(member)) throw new KingdomException("only the king of the kingdom can remove the kingdom");
+
+        kingdoms.remove(kingdom);
+        removedKingdoms.add(kingdom);
+        return kingdom;
+    }
+
+    // members
+
+    /**
+     * get the kingdom a player is in
+     * @param player the player of witch you want the kingdom of
+     * @return the kingdom the player is in, null if no kingdom found
+     */
+    public static Kingdom getKingdomFromPlayer(OfflinePlayer player){
+        for(Kingdom kd : kingdoms){
+            if(kd.getMembers().isMemberOfKingdom(player)) return kd;
         }
         return null;
     }
-    public static Kingdom getKingdom(String name){
-        for(Kingdom kingdom : kingdoms.getKingdomsList()){
-            if(name.toLowerCase().equals(kingdom.getName().toLowerCase())) return kingdom;
+
+    /**
+     * checks if a player (member) is part of a kingdom
+     * @param player the player that will be checked
+     * @return true is player is a member of a kingdom, false if not
+     */
+    public static boolean isMemberOfKingdom(Player player){
+        for(Kingdom kingdom : kingdoms){
+            if(kingdom.getMembers().isMemberOfKingdom(player)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * adds a member to the members class of this kingdom
+     * @param player the player that will be added as a KingdomMember to the members class
+     * @return the added KingdomMember
+     * @throws KingdomException thrown if the player is already part of a kingdom
+     */
+    public KingdomMember addMemberToKingdom(Player player) throws KingdomException {
+        if(player == null) throw new IllegalArgumentException("player can't be null");
+        if(isMemberOfKingdom(player)) throw new KingdomException("player is already part of a kingdom");
+
+        return members.addMember(player.getUniqueId());
+    }
+
+    /**
+     * remove a KingdomMember from the members class
+     * @param player the player (OfflinePlayer) that will be removed from the members class
+     * @return the KingdomMember that got removed from the members class
+     * @throws KingdomException thrown if the member is not part of this kingdom
+     */
+    public KingdomMember removeKingdomMember(OfflinePlayer player) throws KingdomException {
+        if(player == null) throw new IllegalArgumentException("player ca,'t be null");
+        if(members.isMemberOfKingdom(player)) throw new KingdomException("player is not part of this kingdom");
+
+        return members.removeMember(player);
+    }
+
+    /**
+     * sends a message to all online members of this kingdom
+     * @param message the message that will be send to all the kingdom members
+     */
+    public void sendMembersMessage(String message){
+        for(Player player : Bukkit.getOnlinePlayers()){
+            if(members.isMemberOfKingdom(player)){
+                player.sendMessage(message);
+            }
+        }
+    }
+
+    public void invitePlayerToKingdom(Player inviteSender, Player inviteReceiver){
+        if(inviteSender == null) throw new IllegalArgumentException("sender can't be null");
+        if(inviteReceiver == null) throw new IllegalArgumentException("receiver can't be null");
+
+        inviteReceiver.sendMessage(ChatColor.GREEN + "you have been invited by "
+                + ChatColor.DARK_AQUA + inviteSender.getName() + ChatColor.GREEN + " to join the " +
+                ChatColor.GOLD + this.name + ChatColor.GREEN + " kingdom");
+
+        TextComponent clickToAcceptMessage = new TextComponent(ChatColor.BLUE + "click here to accept");
+        TextComponent hoverText = new TextComponent(ChatColor.GREEN + "click to join the " + ChatColor.GOLD + this.name + ChatColor.GREEN + " kingdom");
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{hoverText});
+        ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kingdom acceptinvite " + this.name);
+        clickToAcceptMessage.setHoverEvent(hoverEvent);
+        clickToAcceptMessage.setClickEvent(clickEvent);
+        inviteReceiver.spigot().sendMessage(clickToAcceptMessage);
+
+        joinInvitations.put(inviteReceiver.getUniqueId(), System.currentTimeMillis() + 60000);
+    }
+
+    /**
+     * adds a member to the kingdom if the member is invited to it
+     * @param player the player that will join the kingdom
+     * @throws KingdomException thrown if the player is not invited or the player is already part of a kingdom
+     */
+    public void inviteAcceptation(Player player) throws KingdomException {
+        if(!joinInvitations.containsKey(player.getUniqueId())) throw new KingdomException("you where not invited to join this kingdom");
+        if(joinInvitations.get(player.getUniqueId()) < System.currentTimeMillis()){
+            joinInvitations.remove(player.getUniqueId());
+            throw new KingdomException("you are not invited to this kingdom");
+        }
+        if(Kingdom.isMemberOfKingdom(player)) throw new KingdomException("you are already part of a kingdom");
+
+        members.addMember(player.getUniqueId());
+        joinInvitations.remove(player.getUniqueId());
+    }
+
+    // claims
+
+
+    // misc
+    public static Kingdom getKingdomFromName(String name){
+        for(Kingdom kingdom : kingdoms){
+            if(kingdom.name.toLowerCase().equals(name.toLowerCase())) return kingdom;
         }
         return null;
     }
 
     public static boolean kingdomExists(String name){
-        return getKingdom(name) != null;
+        return !(getKingdomFromName(name) == null);
     }
 
-    public void broadcastToOnline(String message){
-        for(Map.Entry<UUID, KingdomMember> entry : members.entrySet()){
-            if(entry.getValue().getPlayer().isOnline()){
-                entry.getValue().getPlayer().sendMessage(message);
+    //load in kingdom
+
+    /**
+     * loads the kingdoms in a directory from the data files inside
+     * @param dir the directory containing the kingdom data files
+     * @return the ArrayList with all the kingdoms
+     */
+    public static ArrayList<Kingdom> loadKingdoms(File dir){
+        if(dir == null) throw new IllegalArgumentException("dir can't be null");
+        ArrayList<Kingdom> kingdoms = new ArrayList<>();
+        Kingdom.kingdoms = kingdoms;
+        try{
+            if(!dir.exists() || !dir.isDirectory()){
+                dir.mkdir();
+            }
+            if(Objects.requireNonNull(dir.listFiles()).length == 0){
+                System.out.println("no kingdom files found");
+                return kingdoms;
+            }
+            System.out.println("loading in kingdoms:");
+            for(File kingdomFile : Objects.requireNonNull(dir.listFiles())){
+                Object object = ObjectIO.loadObjectFromFile(kingdomFile);
+                if(object instanceof Kingdom){
+                    Kingdom kingdom = (Kingdom) object;
+                    kingdoms.add(kingdom);
+                    System.out.println("kingdom '" + kingdom.getName() + "' loaded");
+                }
             }
         }
-    }
-
-
-    // members
-
-    public boolean isMemberOfKingdom(Player player){
-        return members.containsKey(player.getUniqueId());
-    }
-    public static boolean isMemberOfKingdom(Player player, Kingdom kingdom){
-        return kingdom.isMemberOfKingdom(player);
-    }
-
-    public KingdomMember getMember(OfflinePlayer player){
-        for(Map.Entry<UUID, KingdomMember> entry : members.entrySet()){
-            if(player.getUniqueId().equals(entry.getKey())) return entry.getValue();
+        catch(Exception e){
+            e.printStackTrace();
+            System.out.println("exception in loading in kingdoms");
         }
-        return null;
+        Kingdom.kingdoms = kingdoms;
+        return kingdoms;
     }
 
-    public void addMember(Player player) throws KingdomException {
-        KingdomMember member = new KingdomMember(player);
-        //check if member is already part of a kingdom
-        if(isMemberOfKingdom(player)) throw new KingdomException("player is already part of a kingdom");
+    //save kingdoms
 
-        members.put(player.getUniqueId(), member);
+    /**
+     * saves all the kingdom objects to a directory in separated data files
+     * @param dir the dir where the kingdom objects will be saved
+     */
+    public static void saveKingdoms(File dir){
+        if(Kingdom.kingdoms == null || Kingdom.kingdoms.size() == 0){
+            System.out.println("no kingdoms to save");
+            return;
+        }
+        if(!dir.exists() || !dir.isDirectory()){
+            dir.mkdir();
+        }
+        for(Kingdom kingdom : Kingdom.kingdoms){
+            File kingdomFile = new File(dir, kingdom.getName() + ".dat");
+            ObjectIO.writeObjectToFile(kingdomFile, kingdom);
+        }
     }
 
-    public static void invitePlayerToKingdom(Player invitor, Player invited) throws KingdomException {
-        if(invited == null) throw new KingdomException("invited player can't be null");
-        if(invitor == null) throw new KingdomException("the player that is inviting can't be null");
-        if(!playerIsPartOfKingdom(invitor)) throw new KingdomException("you are not part of a kingdom");
-        if(playerIsPartOfKingdom(invited)) throw new KingdomException("player is already part of a kingdom");
+    // move removed kingdom files
 
-        Kingdom kingdom = Kingdom.getKingdom(invitor);
-        assert kingdom != null;
-
-        if(!kingdom.getMember(invitor).hasRankOrHigher(KingdomRank.KNIGHT)) throw new KingdomException("you do not have permission to do this");
-        if(kingdom.inviteMap.get(invited.getUniqueId()) != null){
-            KingdomInvite invite = kingdom.inviteMap.get(invited.getUniqueId());
-            if(invite.getKingdom() ==  kingdom && invite.isValid(System.currentTimeMillis())){
-                throw new KingdomException("this player is already invited to your kingdom, wait for the invite to expire before sending a new one");
+    public static void moveRemovedKingdoms(File kingdomsDir, File removedDir){
+        if(Kingdom.removedKingdoms == null || Kingdom.removedKingdoms.size() == 0){
+            return;
+        }
+        if(!kingdomsDir.exists() || !kingdomsDir.isDirectory()){
+            kingdomsDir.mkdir();
+        }
+        if(!removedDir.exists() || !removedDir.isDirectory()){
+            removedDir.mkdir();
+        }
+        for(File file : Objects.requireNonNull(kingdomsDir.listFiles())){
+            for(Kingdom removedKingdom : removedKingdoms){
+                if(file.getName().equals(removedKingdom.name + ".dat")){
+                    file.delete();
+                    File kingdomFile = new File(removedDir, removedKingdom.getName() + ".dat");
+                    ObjectIO.writeObjectToFile(kingdomFile, removedKingdom);
+                }
             }
         }
-
-        kingdom.inviteMap.put(invited.getUniqueId(), new KingdomInvite(kingdom, System.currentTimeMillis() + 60000));
-        invited.sendMessage(ChatColor.GREEN + invitor.getName() + ChatColor.RESET + " has invited you to join " + ChatColor.GOLD + kingdom.getName());
-
-        TextComponent message = new TextComponent("click here to accept invitation");
-        message.setColor(net.md_5.bungee.api.ChatColor.DARK_GREEN);
-        message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kingdom accept " + kingdom.getName()));
-        message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder("Accept the invite to join " + kingdom.getName()).color(net.md_5.bungee.api.ChatColor.GRAY).create()));
-        invited.spigot().sendMessage(message);
-
-        invited.sendMessage(ChatColor.GRAY + "invite will expire in 60 seconds");
-
-        invitor.sendMessage(ChatColor.GREEN + "invited player to kingdom");
+        removedKingdoms.clear();
     }
 
-    public static void acceptInvite(Player invited, String kingdomName) throws KingdomException {
-        if(invited == null) throw new KingdomException("invited player can't be null");
-        if(kingdomName == null) throw new KingdomException("the name of the kingdom can't be null");
-        if(playerIsPartOfKingdom(invited)) throw new KingdomException("you are already part of a kingdom");
-
-        Kingdom kingdom = getKingdom(kingdomName);
-        if(kingdom == null) throw new KingdomException("could not find kingdom, the kingdom might have been removed");
-
-        KingdomInvite invite = kingdom.inviteMap.get(invited.getUniqueId());
-        if(invite == null) throw new KingdomException("you where not invited to this kingdom");
-        if(!invite.isValid(System.currentTimeMillis())) throw new KingdomException("invite is no longer valid");
-
-        kingdom.addMember(invited);
-        invited.sendMessage(ChatColor.GREEN + "you joined the kingdom");
-        kingdom.broadcastToOnline(ChatColor.GREEN + invited.getName() + " joined the kingdom");
-    }
-
-    public static boolean playerIsPartOfKingdom(Player player){
-        for(Kingdom kingdom : kingdoms.getKingdomsList()){
-            if(kingdom.getMembers().containsKey(player.getUniqueId())) return true;
-        }
-        return false;
-    }
-
-    // claims
-
-    public void claimChunk(Chunk chunk) throws KingdomException {
-        if(chunk == null) throw new KingdomException("chunk can't be null");
-        if(this.capital == null) throw new KingdomException("this kingdom does not yet have a capital, to create a capital use: /kingdom capital create");
-        if(power < 150) throw new KingdomException("your kingdom needs at least 150 power to claim a chunk");
-        if(maxPower < 50) throw new KingdomException("your maximum power is to low");
-        if(claimedLand.containsChunk(chunk)) throw new KingdomException("this chunk is already claimed by your kingdom");
-
-        // check if chunk is already claimed and if in range of capital
-        for(Kingdom kingdom : kingdoms.getKingdomsList()){
-            if(kingdom.claimedLand.containsChunk(chunk)) throw new KingdomException("this chunk is already claimed by another kingdom");
-        }
-        if(Dragon_Realm_API.distanceBetweenChunks(this.capital.getCenterChunk(), new ChunkCoordinates(chunk.getX(), chunk.getZ())) > 25)
-            throw new KingdomException("to far away from capital, max distance is 25 chunks");
-
-        System.out.println(Dragon_Realm_API.distanceBetweenChunks(this.capital.getCenterChunk(), new ChunkCoordinates(chunk.getX(), chunk.getZ())));
-
-        this.claimedLand.getChunkList().add(new ChunkCoordinates(chunk.getX(), chunk.getZ()));
-    }
-    public static void claimChunk(Player player) throws KingdomException {
-        if(player == null) throw new KingdomException("player can't be null");
-        Kingdom kingdom = Kingdom.getKingdom(player);
-        if(kingdom == null) throw new KingdomException("you are not in a kingdom");
-        KingdomMember member = kingdom.getMember(player);
-        if(!member.getRank().hasRankOrHigher(KingdomRank.KNIGHT)) throw new KingdomException("you do not have permission to do this");
-
-        kingdom.claimChunk(player.getLocation().getChunk());
-        player.sendMessage(ChatColor.GREEN + "claimed chunk for your kingdom");
-    }
-
-    //capital
-
-    public void createCapital(Chunk centerChunk) throws KingdomException {
-        if(centerChunk == null) throw new KingdomException("center chunk can't be null");
-        if(this.capital != null) throw new KingdomException("this kingdom already has a capital");
-        if(!centerChunk.getWorld().getEnvironment().equals(World.Environment.NORMAL)) throw new KingdomException("capital must be in overworld");
-
-        // check if far enough away from other capitals
-        for(Kingdom kingdom : kingdoms.getKingdomsList()){
-            if(kingdom.getCapital() != null &&
-                    Dragon_Realm_API.distanceBetweenChunks(kingdom.getCapital().getCenterChunk(), new ChunkCoordinates(centerChunk.getX(), centerChunk.getZ())) <= 30)
-                throw new KingdomException("capital must be at least 30 chunks away from other capitals");
-        }
-
-        this.capital = new Capital(centerChunk);
-        this.claimedLand.getChunkList().addAll(this.capital.getChunkList());
-    }
-    public static void createCapital(Player player) throws KingdomException {
-        if(player == null) throw new KingdomException("player can't be null");
-        Kingdom kingdom = Kingdom.getKingdom(player);
-        if(kingdom == null) throw new KingdomException("you are not part of a kingdom");
-        KingdomMember member = kingdom.getMember(player);
-        if(!member.hasRankOrHigher(KingdomRank.NOBEL)) throw new KingdomException("you are not high enough rank to do this");
-
-        kingdom.createCapital(player.getLocation().getChunk());
-        player.sendMessage(ChatColor.GREEN + "created capital. (capital is 5 x 5 chunks)");
-    }
-
-    // map
-
-    public static void showMap(Player player){
-        Chunk chunk = player.getLocation().getChunk();
-        for(int z = chunk.getZ() - 4 ; z <= chunk.getZ() + 4 ; z++){
-            StringBuilder line = new StringBuilder();
-            for(int x = chunk.getX() - 4 ; x <= chunk.getX() + 4 ; x++){
-                line.append(getColorForMap(new ChunkCoordinates(x , z)));
-            }
-            player.sendMessage(line.toString());
-        }
-    }
-
-    private static String getColorForMap(ChunkCoordinates cc){
-        for(Kingdom kingdom : kingdoms.getKingdomsList()){
-            if(kingdom.capital.getChunkList().contains(cc)) return ChatColor.DARK_PURPLE + "X";
-            // settlements
-            if(kingdom.claimedLand.getChunkList().contains(cc)) return ChatColor.GREEN + "X";
-        }
-        return ChatColor.GRAY + "X";
-    }
-
-    // power
-
-    public void updateMaxPower(){
-
-    }
-
-    // equals and toHash
+    // equals and to hash override
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Kingdom)) return false;
         Kingdom kingdom = (Kingdom) o;
-        return name.toLowerCase().equals(kingdom.name.toLowerCase());
+        return Objects.equals(name, kingdom.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, members);
+        return Objects.hash(name);
     }
 
-    // test command
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
 
-    public static void test(Player player){
-        initiateKingdomsIfNull();
-        if(kingdoms.getKingdomsList().isEmpty()) player.sendMessage(ChatColor.GREEN + "no kingdoms");
-        for(Kingdom kingdom : kingdoms.getKingdomsList()){
-            player.sendMessage(kingdom.name);
-            player.sendMessage("king: " + kingdom.getKing().getPlayer().getName());
-            player.sendMessage("capital: " + (kingdom.getCapital() == null ? "no capital" :
-                    "(" + kingdom.getCapital().getCenterChunk().getX() + " : " + kingdom.getCapital().getCenterChunk().getZ() + ")"));
-            player.sendMessage("claimed chunks: " + kingdom.getClaimedLand().getChunkList().size());
+        try{
+            sb.append(name).append("\n")
+                    .append("King: ").append(getMembers().getKing().getPlayer().getName()).append("\n");
+            sb.append("Claimed chunks: ").append(getClaim().size()).append("\n");
+            if(getClaim().getSettlements().size() > 0){
+                sb.append("Settlements: \n");
+                if(getClaim().getCapital() != null){
+                    sb.append(" - ").append(getClaim().getCapital().getName()).append(", Capital \n");
+                }
+                for(Settlement settlement : getClaim().getSettlements()){
+                    if(!settlement.isCapital()){
+                        sb.append(" - ").append(settlement.getName()).append(", ")
+                                .append(settlement.getLevel().getName()).append("\n");
+                    }
+                }
+            }
         }
-    }
-
-    // load/save kingdoms
-
-    public static void loadKingdoms(File file) throws KingdomException {
-        Object o = Dragon_Realm_API.load(file);
-        if(o == null){
-            kingdoms = null;
-        }
-        else {
-            if(!(o instanceof Kingdoms)) throw new KingdomException("object is not of type Kingdoms");
-            kingdoms = (Kingdoms) o;
+        catch (KingdomException e){
+            sb.append(e.getMessage());
         }
 
-    }
-    public static void saveKingdoms(File file) {
-        Dragon_Realm_API.save(kingdoms, file);
+        return sb.toString();
     }
 }

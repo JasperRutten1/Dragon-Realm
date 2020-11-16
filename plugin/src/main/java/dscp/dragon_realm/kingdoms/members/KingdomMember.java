@@ -1,64 +1,95 @@
 package dscp.dragon_realm.kingdoms.members;
 
-import dscp.dragon_realm.kingdoms.KingdomException;
-import org.bukkit.entity.Player;
+import dscp.dragon_realm.kingdoms.Kingdom;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 public class KingdomMember implements Serializable {
-    private static final long serialVersionUID = 9041565223205936921L;
+    private static final long serialVersionUID = -2035948641377905712L;
 
-    private Player player;
-    private KingdomRank rank;
+    Kingdom kingdom;
+    KingdomMemberRank rank;
+    UUID playerUUID;
 
-    // constructors
+    //constructors
 
-    public KingdomMember(Player player) throws KingdomException {
-        this(player, KingdomRank.PEASANT);
+    /**
+     * constructor for the KingdomMember class
+     * @param kingdom
+     * the kingdom the player is in
+     * @param playerUUID
+     * the UUID of the player that is part of the kingdom
+     */
+    public KingdomMember(Kingdom kingdom, UUID playerUUID){
+        if(kingdom == null) throw new IllegalArgumentException("kingdom can't be null");
+        if(playerUUID == null) throw new IllegalArgumentException("playerID can't be nul");
+
+        this.kingdom = kingdom;
+        this.playerUUID = playerUUID;
+        this.rank = KingdomMemberRank.PEASANT;
     }
 
-    public KingdomMember(Player player, KingdomRank rank) throws KingdomException {
-        if(player == null) throw new KingdomException("player can't be null");
-        this.player = player;
+    /**
+     * constructor for the KingdomMember class
+     * @param kingdom
+     * the kingdom the player is in
+     * @param playerUUID
+     * the UUID of the player that is part of the kingdom
+     * @param rank
+     * the rank the member will get on creation
+     */
+    public KingdomMember(Kingdom kingdom, UUID playerUUID, KingdomMemberRank rank){
+        this(kingdom, playerUUID);
+
+        if(rank == null) throw new IllegalArgumentException("rank can't be null");
         this.rank = rank;
     }
 
     // getters
 
-    public Player getPlayer() {
-        return player;
+    public Kingdom getKingdom() {
+        return kingdom;
     }
-    public KingdomRank getRank() {
+
+    public KingdomMemberRank getRank() {
         return rank;
     }
 
-    // ranks
-
-    public boolean hasRankOrHigher(KingdomRank rank){
-        return this.rank.hasRankOrHigher(rank);
+    public UUID getPlayerUUID() {
+        return playerUUID;
     }
 
-    public KingdomRank rankUp(){
-        this.rank = this.rank.getRankHigher();
-        return this.rank;
+    // get player
+
+    public OfflinePlayer getPlayer(){
+        return Bukkit.getOfflinePlayer(this.playerUUID);
     }
-    public KingdomRank rankDown(){
-        this.rank = this.rank.getRankLower();
-        return this.rank;
+
+    // ranks and permission
+
+    public boolean hasPermission(KingdomMemberRank neededRank){
+        return this.rank.getRankValue() >= neededRank.getRankValue();
     }
+
+    // equals override
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof KingdomMember)) return false;
-        KingdomMember member = (KingdomMember) o;
-        return Objects.equals(player.getUniqueId(), member.player.getUniqueId()) &&
-                rank == member.rank;
+        KingdomMember that = (KingdomMember) o;
+        return kingdom.equals(that.kingdom) &&
+                playerUUID.equals(that.playerUUID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(player, rank);
+        return Objects.hash(kingdom, playerUUID);
     }
 }
+
