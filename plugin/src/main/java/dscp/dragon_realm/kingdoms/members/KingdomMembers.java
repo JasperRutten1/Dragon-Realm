@@ -186,14 +186,13 @@ public class KingdomMembers implements Serializable {
     /**
      * get the king of the kingdom
      * @return the KingdomMember that is king of the kingdom
-     * @throws KingdomException
      * throws if the kingdom has no king
      */
-    public KingdomMember getKing() throws KingdomException {
+    public KingdomMember getKing() {
         for(Map.Entry<UUID, KingdomMember> entry : members.entrySet()){
             if(entry.getValue().hasPermission(KingdomMemberRank.KING)) return entry.getValue();
         }
-        throw new KingdomException("a kingdom must have a king at all times");
+        return null;
     }
 
     /**
