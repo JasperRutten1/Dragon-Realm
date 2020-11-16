@@ -52,6 +52,7 @@ public class KingdomClaimCommand extends CustomCommand {
             catch (NumberFormatException e){
                 throw new CustomCommandException("2nd argument must be a number");
             }
+            if(r > 5) throw new CustomCommandException("radius can only be 5");
             for(Chunk c : KingdomClaim.getChunksInRadius(chunk.getX(), chunk.getZ(), r)){
                 if(kingdom.getClaim().claimChunk(c.getX(), c.getZ())) count++;
             }

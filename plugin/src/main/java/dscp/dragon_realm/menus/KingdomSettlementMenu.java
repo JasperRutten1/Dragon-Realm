@@ -41,10 +41,12 @@ public class KingdomSettlementMenu extends Container {
                     .name(settlement.getName())
                     .lore(new LoreBuilder()
                         .line(settlement.getLevel().getName())
+                        .line("governor: " + (settlement.getGovernor() != null
+                                ? settlement.getGovernor().getPlayer().getName() : "none"))
                     )
                     .build()
-                );
-            } catch (ArrayIndexOutOfBoundsException ex) {
+                ).handler(e -> new SettlementMenu(settlement).open(viewer));
+            } catch (IndexOutOfBoundsException ex) {
                 bp.slot(i).item(new ItemStackBuilder(Material.BARRIER)
                     .name("&c&lUnclaimed Settlement")
                     .build()

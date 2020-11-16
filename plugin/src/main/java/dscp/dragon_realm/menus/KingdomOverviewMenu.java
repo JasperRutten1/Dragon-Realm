@@ -37,9 +37,12 @@ public class KingdomOverviewMenu extends Container {
             .lore(new LoreBuilder()
                 .blank()
                 .line("View kingdom members")
+                .line("members: " + kingdom.getMembers().getMembers().size())
             )
             .build()
-        );
+        ).handler(e -> {
+            new KingdomMembersMenu(this.kingdom).open(viewer);
+        });
 
         bp.slot(22).item(new ItemStackBuilder(Material.SHIELD)
             .name("&6&lRelationships")

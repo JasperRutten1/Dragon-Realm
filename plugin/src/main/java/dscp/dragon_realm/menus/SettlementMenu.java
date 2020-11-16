@@ -16,13 +16,14 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SettlementMenu extends Container {
 
     private Settlement settlement;
 
     public SettlementMenu(Settlement settlement) {
-        super("Kingdom Settlements", 5);
+        super("Kingdom Settlements", 3);
         this.settlement = settlement;
     }
 
@@ -39,7 +40,7 @@ public class SettlementMenu extends Container {
 
         KingdomMember currentGovernor = settlement.getGovernor();
 
-        bp.slot(20).item(new ItemStackBuilder(Material.PLAYER_HEAD)
+        bp.slot(11).item(new ItemStackBuilder(Material.PLAYER_HEAD)
             .name("Current Governor: " + (currentGovernor != null ? currentGovernor.getPlayer().getName() : "None"))
             .setSkullOwner(currentGovernor != null ? currentGovernor.getPlayer() : null)
             .lore(new LoreBuilder()
@@ -53,7 +54,7 @@ public class SettlementMenu extends Container {
                 return;
             }
 
-            List<KingdomMember> members = settlement.getKingdom().getMembers().getMembersWithRank(KingdomMemberRank.NOBEL);
+            List<KingdomMember> members = settlement.getKingdom().getMembers().getMembersWithRankHigher(KingdomMemberRank.NOBEL);
             int rows = 3;
 
             if(members.size() > 9) rows++;
@@ -64,7 +65,7 @@ public class SettlementMenu extends Container {
         });
 
         if(settlement.getLevel() == SettlementLevel.getHighestLevel()) {
-            bp.slot(16).item(new ItemStackBuilder(Material.NETHER_STAR)
+            bp.slot(15).item(new ItemStackBuilder(Material.NETHER_STAR)
                 .name("&c&lMax Level")
                 .lore(new LoreBuilder()
                     .blank()
@@ -73,17 +74,18 @@ public class SettlementMenu extends Container {
                 .build()
             ).handler(e -> SoundEffect.FAIL.play(viewer));
         } else {
-            bp.slot(16).item(new ItemStackBuilder(Material.ANVIL)
+            bp.slot(15).item(new ItemStackBuilder(Material.ANVIL)
                 .name("&6&lUpgrade Settlement")
                 .lore(new LoreBuilder()
                     .blank()
-                    .line("Price: " + SettlementCosts.getCost(settlement.getLevel().getNextLevel()))
+                    .line("Price: " + Objects.requireNonNull(SettlementCosts.getCost(settlement.getLevel().getNextLevel())).getCoins())
                     .line("Vault: " + settlement.getKingdom().getVault().getCoins())
                 )
                 .build()
             ).handler(e -> {
                 try {
                     settlement.levelUp();
+                    new SettlementMenu(this.settlement).open(viewer);
                 } catch (KingdomException kingdomException) {
                     SoundEffect.FAIL.play(viewer);
                     new TextBuilder()
@@ -93,7 +95,7 @@ public class SettlementMenu extends Container {
             });
         }
 
-        bp.slot(44).item(new ItemStackBuilder(Material.BARRIER)
+        bp.slot(26).item(new ItemStackBuilder(Material.BARRIER)
             .name("&c&lReturn")
             .build()
         ).handler(e -> new KingdomSettlementMenu(settlement.getKingdom()).open(viewer));
