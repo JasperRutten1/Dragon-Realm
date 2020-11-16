@@ -203,7 +203,7 @@ public class KingdomMembers implements Serializable {
     public ArrayList<KingdomMember> getMembersWithRank(KingdomMemberRank rankNeeded){
         ArrayList<KingdomMember> membersWithRank = new ArrayList<>();
         for(Map.Entry<UUID, KingdomMember> entry : members.entrySet()){
-            if(entry.getValue().getRank() == rankNeeded) membersWithRank.add(entry.getValue());
+            if(entry.getValue().hasPermission(rankNeeded)) membersWithRank.add(entry.getValue());
         }
         return membersWithRank;
     }
