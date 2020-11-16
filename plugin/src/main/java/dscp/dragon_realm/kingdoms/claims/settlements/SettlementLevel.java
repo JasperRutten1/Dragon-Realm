@@ -1,17 +1,22 @@
 package dscp.dragon_realm.kingdoms.claims.settlements;
 
+import lombok.Getter;
+import org.bukkit.Material;
+
 public enum SettlementLevel {
-    Outpost(1, "outpost"),
-    Village(2, "village"),
-    Town(3, "town"),
-    City(4, "city");
+    Outpost(1, "outpost", Material.IRON_INGOT),
+    Village(2, "village", Material.GOLD_INGOT),
+    Town(3, "town", Material.DIAMOND),
+    City(4, "city", Material.EMERALD);
 
     int level;
     String name;
+    Material guiItem;
 
-    SettlementLevel(int level, String name){
+    SettlementLevel(int level, String name, Material guiItem){
         this.level = level;
         this.name = name;
+        this.guiItem = guiItem;
     }
 
     public int getLevel() {
@@ -20,6 +25,10 @@ public enum SettlementLevel {
 
     public String getName() {
         return name;
+    }
+
+    public Material getGuiItem() {
+        return guiItem;
     }
 
     public static SettlementLevel getHighestLevel(){

@@ -57,7 +57,7 @@ public class KingdomOverviewMenu extends Container {
                 .line("View kingdom settlements")
             )
             .build()
-        );
+        ).handler(e -> new KingdomSettlementMenu(kingdom).open(viewer));
 
         bp.slot(38).item(new ItemStackBuilder(Material.REDSTONE)
             .name("&6&lSettings")
@@ -81,6 +81,11 @@ public class KingdomOverviewMenu extends Container {
             .name("&6&lBug Report")
             .build()
         );
+
+        bp.slot(53).item(new ItemStackBuilder(Material.BARRIER)
+            .name("&c&lClose")
+            .build()
+        ).handler(e -> viewer.closeInventory());
     }
 
     @Override
