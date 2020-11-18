@@ -102,6 +102,8 @@ public class EnchantsEvents implements Listener {
         ItemStack damagerWeapon = player.getInventory().getItemInMainHand();
         ItemMeta damagerWeaponMeta = damagerWeapon.getItemMeta();
 
+        if(player.getInventory().getItemInMainHand().getItemMeta() == null) return;
+
         // lightning link effect
         if(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).hasEnchant(CustomEnchants.LIGHTNING_LINK)){
             System.out.println(lightningChargeMap);

@@ -51,7 +51,7 @@ public class KingdomOverviewMenu extends Container {
                 .line("View kingdom relationships")
             )
             .build()
-        );
+        ).handler(e -> new KingdomRelationsMenu(this.kingdom).open(viewer));
 
         bp.slot(24).item(new ItemStackBuilder(Material.ACACIA_DOOR)
             .name("&6&lSettlements")
@@ -67,20 +67,42 @@ public class KingdomOverviewMenu extends Container {
             .lore(new LoreBuilder()
                 .blank()
                 .line("View kingdom settings")
+                .line("&oComing soon")
             )
             .build()
         );
 
-        bp.slot(40).item(new ItemStackBuilder(Material.ENDER_CHEST)
+        bp.slot(38).item(new ItemStackBuilder(Material.IRON_SWORD)
+            .name("&l&6Conflicts")
+            .lore(new LoreBuilder()
+                .blank()
+                .line("View kingdom conflicts")
+                .line("&oComing soon")
+            )
+            .build()
+        );
+
+        bp.slot(40).item(new ItemStackBuilder(Material.REDSTONE)
+                .name("&l&6Settings")
+                .lore(new LoreBuilder()
+                        .blank()
+                        .line("View kingdom settings")
+                        .line("&oComing soon")
+                )
+                .build()
+        );
+
+        bp.slot(42).item(new ItemStackBuilder(Material.ENDER_CHEST)
             .name("&6&lVault")
             .lore(new LoreBuilder()
                 .blank()
                 .line("View kingdom vault")
+                    .line("&oComing soon")
             )
             .build()
         );
 
-        bp.slot(42).item(new ItemStackBuilder(Material.PAPER)
+        bp.slot(45).item(new ItemStackBuilder(Material.PAPER)
             .name("&6&lBug Report")
             .build()
         );

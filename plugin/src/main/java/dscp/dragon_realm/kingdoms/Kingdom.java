@@ -7,6 +7,7 @@ import dscp.dragon_realm.kingdoms.claims.settlements.Settlement;
 import dscp.dragon_realm.kingdoms.members.KingdomMember;
 import dscp.dragon_realm.kingdoms.members.KingdomMemberRank;
 import dscp.dragon_realm.kingdoms.members.KingdomMembers;
+import dscp.dragon_realm.kingdoms.relations.KingdomRelations;
 import dscp.dragon_realm.kingdoms.vault.KingdomVault;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -34,6 +35,7 @@ public class Kingdom implements Serializable {
     private String name;
     private KingdomClaim claim;
     private KingdomVault vault;
+    private KingdomRelations relations;
 
     private final Map<UUID, Long> joinInvitations = new HashMap<>();
 
@@ -46,6 +48,7 @@ public class Kingdom implements Serializable {
         this.members.addMember(king.getUniqueId(), KingdomMemberRank.KING);
         this.claim = new KingdomClaim(this);
         this.vault = new KingdomVault(this);
+        this.relations = new KingdomRelations(this);
     }
 
     //getters
@@ -68,6 +71,10 @@ public class Kingdom implements Serializable {
 
     public KingdomVault getVault() {
         return vault;
+    }
+
+    public KingdomRelations getRelations() {
+        return relations;
     }
 
     //create and remove kingdom

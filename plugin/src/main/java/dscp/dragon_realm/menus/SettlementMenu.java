@@ -83,6 +83,14 @@ public class SettlementMenu extends Container {
                 )
                 .build()
             ).handler(e -> {
+                KingdomMember member = settlement.getKingdom().getMembers().getMember(viewer);
+                if(member == null) return;
+                if(!(member.hasPermission(KingdomMemberRank.ROYAL) || member.equals(settlement.getGovernor()))){
+                    SoundEffect.FAIL.play(viewer);
+                    new TextBuilder()
+                            .text("only royals or the governor of this settlement can upgrade this settlement").red()
+                            .sendTo(viewer);
+                }
                 try {
                     settlement.levelUp();
                     new SettlementMenu(this.settlement).open(viewer);

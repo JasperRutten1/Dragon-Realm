@@ -75,6 +75,7 @@ public class SettlementGovernorMenu extends Container {
                 .setSkullOwner(member.getPlayer())
                 .lore(new LoreBuilder()
                     .blank()
+                    .line(member.getRank().getDisplayName())
                     .line("Click to assign this member as the new governor")
                 )
                 .build()

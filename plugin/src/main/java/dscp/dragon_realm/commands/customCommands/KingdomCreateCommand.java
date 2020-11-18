@@ -23,7 +23,10 @@ public class KingdomCreateCommand extends CustomCommand {
         Player player = (Player) sender;
         CommandReturn commandReturn = new CommandReturn(player);
 
-        if(Kingdom.isMemberOfKingdom(player)) throw new CommandException("you are already a member of a kingdom");
+        if(Kingdom.isMemberOfKingdom(player)) throw new CustomCommandException("you are already a member of a kingdom");
+        if(args[1].length() > 15) throw new CustomCommandException("a kingdom name can only be 15 character long");
+        if(Kingdom.getKingdomFromName(args[1]) != null)
+            throw new CustomCommandException("a kingdom with this name already exists");
         Kingdom kingdom = Kingdom.createKingdom(args[1], player);
         commandReturn.addReturnMessage(ChatColor.GREEN + "created kingdom with name " + ChatColor.GOLD
                 + kingdom.getName());

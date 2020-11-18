@@ -1,6 +1,8 @@
 package dscp.dragon_realm.commands;
 
 import dscp.dragon_realm.commands.customCommands.*;
+import dscp.dragon_realm.commands.customCommands.essentials.FlyCommand;
+import dscp.dragon_realm.commands.customCommands.essentials.HealCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,8 +20,10 @@ public enum DRCommands {
     KINGDOM_GIVE_COINS("kingdom", new String[]{"coins", "give"} , new KingdomGiveCoinsCommand("dscp.dr.admin")),
     KINGDOM_VAULT_COINS("kingdom", new String[]{"vault", "coins"}, new KingdomVaultCoinsCommand("dscp.dr.kingdom.default")),
     KINGDOM_UNCLAIM("kingdom", new String[]{"unclaim"}, new KingdomUnclaimCommand("dscp.dr.kingdom.default")),
-    KINGDOM_ASSIGN_GOVERNOR("kingdom", new String[]{"settlement", "assign"}, new KingdomAssignGovernorCommand("dscp.dr.kingdom.default")),
-    KINGDOM_SETTLEMENT_LEVLEUP("kingdom", new String[]{"settlement", "levelup"}, new KingdomLevelUpSettlement("dscp.dr.kingdom.default"));
+
+    HEAL("heal", new String[]{}, new HealCommand("dscp.dr.mod")),
+    FEED("feed", new String[]{}, new HealCommand("dscp.dr.mod")),
+    FLY("fly", new String[]{}, new FlyCommand("dscp.dr.mod"));
 
     String commandName;
     String[] args;

@@ -45,7 +45,7 @@ public class MemberMenu extends Container {
         if(KingdomMemberRank.canPromote(viewerMember, member)){
             KingdomMemberRank higherRank = member.getRank().getHigherRank();
             assert higherRank != null;
-            bp.slot(13).item(new ItemStackBuilder(Material.GREEN_CONCRETE)
+            bp.slot(14).item(new ItemStackBuilder(Material.GREEN_CONCRETE)
                 .name("&aPromote member to " + higherRank.getDisplayName())
                 .lore(new LoreBuilder()
                     .blank()
@@ -73,13 +73,13 @@ public class MemberMenu extends Container {
         if(KingdomMemberRank.canDemote(viewerMember, member)){
             KingdomMemberRank lowerRank = member.getRank().getLowerRank();
             assert lowerRank != null;
-            bp.slot(13).item(new ItemStackBuilder(Material.GREEN_CONCRETE)
-                    .name("&cDemote member to " + lowerRank.getDisplayName())
-                    .lore(new LoreBuilder()
-                            .blank()
-                            .line("rank info")
-                    )
-                    .build()
+            bp.slot(12).item(new ItemStackBuilder(Material.RED_CONCRETE)
+                .name("&cDemote member to " + lowerRank.getDisplayName())
+                .lore(new LoreBuilder()
+                    .blank()
+                    .line("rank info")
+                )
+                .build()
             ).handler(e -> {
                 try{
                     member.demoteMember();
@@ -87,11 +87,16 @@ public class MemberMenu extends Container {
                 }catch (KingdomException ex){
                     SoundEffect.FAIL.play(viewer);
                     new TextBuilder()
-                            .text(ex.getMessage()).red()
-                            .sendTo(viewer);
+                        .text(ex.getMessage()).red()
+                        .sendTo(viewer);
                 }
             });
         }
+
+        bp.slot(this.getSize() - 1).item(new ItemStackBuilder(Material.BARRIER)
+                .name("&c&lReturn")
+                .build()
+        ).handler(e -> new KingdomMembersMenu(member.getKingdom()).open(viewer));
     }
 
     @Override
