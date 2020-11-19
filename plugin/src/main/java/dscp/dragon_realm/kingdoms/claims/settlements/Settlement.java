@@ -133,9 +133,18 @@ public class Settlement implements Serializable {
 
     public void assignGovernor(KingdomMember governor) throws KingdomException {
         if(governor == null) throw new IllegalArgumentException("governor can't be null");
+        if(governor.getKingdom().getClaim().isGovernor(governor))
+            throw new KingdomException("this member is already a governor of another settlement");
         if(!governor.hasPermission(KingdomMemberRank.NOBEL))
             throw new KingdomException("a governor must have a rank of nobel or higher");
         this.governor = governor;
+    }
+
+    public void removeGovernor(KingdomMember governor) throws KingdomException {
+        if(governor == null) throw new IllegalArgumentException("governor can't be null");
+        if(!governor.equals(this.governor))
+            throw new KingdomException("this member is not the current governor of this settlement");
+        this.governor = null;
     }
 
     //level up settlement

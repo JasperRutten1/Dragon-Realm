@@ -20,16 +20,16 @@ public class KingdomInviteAcceptCommand extends CustomCommand {
 
     @Override
     public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("sender must be of type player");
+        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
         Player player = (Player) sender;
         CommandReturn commandReturn = new CommandReturn(player);
 
         //code
         Kingdom kingdom = Kingdom.getKingdomFromName(args[1]);
-        if(kingdom == null) throw new CustomCommandException("could not find this kingdom");
+        if(kingdom == null) throw new CustomCommandException("Could not find this Kingdom.");
         kingdom.inviteAcceptation(player);
-        commandReturn.addReturnMessage(ChatColor.GREEN + "successfully joined kingdom");
-        kingdom.sendMembersMessage(ChatColor.GOLD + "player '" + ChatColor.DARK_AQUA + player.getName() + ChatColor.GOLD + "' joined the kingdom");
+        commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully joined Kingdom.");
+        kingdom.sendMembersMessage(ChatColor.GOLD + "player '" + ChatColor.DARK_AQUA + player.getName() + ChatColor.GOLD + "' joined the Kingdom.");
 
         //return
         return commandReturn;
@@ -37,8 +37,8 @@ public class KingdomInviteAcceptCommand extends CustomCommand {
 
     @Override
     public String getHelp() {
-        return new CommandHelpGenerator("kingdom inviteaccept [kingdom]", "accept an invitation from a kingdom")
-                .addArgument("kingdom", "the name of the kingdom you want to accept the invitation from")
+        return new CommandHelpGenerator("/kingdom inviteaccept [kingdom]", "Accept an invitation from a Kingdom.")
+                .addArgument("kingdom", "The name of the Kingdom you want to accept the invitation from.")
                 .generateHelp();
     }
 }

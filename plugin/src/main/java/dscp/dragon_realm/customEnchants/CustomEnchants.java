@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CustomEnchants {
-    public static final Enchantment MAVERICKS_NUDES = new EnchantWrapper("maverics-nudes", "Maveric's nudes", 1, EnchantmentTarget.WEAPON);
+    public static final Enchantment MAVERICKS_NUDES = new EnchantWrapper("maverics-nudes", "Maveric's Nudes", 1, EnchantmentTarget.WEAPON);
     public static final double MAVERICS_NUDES_CHANCE = 0.50; //chance
 
-    public static final Enchantment ENDER_EDGE = new EnchantWrapper("ender-edge", "Ender edge", 1, EnchantmentTarget.WEAPON);
+    public static final Enchantment ENDER_EDGE = new EnchantWrapper("ender-edge", "Ender Edge", 1, EnchantmentTarget.WEAPON);
     public static final int ENDER_EDGE_DISTANCE = 15; // distance the ender edge sword can teleport
     public static final int ENDER_EDGE_COOLDOWN = 60000; // cooldown in milli seconds
 
@@ -60,13 +60,13 @@ public class CustomEnchants {
 
     public static void getEnchantedBook(Player player, Enchantment enchantment, int amount){
         if(amount > 64){
-            player.sendMessage(ChatColor.RED + "you can only get a max of 64 books at once");
+            player.sendMessage(ChatColor.RED + "You can only get a max of 64 books at one time.");
             amount = 64;
         }
         ItemStack books = new ItemStack(Material.BOOK, amount);
         enchantItem(books, enchantment);
         if(player.getInventory().firstEmpty() == -1){
-            player.sendMessage(ChatColor.RED + "inventory full");
+            player.sendMessage(ChatColor.RED + "Inventory Full!");
             return;
         }
         player.getInventory().addItem(books);
@@ -77,7 +77,7 @@ public class CustomEnchants {
             if(e.getKey().equals(NamespacedKey.minecraft(key))) enchant = e;
         }
         if(enchant == null){
-            player.sendMessage("could not find enchantment with this name");
+            player.sendMessage("Could not find enchantment with this name.");
             return;
         }
         getEnchantedBook(player, enchant, amount);
@@ -131,6 +131,6 @@ public class CustomEnchants {
             registered = false;
             e.printStackTrace();
         }
-        if(registered) System.out.println("registered new enchantment");
+        if(registered) System.out.println("Registered new enchantment.");
     }
 }

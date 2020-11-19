@@ -17,15 +17,15 @@ public class KingdomVaultCoinsCommand extends CustomCommand {
 
     @Override
     public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("sender must be of type player");
+        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
         Player player = (Player) sender;
         CommandReturn commandReturn = new CommandReturn(player);
 
         //code
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
-        if(kingdom == null) throw new CustomCommandException("yo are not in a kingdom");
-        commandReturn.addReturnMessage(ChatColor.GREEN + "you currently have "
-                + kingdom.getVault().getCoins() + " coins");
+        if(kingdom == null) throw new CustomCommandException("You are not in a Kingdom.");
+        commandReturn.addReturnMessage(ChatColor.GREEN + "You currently have ⛃"
+                + kingdom.getVault().getCoins() + " coins.");
 
         //return
         return commandReturn;

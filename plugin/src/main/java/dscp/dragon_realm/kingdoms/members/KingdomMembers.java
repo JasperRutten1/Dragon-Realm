@@ -186,14 +186,13 @@ public class KingdomMembers implements Serializable {
     /**
      * get the king of the kingdom
      * @return the KingdomMember that is king of the kingdom
-     * @throws KingdomException
      * throws if the kingdom has no king
      */
-    public KingdomMember getKing() throws KingdomException {
+    public KingdomMember getKing() {
         for(Map.Entry<UUID, KingdomMember> entry : members.entrySet()){
             if(entry.getValue().hasPermission(KingdomMemberRank.KING)) return entry.getValue();
         }
-        throw new KingdomException("a kingdom must have a king at all times");
+        return null;
     }
 
     /**
@@ -201,10 +200,26 @@ public class KingdomMembers implements Serializable {
      * @param rankNeeded the rank the members need
      * @return a arraylist of all the members that have the rank
      */
-    public ArrayList<KingdomMember> getMembersWithRank(KingdomMemberRank rankNeeded){
+    public ArrayList<KingdomMember> getMembersWithRankHigher(KingdomMemberRank rankNeeded){
+        ArrayList<KingdomMember> membersWithRank = new ArrayList<>();
+        for(Map.Entry<UUID, KingdomMember> entry : members.entrySet()){
+            if(entry.getValue().hasPermission(rankNeeded)) membersWithRank.add(entry.getValue());
+        }
+        return membersWithRank;
+    }
+
+    public ArrayList<KingdomMember> getMembersWithRankExact(KingdomMemberRank rankNeeded){
         ArrayList<KingdomMember> membersWithRank = new ArrayList<>();
         for(Map.Entry<UUID, KingdomMember> entry : members.entrySet()){
             if(entry.getValue().getRank() == rankNeeded) membersWithRank.add(entry.getValue());
+        }
+        return membersWithRank;
+    }
+
+    public ArrayList<KingdomMember> getMembersWithRankLower(KingdomMemberRank rank){
+        ArrayList<KingdomMember> membersWithRank = new ArrayList<>();
+        for(Map.Entry<UUID, KingdomMember> entry : members.entrySet()){
+            if(entry.getValue().getRank().rankValue < rank.rankValue) membersWithRank.add(entry.getValue());
         }
         return membersWithRank;
     }

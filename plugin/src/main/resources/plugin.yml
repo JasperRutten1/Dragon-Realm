@@ -14,7 +14,18 @@ commands:
   settlement:
     description: used to manage settlements
   help:
+    description: get help about commands
   test:
-  feed:
+    description: a test command
   book:
+    description: get a book with enchantment
+  feed:
+    description: feed the player
+  heal:
+    description: heal the player
+  fly:
+    description: allows the playerto fly
+  flyspeed:
+    description: set you fly speed
+
 

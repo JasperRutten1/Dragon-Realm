@@ -17,7 +17,7 @@ public class CommandReturn {
      * @param sender the player that this CommandReturn object is bound to
      */
     public CommandReturn(CommandSender sender){
-        if(sender == null) throw new IllegalArgumentException("player can't be null");
+        if(sender == null) throw new IllegalArgumentException("Player can not be null.");
 
         this.sneder = sender;
         this.returnMessages = new ArrayList<>();
@@ -30,7 +30,7 @@ public class CommandReturn {
      * @return this object
      */
     public CommandReturn addReturnMessage(String message){
-        if(message == null) throw new IllegalArgumentException("message can't be null");
+        if(message == null) throw new IllegalArgumentException("Message can not be null.");
         this.returnMessages.add(message);
         return this;
     }
@@ -41,7 +41,7 @@ public class CommandReturn {
      * @return this object
      */
     public CommandReturn addException(Exception exception){
-        if(exception == null) throw new IllegalArgumentException("exception can't be null");
+        if(exception == null) throw new IllegalArgumentException("Exception can not be null.");
         this.exceptionList.add(exception);
         return this;
     }

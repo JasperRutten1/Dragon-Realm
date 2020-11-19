@@ -21,24 +21,24 @@ public class KingdomInviteCommand extends CustomCommand {
 
     @Override
     public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("sender must be of type player");
+        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
         Player player = (Player) sender;
         CommandReturn commandReturn = new CommandReturn(player);
 
         //get kingdom of inviting player
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
-        if(kingdom == null) throw new CustomCommandException("player is not part of a kingdom");
+        if(kingdom == null) throw new CustomCommandException("Player is not part of a Kingdom.");
 
         //get player that will be invited
         Player toInvite = Dragon_Realm_API.getPlayerFromName(args[1]);
-        if(toInvite == null) throw new CustomCommandException("could not find player with name: " + args[1]);
+        if(toInvite == null) throw new CustomCommandException("Could not find player with name: " + args[1]);
 
         //check if player is part of kingdom
-        if(Kingdom.isMemberOfKingdom(toInvite)) throw new CustomCommandException("this player is already part of a kingdom");
+        if(Kingdom.isMemberOfKingdom(toInvite)) throw new CustomCommandException("This player is already part of a Kingdom.");
 
         kingdom.invitePlayerToKingdom(player, toInvite);
 
-        commandReturn.addReturnMessage(ChatColor.GREEN + "successfully invited player to your kingdom");
+        commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully invited player to your Kingdom.");
 
         //return
         return commandReturn;
@@ -46,8 +46,8 @@ public class KingdomInviteCommand extends CustomCommand {
 
     @Override
     public String getHelp() {
-        return new CommandHelpGenerator("/kingdom invite [player]", "invite a player to yor kingdom")
-                .addArgument("Player", "the name of the player you want to invite")
+        return new CommandHelpGenerator("/kingdom invite [player]", "Invite a player to yor Kingdom.")
+                .addArgument("player", "The name of the player you want to invite.")
                 .generateHelp();
     }
 }

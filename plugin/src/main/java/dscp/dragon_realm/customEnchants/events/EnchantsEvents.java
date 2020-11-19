@@ -77,7 +77,7 @@ public class EnchantsEvents implements Listener {
                 removeArmorPiece(damaged, armorPiece);
                 Dragon_Realm_API.giveItem(damaged, armorPiece);
 
-                damaged.sendMessage(ChatColor.GRAY + "Maverick compelled you to share your noods");
+                damaged.sendMessage(ChatColor.GRAY + "Maverick compelled you to share your noods!");
             }
         }
         // repulsor charge on damage effect
@@ -94,13 +94,15 @@ public class EnchantsEvents implements Listener {
         if(!(event.getDamager() instanceof Player)) return;
         if(!(event.getEntity() instanceof LivingEntity)) return;
 
-        System.out.println("player hit living entity");
+        System.out.println("Player hit living entity.");
 
         Player player = (Player) event.getDamager();
         LivingEntity entity = (LivingEntity) event.getEntity();
 
         ItemStack damagerWeapon = player.getInventory().getItemInMainHand();
         ItemMeta damagerWeaponMeta = damagerWeapon.getItemMeta();
+
+        if(player.getInventory().getItemInMainHand().getItemMeta() == null) return;
 
         // lightning link effect
         if(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).hasEnchant(CustomEnchants.LIGHTNING_LINK)){
@@ -110,7 +112,7 @@ public class EnchantsEvents implements Listener {
                 return;
             }
 
-            player.sendMessage(ChatColor.DARK_GRAY + "you hear the air crackle with energy");
+            player.sendMessage(ChatColor.DARK_GRAY + "You hear the air crackle with energy!");
 
             int range = CustomEnchants.LIGHTNING_LINK_RANGE;
             ArrayList<Entity> inRangeEntities = new ArrayList<>(entity.getWorld().getNearbyEntities(entity.getLocation(), range, range, range, LivingEntity.class::isInstance));
@@ -137,13 +139,13 @@ public class EnchantsEvents implements Listener {
             if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
                 Long timeout = enderEdgeTimeOutMap.get(player);
                 if(!(timeout == null || System.currentTimeMillis() >= timeout)) {
-                    player.sendMessage(ChatColor.GRAY + "still in cool down, " + ((timeout - System.currentTimeMillis())/1000) + " seconds");
+                    player.sendMessage(ChatColor.GRAY + "Still cooling down, please wait " + ((timeout - System.currentTimeMillis())/1000) + " seconds.");
                     return;
                 }
 
                 Block block = player.getTargetBlockExact(CustomEnchants.ENDER_EDGE_DISTANCE);
                 if(block == null || block.getType().equals(Material.AIR)){
-                    player.sendMessage(ChatColor.GRAY + "out of range");
+                    player.sendMessage(ChatColor.GRAY + "Out of range.");
                     return;
                 }
 
@@ -153,7 +155,7 @@ public class EnchantsEvents implements Listener {
                 World world = block.getWorld();
 
                 if(!(blockAbove1.getType().equals(Material.AIR) && blockAbove2.getType().equals(Material.AIR))){
-                    player.sendMessage(ChatColor.GRAY + "invalid space");
+                    player.sendMessage(ChatColor.GRAY + "Invalid space.");
                     return;
                 }
 
@@ -164,7 +166,7 @@ public class EnchantsEvents implements Listener {
                 world.spawnParticle(Particle.DRAGON_BREATH, tpTo.add(0, 1, 0), 200, 0.2, 0.4, 0.2);
 
                 player.teleport(tpTo);
-                player.sendMessage(ChatColor.GRAY + "wooosh");
+                player.sendMessage(ChatColor.GRAY + "Whoosh!");
             }
         }
 
@@ -172,7 +174,7 @@ public class EnchantsEvents implements Listener {
         else if(meta.hasEnchant(CustomEnchants.REPULSOR)){
             if(!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
             if(this.capacitorChargeMap.get(player) == null || this.capacitorChargeMap.get(player) < 15){
-                player.sendMessage(ChatColor.GRAY + "not charged enough");
+                player.sendMessage(ChatColor.GRAY + "Not enough charge.");
                 return;
             }
 
@@ -233,7 +235,7 @@ public class EnchantsEvents implements Listener {
             }
         }
         else{
-            player.sendMessage("book can only have custom enchantments");
+            player.sendMessage("Book can only have custom enchantments.");
         }
 
     }
@@ -332,7 +334,7 @@ public class EnchantsEvents implements Listener {
             arrow.remove();
             event.setCancelled(true);
             newArrow.setVelocity(arrow.getVelocity().multiply(-0.5));
-            player.sendMessage(ChatColor.GRAY + "deflected arrow");
+            player.sendMessage(ChatColor.GRAY + "Deflected arrow!");
         }
     }
 
@@ -340,7 +342,7 @@ public class EnchantsEvents implements Listener {
     public void playerHitByLightning(EntityDamageByEntityEvent event){
         if(!(event.getDamager() instanceof LightningStrike)) return;
         if(!(event.getEntity() instanceof Player)) return;
-        System.out.println("player hit by lightning");
+        System.out.println("Player hit by lightning.");
 
         Player player = (Player) event.getEntity();
         LightningStrike lightning = (LightningStrike) event.getDamager();
@@ -348,7 +350,7 @@ public class EnchantsEvents implements Listener {
         // lightning link charge
         if(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).hasEnchant(CustomEnchants.LIGHTNING_LINK)){
             lightningChargeMap.put(player, System.currentTimeMillis() + CustomEnchants.LIGHTNING_LINK_MAX_CHARGE_TIME);
-            player.sendMessage(ChatColor.GRAY + "sword is charged with lightning");
+            player.sendMessage(ChatColor.GRAY + "Your sword is charged with lightning!");
         }
     }
 

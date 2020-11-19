@@ -1,6 +1,7 @@
 package dscp.dragon_realm.kingdoms.members;
 
 import dscp.dragon_realm.kingdoms.Kingdom;
+import dscp.dragon_realm.kingdoms.KingdomException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -73,6 +74,25 @@ public class KingdomMember implements Serializable {
 
     public boolean hasPermission(KingdomMemberRank neededRank){
         return this.rank.getRankValue() >= neededRank.getRankValue();
+    }
+
+    public void promoteMember() throws KingdomException {
+        if(this.rank.isHighestRank()) throw new KingdomException("member already has the highest rank");
+        if(this.rank.getHigherRank() == KingdomMemberRank.ROYAL
+                && kingdom.getMembers().getMembersWithRankExact(KingdomMemberRank.ROYAL).size() >= 2)
+            throw new KingdomException("a kingdom can only have 2 members with the rank of royal");
+        if(this.rank.getHigherRank() == KingdomMemberRank.NOBEL
+                && kingdom.getMembers().getMembersWithRankExact(KingdomMemberRank.NOBEL).size() >= 3)
+            throw new KingdomException("a kingdom can only have 3 members with the rank of nobel");
+        this.rank = this.rank.getHigherRank();
+    }
+
+    public void demoteMember() throws KingdomException {
+        if(this.rank.getLowerRank() == KingdomMemberRank.NOBEL
+                && kingdom.getMembers().getMembersWithRankExact(KingdomMemberRank.NOBEL).size() >= 3)
+            throw new KingdomException("a kingdom can only have 3 members with the rank of nobel");
+        if(this.rank.isLowestRank()) throw new KingdomException("member is already at the lowest rank");
+        this.rank = this.rank.getLowerRank();
     }
 
     // equals override

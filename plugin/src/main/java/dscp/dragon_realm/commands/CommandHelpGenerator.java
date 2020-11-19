@@ -11,15 +11,15 @@ public class CommandHelpGenerator {
     private Map<String, String> arguments;
 
     public CommandHelpGenerator(String command, String explanation){
-        if(command == null) throw new IllegalArgumentException("command can't be null");
-        if(explanation == null) throw new IllegalArgumentException("explanation can't be null");
+        if(command == null) throw new IllegalArgumentException("Command can not be null.");
+        if(explanation == null) throw new IllegalArgumentException("Explanation can not be null.");
         this.command = command;
         this.explanation = explanation;
         this.arguments = new HashMap<>();
     }
 
     public CommandHelpGenerator addArgument(String argument, String explanation){
-        if(this.arguments.containsKey(argument)) throw new IllegalArgumentException("a command can not have 2 of the same arguments");
+        if(this.arguments.containsKey(argument)) throw new IllegalArgumentException("A command can not have 2 or more of the same arguments.");
         this.arguments.put(argument, explanation);
         return this;
     }

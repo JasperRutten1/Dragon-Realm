@@ -185,7 +185,7 @@ public class KingdomClaim implements Serializable {
     }
 
     public static int distance(Chunk a, Chunk b){
-        return Math.min(Math.abs(a.getX() - b.getX()), Math.abs(a.getZ() - b.getZ()));
+        return Math.max(Math.abs(a.getX() - b.getX()), Math.abs(a.getZ() - b.getZ()));
     }
 
     //settlements

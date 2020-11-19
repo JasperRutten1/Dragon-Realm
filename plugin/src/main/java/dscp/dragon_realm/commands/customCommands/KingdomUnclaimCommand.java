@@ -21,28 +21,28 @@ public class KingdomUnclaimCommand extends CustomCommand {
 
     @Override
     public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("sender must be of type player");
+        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
         Player player = (Player) sender;
         CommandReturn commandReturn = new CommandReturn(player);
 
         //code
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
-        if(kingdom == null) throw new CustomCommandException("you are not part of a kingdom");
+        if(kingdom == null) throw new CustomCommandException("You are not part of a Kingdom.");
         Chunk chunk = player.getLocation().getChunk();
         int x = chunk.getX();
         int z = chunk.getZ();
         if(!chunk.getWorld().equals(KingdomClaim.WORLD))
-            throw new CustomCommandException("this command can only be preformed in the overworld");
+            throw new CustomCommandException("This command can only be preformed in the Overworld.");
         if(!kingdom.equals(KingdomClaim.claimedBy(x, z)))
-            throw new CustomCommandException("this chunk is not claimed by your kingdom");
+            throw new CustomCommandException("This chunk is not claimed by your Kingdom.");
         KingdomMember member = kingdom.getMembers().getMember(player);
         assert member != null;
         if(!member.hasPermission(KingdomMemberRank.KNIGHT))
-            throw new CustomCommandException("you must have the rank of knight or higher to do this");
+            throw new CustomCommandException("You must have the rank of Knight or higher to do this.");
         if(kingdom.getClaim().isCoveredBySettlement(x, z))
-            throw new CustomCommandException("this chunk is covered by a settlement, remove the settlement first");
+            throw new CustomCommandException("This chunk is covered by a settlement, remove the settlement before trying again.");
         kingdom.getClaim().removeClaim(x, z);
-        commandReturn.addReturnMessage(ChatColor.GREEN + "successfully removed claim on chunk");
+        commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully removed claim on chunk.");
 
         //return
         return commandReturn;
