@@ -36,7 +36,7 @@ public class KingdomOverviewMenu extends Container {
             .setSkullOwner(kingdomKing != null ? kingdomKing.getPlayer() : null)
             .lore(new LoreBuilder()
                 .blank()
-                .line("View kingdom members")
+                .line("View Kingdom Members")
                 .line("members: " + kingdom.getMembers().getMembers().size())
             )
             .build()
@@ -48,7 +48,7 @@ public class KingdomOverviewMenu extends Container {
             .name("&6&lRelationships")
             .lore(new LoreBuilder()
                 .blank()
-                .line("View kingdom relationships")
+                .line("View Kingdom Relationships")
             )
             .build()
         ).handler(e -> new KingdomRelationsMenu(this.kingdom).open(viewer));
@@ -57,7 +57,7 @@ public class KingdomOverviewMenu extends Container {
             .name("&6&lSettlements")
             .lore(new LoreBuilder()
                 .blank()
-                .line("View kingdom settlements")
+                .line("View Kingdom Settlements")
             )
             .build()
         ).handler(e -> new KingdomSettlementMenu(kingdom).open(viewer));
@@ -66,8 +66,8 @@ public class KingdomOverviewMenu extends Container {
             .name("&6&lSettings")
             .lore(new LoreBuilder()
                 .blank()
-                .line("View kingdom settings")
-                .line("&oComing soon")
+                .line("View Kingdom Settings")
+                .line("&oCOMING SOON!")
             )
             .build()
         );
@@ -76,8 +76,8 @@ public class KingdomOverviewMenu extends Container {
             .name("&l&6Conflicts")
             .lore(new LoreBuilder()
                 .blank()
-                .line("View kingdom conflicts")
-                .line("&oComing soon")
+                .line("View Kingdom Conflicts")
+                .line("&oCOMING SOON!")
             )
             .build()
         );
@@ -86,8 +86,8 @@ public class KingdomOverviewMenu extends Container {
                 .name("&l&6Settings")
                 .lore(new LoreBuilder()
                         .blank()
-                        .line("View kingdom settings")
-                        .line("&oComing soon")
+                        .line("View Kingdom Settings")
+                        .line("&oCOMING SOON!")
                 )
                 .build()
         );
@@ -96,14 +96,19 @@ public class KingdomOverviewMenu extends Container {
             .name("&6&lVault")
             .lore(new LoreBuilder()
                 .blank()
-                .line("View kingdom vault")
-                    .line("&oComing soon")
+                .line("View Kingdom Vault")
+                    .line("&oCOMING SOON!")
             )
             .build()
         );
 
         bp.slot(45).item(new ItemStackBuilder(Material.PAPER)
             .name("&6&lBug Report")
+            .lore(new LoreBuilder()
+                  .blank()
+                  .line("Report Bugs Here)
+                     .line("&oCOMING SOON!")
+            )
             .build()
         );
 
