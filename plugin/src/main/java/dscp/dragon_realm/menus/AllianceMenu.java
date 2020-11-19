@@ -49,7 +49,7 @@ public class AllianceMenu extends Container {
                     .name("&l&6" + kingdom.getName())
                     .lore(new LoreBuilder()
                             .blank()
-                            .lineIf("Your kingdom: ", kingdom.getMembers().isMemberOfKingdom(viewer))
+                            .lineIf("Your Kingdom: ", kingdom.getMembers().isMemberOfKingdom(viewer))
                             .line(kingdom.toString())
                     )
                     .build()
@@ -64,7 +64,7 @@ public class AllianceMenu extends Container {
                     .name("&l&6Leave Alliance")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("click to leave this alliance")
+                            .line("Click to leave this alliance.")
                     )
                     .build()
             ).handler(e -> {
@@ -83,7 +83,7 @@ public class AllianceMenu extends Container {
                     .name("&l&6Settings")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("coming soon")
+                            .line("COMING SOON!")
                     )
                     .build()
             ).handler(e -> SoundEffect.FAIL.play(viewer));
