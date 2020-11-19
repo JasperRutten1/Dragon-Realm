@@ -49,7 +49,7 @@ public class AllianceInvitationMenu extends Container {
                     .name("&l&6" + invitedBy.getName())
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("invitation to join alliance")
+                            .line("Invitation to join alliance.")
                     )
                     .build()
             ).handler(e -> {
@@ -66,7 +66,7 @@ public class AllianceInvitationMenu extends Container {
                 else{
                     SoundEffect.FAIL.play(viewer);
                     new TextBuilder()
-                            .text("only royals or higher can accept alliance invitations").red()
+                            .text("Only Royals or higher can accept alliance invitations.").red()
                             .sendTo(viewer);
                 }
                 new AllianceInvitationMenu(this.kingdom).open(viewer);
