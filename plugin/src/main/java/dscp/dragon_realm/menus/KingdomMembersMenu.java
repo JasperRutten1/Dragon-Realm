@@ -17,7 +17,7 @@ public class KingdomMembersMenu extends Container {
     private Kingdom kingdom;
 
     public KingdomMembersMenu(Kingdom kingdom) {
-        super("members menu", getRows(kingdom));
+        super("Members Menu", getRows(kingdom));
         this.kingdom = kingdom;
     }
 
@@ -35,7 +35,7 @@ public class KingdomMembersMenu extends Container {
             .name(kingdom.getName())
             .lore(new LoreBuilder()
                     .blank()
-                    .line("Lorem ipsum")
+                    .line("Dylanchill was here.")
             )
             .build()
         );
@@ -47,7 +47,7 @@ public class KingdomMembersMenu extends Container {
                 .setSkullOwner(kingdomKing != null ? kingdomKing.getPlayer() : null)
                 .lore(new LoreBuilder()
                     .blank()
-                    .line("&6The king of this kingdom")
+                    .line("&6The King of this Kingdom.")
                 )
                 .build()
         ).handler(e -> {
