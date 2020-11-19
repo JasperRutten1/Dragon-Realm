@@ -16,23 +16,23 @@ public class FlyCommand extends CustomCommand {
 
     @Override
     public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("sender must be of type player");
+        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
         Player player = (Player) sender;
         CommandReturn commandReturn = new CommandReturn(player);
 
         //code
         if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR){
-            commandReturn.addReturnMessage(ChatColor.RED + "this command can not be preformed in "
+            commandReturn.addReturnMessage(ChatColor.RED + "This command can not be performed in "
                     + player.getGameMode().name());
             return commandReturn;
         }
         if(player.getAllowFlight()){
             player.setAllowFlight(false);
-            commandReturn.addReturnMessage(ChatColor.AQUA + "flying disabled");
+            commandReturn.addReturnMessage(ChatColor.AQUA + "You can no longer fly.");
         }
         else{
             player.setAllowFlight(true);
-            commandReturn.addReturnMessage(ChatColor.AQUA + "you can now fly");
+            commandReturn.addReturnMessage(ChatColor.AQUA + "You can now fly.");
         }
 
         //return
