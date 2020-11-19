@@ -29,7 +29,7 @@ public class KingdomSettlementMenu extends Container {
             .name(kingdom.getName())
             .lore(new LoreBuilder()
                 .blank()
-                .line("Lorem ipsum")
+                .line("Dylanchill was also here.")
             )
             .build()
         );
@@ -41,7 +41,7 @@ public class KingdomSettlementMenu extends Container {
                     .name(settlement.getName())
                     .lore(new LoreBuilder()
                         .line(settlement.getLevel().getName())
-                        .line("governor: " + (settlement.getGovernor() != null
+                        .line("Governor: " + (settlement.getGovernor() != null
                                 ? settlement.getGovernor().getPlayer().getName() : "none"))
                     )
                     .build()
