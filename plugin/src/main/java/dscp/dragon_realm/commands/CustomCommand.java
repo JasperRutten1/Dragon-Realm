@@ -10,7 +10,7 @@ public abstract class CustomCommand {
     private String permission;
 
     public CustomCommand(String permission){
-        if(permission == null) throw new IllegalArgumentException("permission can't be null");
+        if(permission == null) throw new IllegalArgumentException("Permission can not be null.");
 
         this.permission = permission;
     }
@@ -34,8 +34,8 @@ public abstract class CustomCommand {
     public abstract String getHelp();
 
     public void checkArgs(CommandSender sender, String commandName, String[] args){
-        if(sender == null) throw new IllegalArgumentException("sender can't ve null");
-        if(commandName == null) throw new IllegalArgumentException("command name can't be null");
-        if(args == null) throw new IllegalArgumentException("args can't be null");
+        if(sender == null) throw new IllegalArgumentException("Sender can not be null.");
+        if(commandName == null) throw new IllegalArgumentException("Command name can not be null.");
+        if(args == null) throw new IllegalArgumentException("Arguments can not be null.");
     }
 }
