@@ -34,7 +34,7 @@ public class RelationMenu extends Container {
             .name("&l&6" + kingdomOfViewer.getName())
             .lore(new LoreBuilder()
                 .blank()
-                .line("your kingdom")
+                .line("Your Kingdom")
                 .line(kingdomOfViewer.toString())
             )
             .build()
@@ -46,10 +46,10 @@ public class RelationMenu extends Container {
 
                 if(member.hasPermission(KingdomMemberRank.ROYAL)){
                     bp.slot(3).item(new ItemStackBuilder(Material.RED_DYE)
-                        .name("&l&cLeave alliance")
+                        .name("&l&cLeave Alliance")
                         .lore(new LoreBuilder()
                             .blank()
-                            .line("leave the alliance with this kingdom")
+                            .line("Leave the Alliance with this Kingdom")
                         )
                         .build()
                     ).handler(e -> {
@@ -71,7 +71,7 @@ public class RelationMenu extends Container {
                                 .blank()
                                 .line(alliance.toString())
                                 .blank()
-                                .line("Open the alliance menu")
+                                .line("Open the Alliance Menu")
                         )
                         .build()
                 ).handler( e -> {
@@ -93,10 +93,10 @@ public class RelationMenu extends Container {
 
                 if(member.hasPermission(KingdomMemberRank.NOBEL)){
                     bp.slot(3).item(new ItemStackBuilder(Material.RED_DYE)
-                            .name("&cWorsen relation")
+                            .name("&cLower Relation")
                             .lore(new LoreBuilder()
                                     .blank()
-                                    .line("worsen relation to " +
+                                    .line("Lower Relation to " +
                                             kingdomOfViewer.getRelations().getRelationToKingdom(otherKingdom)
                                                     .getRelationLower().getDisplayName())
                             )
@@ -105,7 +105,7 @@ public class RelationMenu extends Container {
                         try {
                             kingdomOfViewer.getRelations().worsenRelation(otherKingdom);
                             new TextBuilder()
-                                    .text("worsened relation to kingdom").gray()
+                                    .text("Lowered Relation with Kingdom").gray()
                                     .sendTo(viewer);
                             new RelationMenu(this.kingdomOfViewer, otherKingdom).open(viewer);
                         } catch (KingdomException kingdomException) {
@@ -122,14 +122,14 @@ public class RelationMenu extends Container {
                     KingdomAlliance al = otherKingdom.getRelations().getAlliance();
                     if(kingdomOfViewer.getRelations().getAllianceInvites().contains(otherKingdom)){ //invited by kingdom
                         bp.slot(5).item(new ItemStackBuilder(Material.PAPER)
-                                .name("&aAccept alliance invitation")
+                                .name("&aAccept Alliance Invitation")
                                 .lore(new LoreBuilder()
                                         .blank()
-                                        .line("your kingdom has been invited to join a alliance with this kingdom")
+                                        .line("Your Kingdom has been invited to join an alliance with this Kingdom!")
                                         .lineIf((al != null ? al.toString() : ""),
                                                 otherKingdom.getRelations().getAlliance() != null)
                                         .blank()
-                                        .line("click to accept invitation")
+                                        .line("Click to Accept Invitation")
                                 )
                                 .build()
                         ).handler(e ->{
@@ -146,22 +146,22 @@ public class RelationMenu extends Container {
                     }
                     else if(kingdomOfViewer.getRelations().getInvitedKingdoms().contains(otherKingdom)){ //already invited
                         bp.slot(5).item(new ItemStackBuilder(Material.BOOK)
-                                .name("&aAlliance invitation send!")
+                                .name("&aAlliance Invitation sent!")
                                 .lore(new LoreBuilder()
                                         .blank()
-                                        .line("this kingdom has been invited to join a alliance with your kingdom")
+                                        .line("This Kingdom has been invited to join an alliance with your Kingdom!")
                                 )
                                 .build()
                         );
                     }
                     else{
                         bp.slot(5).item(new ItemStackBuilder(Material.WRITABLE_BOOK)
-                                .name("&aSend Alliance invitation")
+                                .name("&aSend Alliance Invitation")
                                 .lore(new LoreBuilder()
                                         .blank()
-                                        .lineIf("send this kingdom a invitation to join a alliance with you",
+                                        .lineIf("Send this Kingdom an invitation to join an Alliance with you!",
                                                 kingdomOfViewer.getRelations().getAlliance() != null)
-                                        .lineIf("send this kingdom a invitation to join your current alliance",
+                                        .lineIf("Send this Kingdom an invitation to join your current Alliance!",
                                                 kingdomOfViewer.getRelations().getAlliance() == null)
                                 )
                                 .build()
@@ -189,10 +189,10 @@ public class RelationMenu extends Container {
 
                 if(member.hasPermission(KingdomMemberRank.NOBEL)){
                     bp.slot(3).item(new ItemStackBuilder(Material.RED_DYE)
-                            .name("&cWorsen relation")
+                            .name("&cLower Relation")
                             .lore(new LoreBuilder()
                                     .blank()
-                                    .line("worsen relation to " +
+                                    .line("Lower Relation to " +
                                             kingdomOfViewer.getRelations().getRelationToKingdom(otherKingdom)
                                                     .getRelationLower().getDisplayName())
                             )
@@ -201,7 +201,7 @@ public class RelationMenu extends Container {
                         try {
                             kingdomOfViewer.getRelations().worsenRelation(otherKingdom);
                             new TextBuilder()
-                                    .text("worsened relation to kingdom").gray()
+                                    .text("Lowered relation with Kingdom.").gray()
                                     .sendTo(viewer);
                             new RelationMenu(this.kingdomOfViewer, otherKingdom).open(viewer);
                         } catch (KingdomException kingdomException) {
@@ -214,10 +214,10 @@ public class RelationMenu extends Container {
                     });
 
                     bp.slot(5).item(new ItemStackBuilder(Material.LIME_DYE)
-                            .name("&cImprove relation")
+                            .name("&cImprove Relation")
                             .lore(new LoreBuilder()
                                     .blank()
-                                    .line("Improve relation to " +
+                                    .line("Improve Relation to " +
                                             kingdomOfViewer.getRelations().getRelationToKingdom(otherKingdom)
                                                     .getRelationHigher().getDisplayName())
                             )
@@ -226,7 +226,7 @@ public class RelationMenu extends Container {
                         try {
                             kingdomOfViewer.getRelations().improveRelation(otherKingdom);
                             new TextBuilder()
-                                    .text("improved relation to kingdom").gray()
+                                    .text("Improved Relation with Kingdom").gray()
                                     .sendTo(viewer);
                             new RelationMenu(this.kingdomOfViewer, otherKingdom).open(viewer);
                         } catch (KingdomException kingdomException) {
@@ -249,10 +249,10 @@ public class RelationMenu extends Container {
 
                 if(member.hasPermission(KingdomMemberRank.ROYAL)){
                     bp.slot(3).item(new ItemStackBuilder(Material.RED_DYE)
-                            .name("&cWorsen relation")
+                            .name("&cLower Relation")
                             .lore(new LoreBuilder()
                                     .blank()
-                                    .line("worsen relation to " +
+                                    .line("Lower Relation to " +
                                             kingdomOfViewer.getRelations().getRelationToKingdom(otherKingdom)
                                                     .getRelationLower().getDisplayName())
                             )
@@ -261,7 +261,7 @@ public class RelationMenu extends Container {
                         try {
                             kingdomOfViewer.getRelations().worsenRelation(otherKingdom);
                             new TextBuilder()
-                                    .text("worsened relation to kingdom").gray()
+                                    .text("Lowered Relation with Kingdom").gray()
                                     .sendTo(viewer);
                             new RelationMenu(this.kingdomOfViewer, otherKingdom).open(viewer);
                         } catch (KingdomException kingdomException) {
@@ -276,10 +276,10 @@ public class RelationMenu extends Container {
 
                 if(member.hasPermission(KingdomMemberRank.NOBEL)){
                     bp.slot(5).item(new ItemStackBuilder(Material.LIME_DYE)
-                            .name("&cImprove relation")
+                            .name("&cImprove Relation")
                             .lore(new LoreBuilder()
                                     .blank()
-                                    .line("Improve relation to " +
+                                    .line("Improve Relation to " +
                                             kingdomOfViewer.getRelations().getRelationToKingdom(otherKingdom)
                                                     .getRelationHigher().getDisplayName())
                             )
@@ -288,7 +288,7 @@ public class RelationMenu extends Container {
                         try {
                             kingdomOfViewer.getRelations().improveRelation(otherKingdom);
                             new TextBuilder()
-                                    .text("improved relation to kingdom").gray()
+                                    .text("Improved relation with Kingdom").gray()
                                     .sendTo(viewer);
                             new RelationMenu(this.kingdomOfViewer, otherKingdom).open(viewer);
                         } catch (KingdomException kingdomException) {
@@ -311,10 +311,10 @@ public class RelationMenu extends Container {
                 );
 
                 bp.slot(5).item(new ItemStackBuilder(Material.LIME_DYE)
-                        .name("&cImprove relation")
+                        .name("&cImprove Relation")
                         .lore(new LoreBuilder()
                                 .blank()
-                                .line("Improve relation to " +
+                                .line("Improve Relation to " +
                                         kingdomOfViewer.getRelations().getRelationToKingdom(otherKingdom)
                                                 .getRelationHigher().getDisplayName())
                         )
@@ -323,7 +323,7 @@ public class RelationMenu extends Container {
                     try {
                         kingdomOfViewer.getRelations().improveRelation(otherKingdom);
                         new TextBuilder()
-                                .text("improved relation to kingdom").gray()
+                                .text("Improved Relation with Kingdom").gray()
                                 .sendTo(viewer);
                         new RelationMenu(this.kingdomOfViewer, otherKingdom).open(viewer);
                     } catch (KingdomException kingdomException) {
@@ -342,7 +342,7 @@ public class RelationMenu extends Container {
             .name(relation.getColor() + otherKingdom.getName())
             .lore(new LoreBuilder()
                 .blank()
-                .line("relation to your kingdom: " + otherKingdom.getRelations().getRelationToKingdom(kingdomOfViewer).getDisplayName())
+                .line("Relation to Your Kingdom: " + otherKingdom.getRelations().getRelationToKingdom(kingdomOfViewer).getDisplayName())
                 .line(otherKingdom.toString())
             )
             .build()
