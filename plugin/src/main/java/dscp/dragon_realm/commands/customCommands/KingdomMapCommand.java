@@ -20,7 +20,7 @@ public class KingdomMapCommand extends CustomCommand {
 
     @Override
     public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("sender must be of type player");
+        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
         Player player = (Player) sender;
         CommandReturn commandReturn = new CommandReturn(player);
 
@@ -33,7 +33,7 @@ public class KingdomMapCommand extends CustomCommand {
 
     @Override
     public String getHelp() {
-        return new CommandHelpGenerator("/kingdom map", "get a map of the chunks around you, the map claimed chunks")
+        return new CommandHelpGenerator("/kingdom map", "Get a map of chunks around you. You can see which chunks are unclaimed, as well as chunks that are claimed by your Kingdom, as well as other Kingdom's.")
                 .generateHelp();
     }
 }
