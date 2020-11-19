@@ -21,18 +21,18 @@ public class KingdomRemoveCommand extends CustomCommand {
 
     @Override
     public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("sender must be of type player");
+        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
         Player player = (Player) sender;
         CommandReturn commandReturn = new CommandReturn(player);
 
         //code
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
-        if(kingdom == null) throw new CommandException("you are not a member of a kingdom");
+        if(kingdom == null) throw new CommandException("You are not a member of a Kingdom.");
         if(!kingdom.getMembers().getKing().getPlayerUUID().equals(player.getUniqueId()))
-            throw new CommandException("only the king can remove the kingdom");
+            throw new CommandException("Only the King can remove the Kingdom.");
 
-        Kingdom.removeKingdom(player).sendMembersMessage(ChatColor.GOLD + "this kingdom has been removed");
-        commandReturn.addReturnMessage(ChatColor.GREEN + "successfully removed kingdom");
+        Kingdom.removeKingdom(player).sendMembersMessage(ChatColor.GOLD + "This Kingdom has been removed.");
+        commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully removed Kingdom.");
 
         //return
         return commandReturn;
@@ -40,7 +40,7 @@ public class KingdomRemoveCommand extends CustomCommand {
 
     @Override
     public String getHelp() {
-        return new CommandHelpGenerator("/kingdom remove", "removes a kingdom, can only be done by the king")
+        return new CommandHelpGenerator("/kingdom remove", "Removes a Kingdom, can only be done by the King.")
                 .generateHelp();
     }
 }
