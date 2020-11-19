@@ -38,7 +38,7 @@ public class KingdomRelationsMenu extends Container {
                             .blank()
                             .line(alliance.toString())
                             .blank()
-                            .line("Open the Alliance menu")
+                            .line("Open the Alliance Menu")
                     )
                     .build()
             ).handler(e -> {
@@ -56,7 +56,7 @@ public class KingdomRelationsMenu extends Container {
                     .name("&l&6Alliance")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("&cNot in alliance")
+                            .line("&cNot in an Alliance")
                     )
                     .build()
             );
@@ -67,7 +67,7 @@ public class KingdomRelationsMenu extends Container {
                     .name("&l&6Alliance Invitations")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("invitations: " + kingdom.getRelations().getAllianceInvites().size())
+                            .line("Invitations: " + kingdom.getRelations().getAllianceInvites().size())
                     )
                     .build()
             ).handler(e -> {
@@ -79,7 +79,7 @@ public class KingdomRelationsMenu extends Container {
                     .name("&l&6Alliance Invitations")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("no invitations")
+                            .line("No Invitations")
                     )
                     .build()
             );
@@ -87,10 +87,10 @@ public class KingdomRelationsMenu extends Container {
 
         if(kingdom.getRelations().getKingdomsWithRelation(Relation.FRIENDLY).size() > 0){
             bp.slot(13).item(new ItemStackBuilder(Material.GREEN_CONCRETE)
-                    .name("&l&6Friendly kingdoms")
+                    .name("&l&6Friendly Kingdoms")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("overview of friendly kingdoms")
+                            .line("Overview of Friendly Kingdoms")
                     )
                     .build()
             ).handler(e -> {
@@ -99,10 +99,10 @@ public class KingdomRelationsMenu extends Container {
         }
         else{
             bp.slot(13).item(new ItemStackBuilder(Material.GREEN_CONCRETE)
-                    .name("&l&6Friendly kingdoms")
+                    .name("&l&6Friendly Kingdoms")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("no friendly kingdoms")
+                            .line("No Friendly Kingdoms")
                     )
                     .build()
             );
@@ -110,10 +110,10 @@ public class KingdomRelationsMenu extends Container {
 
         if(kingdom.getRelations().getKingdomsWithRelation(Relation.NEUTRAL).size() > 0){
             bp.slot(14).item(new ItemStackBuilder(Material.WHITE_CONCRETE)
-                    .name("&l&6Neutral kingdoms")
+                    .name("&l&6Neutral Kingdoms")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("overview of neutral kingdoms")
+                            .line("Overview of Neutral Kingdoms")
                     )
                     .build()
             ).handler(e -> {
@@ -122,10 +122,10 @@ public class KingdomRelationsMenu extends Container {
         }
         else{
             bp.slot(14).item(new ItemStackBuilder(Material.WHITE_CONCRETE)
-                    .name("&l&6Neutral kingdoms")
+                    .name("&l&6Neutral Kingdoms")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("no neutral kingdoms")
+                            .line("No Neutral Kingdoms")
                     )
                     .build()
             );
@@ -133,10 +133,10 @@ public class KingdomRelationsMenu extends Container {
 
         if(kingdom.getRelations().getKingdomsWithRelation(Relation.AGGRESSIVE).size() > 0){
             bp.slot(15).item(new ItemStackBuilder(Material.RED_CONCRETE)
-                    .name("&l&6Aggressive kingdoms")
+                    .name("&l&6Aggressive Kingdoms")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("overview of aggressive kingdoms")
+                            .line("Overview of Aggressive Kingdoms")
                     )
                     .build()
             ).handler(e -> {
@@ -145,7 +145,7 @@ public class KingdomRelationsMenu extends Container {
         }
         else{
             bp.slot(15).item(new ItemStackBuilder(Material.RED_CONCRETE)
-                    .name("&l&6Aggressive kingdoms")
+                    .name("&l&6Aggressive Kingdoms")
                     .lore(new LoreBuilder()
                             .blank()
                             .line("no aggressive kingdoms")
@@ -156,10 +156,10 @@ public class KingdomRelationsMenu extends Container {
 
         if(kingdom.getRelations().getKingdomsWithRelation(Relation.ENEMY).size() > 0){
             bp.slot(16).item(new ItemStackBuilder(Material.TNT)
-                    .name("&l&6Enemy kingdoms")
+                    .name("&l&6Enemy Kingdoms")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("overview of enemy kingdoms")
+                            .line("Overview of Enemy Kingdoms")
                     )
                     .build()
             ).handler(e -> {
@@ -168,10 +168,10 @@ public class KingdomRelationsMenu extends Container {
         }
         else{
             bp.slot(16).item(new ItemStackBuilder(Material.TNT)
-                    .name("&l&6Enemy kingdoms")
+                    .name("&l&6Enemy Kingdoms")
                     .lore(new LoreBuilder()
                             .blank()
-                            .line("no enemy kingdoms")
+                            .line("No Enemy Kingdoms")
                     )
                     .build()
             );
