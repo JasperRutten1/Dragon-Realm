@@ -46,7 +46,7 @@ public class SettlementGovernorMenu extends Container {
             .setSkullOwner(currentGovernor != null ? currentGovernor.getPlayer() : null)
             .lore(
                     new LoreBuilder()
-                    .line("click here to remove this member as governor")
+                    .line("Click Here to Remove This Member as Governor")
             )
             .build()
         ).handler(e -> {
@@ -76,7 +76,7 @@ public class SettlementGovernorMenu extends Container {
                 .lore(new LoreBuilder()
                     .blank()
                     .line(member.getRank().getDisplayName())
-                    .line("Click to assign this member as the new governor")
+                    .line("Click to Assign This Member as the New Governor")
                 )
                 .build()
             ).handler(e -> {
