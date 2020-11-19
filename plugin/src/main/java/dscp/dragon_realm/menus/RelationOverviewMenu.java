@@ -16,7 +16,7 @@ public class RelationOverviewMenu extends Container {
     private Relation relation;
 
     public RelationOverviewMenu(Kingdom kingdom, Relation relation) {
-        super(relation.getRelName() + " kingdoms", 6);
+        super(relation.getRelName() + " Kingdoms", 6);
         this.kingdom = kingdom;
         this.relation = relation;
     }
