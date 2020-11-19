@@ -33,7 +33,7 @@ public class SettlementMenu extends Container {
             .name(settlement.getName())
             .lore(new LoreBuilder()
                 .blank()
-                .line("Lorem ipsum")
+                .line("Dylanchill was here.")
             )
             .build()
         );
@@ -45,7 +45,7 @@ public class SettlementMenu extends Container {
             .setSkullOwner(currentGovernor != null ? currentGovernor.getPlayer() : null)
             .lore(new LoreBuilder()
                 .blank()
-                .line("Assign the settlements governor")
+                .line("Assign the Settlements Governor")
             )
             .build()
         ).handler(e -> {
@@ -69,7 +69,7 @@ public class SettlementMenu extends Container {
                 .name("&c&lMax Level")
                 .lore(new LoreBuilder()
                     .blank()
-                    .line("This settlement has reached the max level")
+                    .line("This Settlement has Reached The Max Level!")
                 )
                 .build()
             ).handler(e -> SoundEffect.FAIL.play(viewer));
@@ -78,8 +78,8 @@ public class SettlementMenu extends Container {
                 .name("&6&lUpgrade Settlement")
                 .lore(new LoreBuilder()
                     .blank()
-                    .line("Price: " + Objects.requireNonNull(SettlementCosts.getCost(settlement.getLevel().getNextLevel())).getCoins())
-                    .line("Vault: " + settlement.getKingdom().getVault().getCoins())
+                    .line("Price: ⛃" + Objects.requireNonNull(SettlementCosts.getCost(settlement.getLevel().getNextLevel())).getCoins())
+                    .line("Vault: ⛃" + settlement.getKingdom().getVault().getCoins())
                 )
                 .build()
             ).handler(e -> {
@@ -88,7 +88,7 @@ public class SettlementMenu extends Container {
                 if(!(member.hasPermission(KingdomMemberRank.ROYAL) || member.equals(settlement.getGovernor()))){
                     SoundEffect.FAIL.play(viewer);
                     new TextBuilder()
-                            .text("only royals or the governor of this settlement can upgrade this settlement").red()
+                            .text("Only Royals or The Governor of This Settlement Can Upgrade This Settlement").red()
                             .sendTo(viewer);
                 }
                 try {
