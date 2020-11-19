@@ -36,7 +36,7 @@ public class MemberMenu extends Container {
             .name(member.getRank().getDisplayName())
             .lore(new LoreBuilder()
                 .blank()
-                .line("rank info")
+                .line("Rank Information")
             )
             .build()
         );
@@ -49,9 +49,9 @@ public class MemberMenu extends Container {
                 .name("&aPromote member to " + higherRank.getDisplayName())
                 .lore(new LoreBuilder()
                     .blank()
-                        .lineIf("this action will replace you with this member as the current king of the kingdom",
+                        .lineIf("This action will pass the Kingdom on to this member, making them King.",
                                 member.getRank() == KingdomMemberRank.ROYAL)
-                    .line("rank info")
+                    .line("Rank Information")
                 )
                 .build()
             ).handler(e -> {
@@ -77,7 +77,7 @@ public class MemberMenu extends Container {
                 .name("&cDemote member to " + lowerRank.getDisplayName())
                 .lore(new LoreBuilder()
                     .blank()
-                    .line("rank info")
+                    .line("Rank Information")
                 )
                 .build()
             ).handler(e -> {
