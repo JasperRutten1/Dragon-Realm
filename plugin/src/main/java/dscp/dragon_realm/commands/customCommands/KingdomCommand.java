@@ -16,13 +16,13 @@ public class KingdomCommand extends CustomCommand {
 
     @Override
     public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("sender must be of type player");
+        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
         Player player = (Player) sender;
 
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
         if(kingdom != null)
             new KingdomOverviewMenu(kingdom).open(player);
-        else throw new CustomCommandException("You are not in a kingdom!");
+        else throw new CustomCommandException("You are not in a Kingdom.");
 
         return new CommandReturn(player);
     }
