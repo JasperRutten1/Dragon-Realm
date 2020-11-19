@@ -17,25 +17,25 @@ public class KingdomGiveCoinsCommand extends CustomCommand {
 
     @Override
     public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("sender must be of type player");
+        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
         Player player = (Player) sender;
         CommandReturn commandReturn = new CommandReturn(player);
 
         //code
         Kingdom kingdom = Kingdom.getKingdomFromName(args[2]);
 
-        if(kingdom == null) throw new CustomCommandException("kingdom not found");
+        if(kingdom == null) throw new CustomCommandException("Kingdom not found.");
         try{
             int coins = Integer.parseInt(args[3]);
             kingdom.getVault().addCoins(coins);
         }
         catch (NumberFormatException e){
-            throw new CustomCommandException("could not convert to numbers");
+            throw new CustomCommandException("Could not convert to numbers.");
         }
         catch (VaultException e){
             throw new CustomCommandException(e.getMessage());
         }
-        commandReturn.addReturnMessage(ChatColor.GREEN + "successfully added coins");
+        commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully added coins.");
 
         //return
         return commandReturn;
