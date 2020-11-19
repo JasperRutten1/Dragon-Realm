@@ -32,9 +32,9 @@ public enum DRCommands {
     CustomCommand command;
 
     DRCommands(String commandName, String[] args, CustomCommand command){
-        if(commandName == null)  throw new IllegalArgumentException("command name can't be null");
-        if(args == null) throw new IllegalArgumentException("arguments can't be null");
-        if(command == null) throw new IllegalArgumentException("command can't be null");
+        if(commandName == null)  throw new IllegalArgumentException("Command name can not be null.");
+        if(args == null) throw new IllegalArgumentException("Arguments can not be null.");
+        if(command == null) throw new IllegalArgumentException("Command can not be null.");
 
         this.commandName = commandName;
         this.args = args;
@@ -54,8 +54,8 @@ public enum DRCommands {
     }
 
     public boolean isCommand(String commandName, String[] args){
-        if(commandName == null)  throw new IllegalArgumentException("command name can't be null");
-        if(args == null) throw new IllegalArgumentException("arguments can't be null");
+        if(commandName == null)  throw new IllegalArgumentException("Command name can not be null.");
+        if(args == null) throw new IllegalArgumentException("Arguments can not be null.");
 
         if(!this.commandName.equals(commandName)) return false;
         try{
@@ -70,9 +70,9 @@ public enum DRCommands {
     }
 
     public static void handleCommand(CommandSender sender, String commandName, String[] args){
-        if(sender == null) throw new IllegalArgumentException("sender can't be null");
-        if(commandName == null)  throw new IllegalArgumentException("command name can't be null");
-        if(args == null) throw new IllegalArgumentException("arguments can't be null");
+        if(sender == null) throw new IllegalArgumentException("Sender can not be null.");
+        if(commandName == null)  throw new IllegalArgumentException("Command name can not be null.");
+        if(args == null) throw new IllegalArgumentException("Arguments can not be null.");
 
         try{
             for(DRCommands drc : values()){
@@ -85,14 +85,14 @@ public enum DRCommands {
         catch (ArrayIndexOutOfBoundsException e){
             if(sender instanceof Player){
                 Player player = (Player) sender;
-                player.sendMessage(ChatColor.RED + "missing arguments, type '/kingdom help' for more info");
+                player.sendMessage(ChatColor.RED + "Missing arguments, type '/kingdom help' for more information.");
             }
             return;
         }
 
         if(sender instanceof Player){
             Player player = (Player) sender;
-            player.sendMessage(ChatColor.RED + "unknown command, type '/kingdom help' to get more info");
+            player.sendMessage(ChatColor.RED + "Unknown command, type '/kingdom help' for more information.");
         }
     }
 }
