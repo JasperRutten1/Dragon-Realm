@@ -25,5 +25,7 @@ commands:
     description: heal the player
   fly:
     description: allows the playerto fly
+  flyspeed:
+    description: set you fly speed
 
 

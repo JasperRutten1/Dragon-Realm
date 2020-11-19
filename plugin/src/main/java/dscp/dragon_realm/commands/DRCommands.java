@@ -2,6 +2,7 @@ package dscp.dragon_realm.commands;
 
 import dscp.dragon_realm.commands.customCommands.*;
 import dscp.dragon_realm.commands.customCommands.essentials.FlyCommand;
+import dscp.dragon_realm.commands.customCommands.essentials.FlySpeedCommand;
 import dscp.dragon_realm.commands.customCommands.essentials.HealCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -23,7 +24,8 @@ public enum DRCommands {
 
     HEAL("heal", new String[]{}, new HealCommand("dscp.dr.mod")),
     FEED("feed", new String[]{}, new HealCommand("dscp.dr.mod")),
-    FLY("fly", new String[]{}, new FlyCommand("dscp.dr.mod"));
+    FLY("fly", new String[]{}, new FlyCommand("dscp.dr.fly")),
+    FLY_SPEED("flyspeed", new String[]{}, new FlySpeedCommand("dscp.dr.fly"));
 
     String commandName;
     String[] args;
