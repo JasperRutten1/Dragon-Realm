@@ -21,27 +21,27 @@ public class KingdomCreateSettlementCommand extends CustomCommand {
 
     @Override
     public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("sender must be of type player");
+        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
         Player player = (Player) sender;
         CommandReturn commandReturn = new CommandReturn(player);
 
         //code
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
-        if(kingdom == null) throw new CustomCommandException("you are not part of a kingdom");
+        if(kingdom == null) throw new CustomCommandException("You are not part of a Kingdom.");
         KingdomMember member = kingdom.getMembers().getMember(player);
         assert member != null;
         if(!member.hasPermission(KingdomMemberRank.ROYAL))
-            throw new CustomCommandException("you must have the rank of royal or higher");
+            throw new CustomCommandException("You must have the rank of Royal or higher.");
         if(kingdom.getClaim().getSettlements().size() >= Settlement.SETTLEMENT_MAX)
-            throw new CustomCommandException("you already have the maximum amount of settlements");
+            throw new CustomCommandException("You already have the maximum amount of settlements.");
         Settlement newSettlement = new Settlement(kingdom, args[2], 1, player.getLocation().getChunk());
         for(Settlement settlement : kingdom.getClaim().getSettlements()){
             if(settlement.getDistance(newSettlement) < 11)
-                throw new CustomCommandException("to close to other settlement, must be at least 11 chunks away " +
+                throw new CustomCommandException("This settlement is too close to an already existing settlement, ensure you are 11+ chunks away from an existing settlement, then try again." +
                         "\ndistance to closest settlement: " + settlement.getDistance(newSettlement));
         }
         kingdom.getClaim().addSettlement(newSettlement);
-        commandReturn.addReturnMessage(ChatColor.GREEN + "successfully created new settlement '" + newSettlement.getName() + "'");
+        commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully created new settlement '" + newSettlement.getName() + "'");
 
         //return
         return commandReturn;
