@@ -43,12 +43,12 @@ public class CustomEnchantsCraftingRecipes {
     }
 
     public static void createRecipeForBook(String key, Enchantment enchantment, Material[] materials){
-        if(key == null) throw new IllegalArgumentException("kay can't be null");
-        if(enchantment == null) throw new IllegalArgumentException("enchantment can't be null");
-        if(materials == null) throw new IllegalArgumentException("materials can't be null");
-        if(!(materials.length == 9)) throw new IllegalArgumentException("material array must contain 9 materials");
+        if(key == null) throw new IllegalArgumentException("Key can not be null.");
+        if(enchantment == null) throw new IllegalArgumentException("Enchantment can not be null.");
+        if(materials == null) throw new IllegalArgumentException("Materials can not be null.");
+        if(!(materials.length == 9)) throw new IllegalArgumentException("Material array must contain 9 materials.");
         for(Material material : materials){
-            if(material == null) throw new IllegalArgumentException("materials can not contain null values");
+            if(material == null) throw new IllegalArgumentException("Materials can not contain null values.");
         }
 
         ItemStack book = new ItemStack(Material.BOOK);
@@ -68,6 +68,6 @@ public class CustomEnchantsCraftingRecipes {
         recipe.setIngredient('I', materials[8]);
         Bukkit.addRecipe(recipe);
 
-        Dragon_Realm_API.consoleLog("registered new custom crafting recipe");
+        Dragon_Realm_API.consoleLog("Registered new Custom Crafting Recipe.");
     }
 }
