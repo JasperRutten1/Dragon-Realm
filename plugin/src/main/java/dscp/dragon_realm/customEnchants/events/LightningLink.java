@@ -15,7 +15,7 @@ public class LightningLink {
     private Entity entity;
 
     public LightningLink(Entity entity){
-        if(entity == null) throw new IllegalArgumentException("entity can't be null");
+        if(entity == null) throw new IllegalArgumentException("Entity can not be null.");
         this.entity = entity;
         this.link1 = null;
         this.link2 = null;
@@ -106,7 +106,7 @@ public class LightningLink {
     }
 
     public static void lightningChainDamage(double damage, LightningLink link) throws EnchantException {
-        if(!(link.getEntity() instanceof LivingEntity)) throw new  EnchantException("exception in link damage, wrong entity type");
+        if(!(link.getEntity() instanceof LivingEntity)) throw new  EnchantException("Exception in link damage, wrong entity type.");
         LivingEntity entity = (LivingEntity) link.getEntity();
 
         //damage
