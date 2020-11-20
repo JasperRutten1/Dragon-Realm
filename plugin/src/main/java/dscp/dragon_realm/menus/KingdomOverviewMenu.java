@@ -106,8 +106,8 @@ public class KingdomOverviewMenu extends Container {
             .name("&6&lBug Report")
             .lore(new LoreBuilder()
                   .blank()
-                  .line("Report Bugs Here)
-                     .line("&oCOMING SOON!")
+                  .line("Report Bugs Here")
+                    .line("&oCOMING SOON!")
             )
             .build()
         );
