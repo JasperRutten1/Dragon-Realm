@@ -4,6 +4,7 @@ import dscp.dragon_realm.commands.DRCommands;
 import dscp.dragon_realm.customEnchants.CustomEnchants;
 import dscp.dragon_realm.customEnchants.CustomEnchantsCraftingRecipes;
 import dscp.dragon_realm.customEnchants.events.EnchantsEvents;
+import dscp.dragon_realm.discord.ToDiscordEvents;
 import dscp.dragon_realm.kingdoms.Kingdom;
 import dscp.dragon_realm.kingdoms.claims.settlements.resources.SettlementFarmLand;
 import dscp.dragon_realm.utils.Reflection;
@@ -55,6 +56,7 @@ public final class Dragon_Realm extends JavaPlugin {
         // initialising event listeners
         getServer().getPluginManager().registerEvents(Reflection.init(), this);
         getServer().getPluginManager().registerEvents(enchantsEvents, this);
+        getServer().getPluginManager().registerEvents(new ToDiscordEvents(), this);
     }
 
     @Override

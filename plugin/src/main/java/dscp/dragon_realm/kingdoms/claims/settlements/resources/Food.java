@@ -5,7 +5,7 @@ import org.bukkit.Material;
 public enum Food {
     WHEAT(Material.WHEAT),
     CARROT(Material.CARROTS),
-    Potato;
+    Potato(Material.POTATOES);
 
     Material blockType;
 

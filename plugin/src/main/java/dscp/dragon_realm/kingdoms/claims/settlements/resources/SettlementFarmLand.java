@@ -105,8 +105,11 @@ public class SettlementFarmLand {
         return  materials;
     }
 
+    /*
     private static Map<Material, Double> generateCropValueMap(){
         Map<Material, Double> cropValueMap = new HashMap<>();
         cropValueMap.put(Material.WHEAT, )
     }
+     */
+
 }
