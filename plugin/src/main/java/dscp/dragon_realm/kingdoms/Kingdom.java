@@ -2,6 +2,7 @@ package dscp.dragon_realm.kingdoms;
 
 import dscp.dragon_realm.Dragon_Realm_API;
 import dscp.dragon_realm.ObjectIO;
+import dscp.dragon_realm.discord.DiscordKingdomWebhook;
 import dscp.dragon_realm.kingdoms.claims.KingdomClaim;
 import dscp.dragon_realm.kingdoms.claims.settlements.Settlement;
 import dscp.dragon_realm.kingdoms.members.KingdomMember;
@@ -19,6 +20,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -97,6 +99,12 @@ public class Kingdom implements Serializable {
         }
         Kingdom kingdom = new Kingdom(name, king);
         kingdoms.add(kingdom);
+        try{
+            new DiscordKingdomWebhook(kingdom).sendKingdomCreateMessage();
+        }
+        catch (IOException e){
+            System.out.println("Exception in sending discord webhook");
+        }
         return kingdom;
     }
 
@@ -216,7 +224,13 @@ public class Kingdom implements Serializable {
         }
         if(Kingdom.isMemberOfKingdom(player)) throw new KingdomException("you are already part of a kingdom");
 
-        members.addMember(player.getUniqueId());
+        KingdomMember member = members.addMember(player.getUniqueId());
+        try{
+            new DiscordKingdomWebhook(this).sendMemberJoinWebhook(member);
+        }
+        catch (IOException e){
+            System.out.println("Exception in sending discord webhook");
+        }
         joinInvitations.remove(player.getUniqueId());
     }
 

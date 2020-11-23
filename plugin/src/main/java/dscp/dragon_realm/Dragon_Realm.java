@@ -4,10 +4,12 @@ import dscp.dragon_realm.commands.DRCommands;
 import dscp.dragon_realm.customEnchants.CustomEnchants;
 import dscp.dragon_realm.customEnchants.CustomEnchantsCraftingRecipes;
 import dscp.dragon_realm.customEnchants.events.EnchantsEvents;
+import dscp.dragon_realm.discord.DiscordWebhook;
 import dscp.dragon_realm.discord.ToDiscordEvents;
 import dscp.dragon_realm.kingdoms.Kingdom;
 import dscp.dragon_realm.kingdoms.claims.settlements.resources.SettlementFarmLand;
 import dscp.dragon_realm.utils.Reflection;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 
 public final class Dragon_Realm extends JavaPlugin {
 
@@ -57,11 +60,30 @@ public final class Dragon_Realm extends JavaPlugin {
         getServer().getPluginManager().registerEvents(Reflection.init(), this);
         getServer().getPluginManager().registerEvents(enchantsEvents, this);
         getServer().getPluginManager().registerEvents(new ToDiscordEvents(), this);
+
+        try{
+            DiscordWebhook startUpWebhook = new DiscordWebhook(ToDiscordEvents.WEBHOOK_LINK);
+            startUpWebhook.setUsername("Dragon-Realm");
+            startUpWebhook.setContent("**Server starting up** \nip: " + Bukkit.getServer().getIp());
+            startUpWebhook.execute();
+        }
+        catch (IOException e){
+            System.out.println("Exception in sending discord webhook");
+        }
     }
 
     @Override
     public void onDisable() {
         Kingdom.saveKingdoms(new File(getDataFolder(), "kingdoms"));
+        try{
+            DiscordWebhook startUpWebhook = new DiscordWebhook(ToDiscordEvents.WEBHOOK_LINK);
+            startUpWebhook.setUsername("Dragon-Realm");
+            startUpWebhook.setContent("**Server shutting down**");
+            startUpWebhook.execute();
+        }
+        catch (IOException e){
+            System.out.println("Exception in sending discord webhook");
+        }
     }
 
     public static Dragon_Realm getInstance() {

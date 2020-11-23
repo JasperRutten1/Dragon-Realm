@@ -56,4 +56,5 @@ public class ToDiscordEvents implements Listener {
             System.out.println("exception in sending webhook to discord");
         }
     }
+
 }
