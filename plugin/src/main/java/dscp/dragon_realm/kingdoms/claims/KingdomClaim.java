@@ -6,6 +6,8 @@ import dscp.dragon_realm.kingdoms.KingdomException;
 import dscp.dragon_realm.kingdoms.claims.settlements.Settlement;
 import dscp.dragon_realm.kingdoms.members.KingdomMember;
 import org.bukkit.*;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.io.Serializable;
@@ -105,6 +107,17 @@ public class KingdomClaim implements Serializable {
      */
     public static Chunk getChunkObject(int x, int z){
         return WORLD.getChunkAt(x, z);
+    }
+
+    public static boolean hasBiome(Biome biome, Chunk chunk){
+        for(int x = 0 ; x < 16 ; x++){
+            for(int z = 0 ; z < 16 ; z++){
+                Block block = chunk.getBlock(x, 63, z);
+                if(block.getBiome().equals(biome)) return true;
+            }
+        }
+
+        return false;
     }
 
     //map

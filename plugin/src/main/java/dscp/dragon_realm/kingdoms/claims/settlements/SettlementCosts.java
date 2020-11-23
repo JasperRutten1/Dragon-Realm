@@ -3,8 +3,8 @@ package dscp.dragon_realm.kingdoms.claims.settlements;
 public enum SettlementCosts {
     OUTPOST(2500, SettlementLevel.Outpost),
     VILLAGE(10000, SettlementLevel.Village),
-    TOWN(300000, SettlementLevel.Town),
-    CITY(1000000, SettlementLevel.City);
+    TOWN(50000, SettlementLevel.Town),
+    CITY(300000, SettlementLevel.City);
 
     long coins;
     SettlementLevel level;

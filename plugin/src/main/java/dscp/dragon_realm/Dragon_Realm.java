@@ -5,10 +5,12 @@ import dscp.dragon_realm.customEnchants.CustomEnchants;
 import dscp.dragon_realm.customEnchants.CustomEnchantsCraftingRecipes;
 import dscp.dragon_realm.customEnchants.events.EnchantsEvents;
 import dscp.dragon_realm.kingdoms.Kingdom;
+import dscp.dragon_realm.kingdoms.claims.settlements.resources.SettlementFarmLand;
 import dscp.dragon_realm.utils.Reflection;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -71,6 +73,11 @@ public final class Dragon_Realm extends JavaPlugin {
             if(command.getName().equals("test")){
                 for(Kingdom kingdom : Kingdom.kingdoms){
                     sender.sendMessage(kingdom.toString());
+                }
+                if(sender instanceof Player){
+                    Player player = (Player) sender;
+                    player.sendMessage("farmlands found: " +
+                            SettlementFarmLand.getFarmLandBlocksInChunk(player.getLocation().getChunk()).size());
                 }
             }
         }

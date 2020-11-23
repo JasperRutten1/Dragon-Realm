@@ -25,6 +25,9 @@ public class Settlement implements Serializable {
     private Integer centerX;
     private Integer centerZ;
 
+    //resources
+    private double food, taxingRate, population, coins;
+
     public static final int SETTLEMENT_MAX = 4;
 
     public Settlement(Kingdom kingdom, String name, int level, Chunk centerChunk) throws KingdomException {
@@ -172,6 +175,10 @@ public class Settlement implements Serializable {
         this.level = nextLevel;
         return this;
     }
+
+    //resources
+
+
 
     //equals and hashcode override
 
