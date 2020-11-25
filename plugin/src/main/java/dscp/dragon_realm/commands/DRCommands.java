@@ -1,6 +1,7 @@
 package dscp.dragon_realm.commands;
 
 import dscp.dragon_realm.commands.customCommands.*;
+import dscp.dragon_realm.commands.customCommands.DragonProtect.*;
 import dscp.dragon_realm.commands.customCommands.essentials.FlyCommand;
 import dscp.dragon_realm.commands.customCommands.essentials.FlySpeedCommand;
 import dscp.dragon_realm.commands.customCommands.essentials.HealCommand;
@@ -25,7 +26,14 @@ public enum DRCommands {
     HEAL("heal", new String[]{}, new HealCommand("dscp.dr.mod")),
     FEED("feed", new String[]{}, new HealCommand("dscp.dr.mod")),
     FLY("fly", new String[]{}, new FlyCommand("dscp.dr.fly")),
-    FLY_SPEED("flyspeed", new String[]{}, new FlySpeedCommand("dscp.dr.fly"));
+    FLY_SPEED("flyspeed", new String[]{}, new FlySpeedCommand("dscp.dr.fly")),
+
+    CREATE_PROTECTED_ZONE("dp", new String[]{"zone", "create"}, new CreateProtectedZone("dscp.dp.zones")),
+    ASSIGN_CHUNK_TO_ZONE("dp", new String[]{"assign"}, new AssignChunkToProtectedZone("dscp.dp.zones")),
+    UN_ASSIGN_CHUNK_TO_ZONE("dp", new String[]{"unassign"}, new UnAssignChunkFromProtectedZone("dscp.dp.zones")),
+    TOGGLE_EDIT_MODE("dp", new String[]{"edit"}, new ToggleEditMode("dscp.dp.edit")),
+    LIST_PROTECTED_ZONES("dp", new String[]{"zone", "list"}, new ListProtectedZones("dscp.dp.zones")),
+    REMOVE_PROTECTED_ZONE("dp", new String[]{"zone", "remove"}, new RemoveProtectedZone("dscp.dp.zones"));
 
     String commandName;
     String[] args;

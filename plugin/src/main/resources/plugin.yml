@@ -27,5 +27,7 @@ commands:
     description: allows the playerto fly
   flyspeed:
     description: set you fly speed
+  dp:
+    description: main command for dragon protect
 
 

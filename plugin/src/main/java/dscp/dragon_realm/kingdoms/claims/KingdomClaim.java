@@ -180,7 +180,7 @@ public class KingdomClaim implements Serializable {
         return chunks;
     }
 
-    public ArrayList<Chunk> getChunksInRadius(Chunk chunk, int r){
+    public static ArrayList<Chunk> getChunksInRadius(Chunk chunk, int r){
         if(chunk == null) throw new IllegalArgumentException("chunk can't be null");
         return getChunksInRadius(chunk.getX(), chunk.getZ(), r);
     }
