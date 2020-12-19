@@ -1,5 +1,6 @@
 package dscp.dragon_realm;
 
+import dscp.dragon_realm.advancedParticles.AdvancedParticles;
 import dscp.dragon_realm.commands.DRCommands;
 import dscp.dragon_realm.customEnchants.CustomEnchants;
 import dscp.dragon_realm.customEnchants.CustomEnchantsCraftingRecipes;
@@ -8,13 +9,19 @@ import dscp.dragon_realm.discord.DiscordWebhook;
 import dscp.dragon_realm.discord.ToDiscordEvents;
 import dscp.dragon_realm.dragonProtect.DragonProtect;
 import dscp.dragon_realm.kingdoms.Kingdom;
-import dscp.dragon_realm.kingdoms.claims.settlements.resources.SettlementFarmLand;
+import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSword;
+import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSwordManager;
+import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active.SpiritSwordActiveAbility;
+import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.passive.SpiritSwordPassiveAbility;
+import dscp.dragon_realm.specialWeapons.spiritSwords.events.SpiritSwordEventManager;
 import dscp.dragon_realm.utils.Reflection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -49,6 +56,9 @@ public final class Dragon_Realm extends JavaPlugin {
         // initialising objects
         Kingdom.loadKingdoms(new File(getDataFolder(), "kingdoms"));
         dragonProtect = DragonProtect.load();
+        SpiritSword.loadSoulBindMap();
+        SpiritSwordPassiveAbility.start();
+        SpiritSwordActiveAbility.start();;
 
         // initialising event objects
         try{
@@ -60,9 +70,11 @@ public final class Dragon_Realm extends JavaPlugin {
         }
 
         // initialising event listeners
-        getServer().getPluginManager().registerEvents(Reflection.init(), this);
-        getServer().getPluginManager().registerEvents(enchantsEvents, this);
-        getServer().getPluginManager().registerEvents(new ToDiscordEvents(), this);
+        PluginManager manager = getServer().getPluginManager();
+        manager.registerEvents(Reflection.init(), this);
+        manager.registerEvents(enchantsEvents, this);
+        manager.registerEvents(new ToDiscordEvents(), this);
+        SpiritSwordEventManager.registerEvents();
         DragonProtect.registerEvents();
 
     }
@@ -87,6 +99,7 @@ public final class Dragon_Realm extends JavaPlugin {
     public void onDisable() {
         Kingdom.saveKingdoms(new File(getDataFolder(), "kingdoms"));
         DragonProtect.save();
+        SpiritSword.saveSoulBindMap();
         try{
             DiscordWebhook startUpWebhook = new DiscordWebhook(ToDiscordEvents.WEBHOOK_LINK);
             startUpWebhook.setUsername("Dragon-Realm");
@@ -106,15 +119,9 @@ public final class Dragon_Realm extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         try{
             DRCommands.handleCommand(sender, command.getName(), args);
-            if(command.getName().equals("test")){
-                for(Kingdom kingdom : Kingdom.kingdoms){
-                    sender.sendMessage(kingdom.toString());
-                }
-                if(sender instanceof Player){
-                    Player player = (Player) sender;
-                    player.sendMessage("farmlands found: " +
-                            SettlementFarmLand.getFarmLandBlocksInChunk(player.getLocation().getChunk()).size());
-                }
+            if(command.getName().equals("test") && sender instanceof Player){
+                Player player = (Player) sender;
+                AdvancedParticles.particleSphere(player, Particle.FLAME, 2, 40);
             }
         }
         catch (Exception e){

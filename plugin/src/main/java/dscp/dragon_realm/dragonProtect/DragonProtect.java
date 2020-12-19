@@ -3,8 +3,7 @@ package dscp.dragon_realm.dragonProtect;
 import dscp.dragon_realm.Dragon_Realm;
 import dscp.dragon_realm.Dragon_Realm_API;
 import dscp.dragon_realm.ObjectIO;
-import dscp.dragon_realm.dragonProtect.events.DPBreakBlockEvent;
-import dscp.dragon_realm.dragonProtect.events.DPPlaceBlockEvent;
+import dscp.dragon_realm.dragonProtect.events.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -156,8 +155,11 @@ public class DragonProtect implements Serializable {
         ArrayList<Listener> events = new ArrayList<>();
         DragonProtect dp = Dragon_Realm.dragonProtect;
 
-        events.add(new DPBreakBlockEvent(dp));
-        events.add(new DPPlaceBlockEvent(dp));
+        events.add(new DPBreakBlockEvent());
+        events.add(new DPPlaceBlockEvent());
+        events.add(new DPPlayerDamageEvent());
+        events.add(new DPExplosionEvent());
+        events.add(new DPEnderPearlEvent());
 
         return events;
     }

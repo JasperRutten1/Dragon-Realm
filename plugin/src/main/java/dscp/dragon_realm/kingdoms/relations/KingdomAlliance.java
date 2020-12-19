@@ -1,68 +1,92 @@
 package dscp.dragon_realm.kingdoms.relations;
 
 import dscp.dragon_realm.kingdoms.Kingdom;
-import dscp.dragon_realm.kingdoms.KingdomException;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class KingdomAlliance implements Serializable {
     private static final long serialVersionUID = 6986846034456483371L;
 
     private List<Kingdom> kingdoms;
     private String name;
+    private Map<Kingdom, Long> joinTimeMap;
+    private Kingdom invitedKingdom;
 
-    public static int MAXIMUM_MEMBERS = 3;
-    public static int MAXIMUM_INVITES = 3;
+    public static int MAXIMUM_MEMBERS = 4;
 
     public KingdomAlliance(){
         this.kingdoms = new ArrayList<>();
+        this.joinTimeMap = new HashMap<>();
+    }
+
+    public String getName() {
+        return name;
     }
 
     public List<Kingdom> getKingdoms() {
         return kingdoms;
     }
 
-    public boolean canBeInvited(Kingdom kingdom){
-        for(Kingdom k : kingdoms){
-            if(k.getRelations().getRelationToKingdom(kingdom) != Relation.FRIENDLY) return false;
-        }
-        return true;
+    //kingdoms
+
+    public void addKingdom(Kingdom kingdom){
+        if(hasMaxMembers()) return;
+        if(kingdoms.contains(kingdom)) return;
+        kingdoms.add(kingdom);
+        this.joinTimeMap.put(kingdom, System.currentTimeMillis());
     }
 
-    public KingdomAlliance addKingdomToAlliance(Kingdom kingdom) throws KingdomException {
-        if(kingdoms.size() >= MAXIMUM_MEMBERS)
-            throw new KingdomException("only " + MAXIMUM_MEMBERS + " kingdoms are allowed in a alliance");
-        if(canBeInvited(kingdom)){
-            kingdoms.add(kingdom);
-        }
-        else throw new KingdomException("This kingdom can not be invited to join. " +
-                "\nall kingdoms of the alliance must be friendly with this kingdom");
-        return this;
+    public boolean hasMaxMembers(){
+        return kingdoms.size() >= MAXIMUM_MEMBERS;
     }
 
-    public void sendAllianceMessage(String message){
+    public void removeKingdom(Kingdom kingdom){
+        kingdoms.remove(kingdom);
+        if(kingdoms.size() <= 1){
+            removeAlliance();
+        }
+    }
+
+    public void bindAlliance(){
         for(Kingdom kingdom : kingdoms){
-            kingdom.sendMembersMessage(message);
+            if(!kingdom.getRelations().getAlliance().equals(this)){
+                kingdom.getRelations().setAlliance(this);
+            }
         }
     }
 
-    public void sendAllianceBroadcast(String message){
+    public void removeAlliance(){
         for(Kingdom kingdom : kingdoms){
-            kingdom.sendMembersMessage("&l[&3Alliance&f]&r " + message);
+            kingdom.getRelations().setAlliance(null);
         }
+        kingdoms = null;
+    }
+
+    //invites
+
+    public boolean hasInvitedKingdom(){
+        return invitedKingdom != null;
+    }
+
+    public void setInvitedKingdom(Kingdom invitedKingdom) {
+        this.invitedKingdom = invitedKingdom;
+    }
+
+    public void removeInvitedKingdom(){
+        this.invitedKingdom = null;
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof KingdomAlliance)) return false;
+        KingdomAlliance that = (KingdomAlliance) o;
+        return Objects.equals(kingdoms, that.kingdoms) && Objects.equals(name, that.name);
+    }
 
-        sb.append("Members: \n");
-        for(Kingdom kingdom : kingdoms){
-            sb.append(" - ").append(kingdom.getName()).append("\n");
-        }
-
-        return sb.toString();
+    @Override
+    public int hashCode() {
+        return Objects.hash(kingdoms, name);
     }
 }

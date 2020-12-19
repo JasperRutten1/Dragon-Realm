@@ -2,7 +2,10 @@ package dscp.dragon_realm;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -13,7 +16,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -102,5 +107,41 @@ public abstract class Dragon_Realm_API {
 
     public static String capitalizeFirstLetter(String string){
         return string.substring(0,1).toUpperCase() + string.substring(1).toLowerCase();
+    }
+
+    public static Entity getNearestEntityInSight(Player player, int range) {
+        ArrayList<Entity> entities = (ArrayList<Entity>) player.getNearbyEntities(range, range, range);
+        ArrayList<Block> sightBlock = (ArrayList<Block>) player.getLineOfSight(null, range);
+        ArrayList<Location> sight = new ArrayList<Location>();
+        for (Block block : sightBlock) sight.add(block.getLocation());
+        for (Location location : sight) {
+            for (Entity entity : entities) {
+                if (Math.abs(entity.getLocation().getX() - location.getX()) < 1.3) {
+                    if (Math.abs(entity.getLocation().getY() - location.getY()) < 1.5) {
+                        if (Math.abs(entity.getLocation().getZ() - location.getZ()) < 1.3) {
+                            return entity;
+                        }
+                    }
+                }
+            }
+        }
+        return null; //Return null if no entity was found
+    }
+
+    public static Block getNearestBlockInSight(Player player, int range, ArrayList<Material> filter){
+        ArrayList<Block> lineOfSight = (ArrayList<Block>) player.getLineOfSight(null, range);
+
+        for(Block block : lineOfSight){
+            if(!filter.contains(block.getType())){
+                return block;
+            }
+        }
+        return null;
+    }
+
+    public static Block getNearestBlockInSight(Player player, int range){
+        ArrayList<Material> materials = new ArrayList<>();
+        materials.add(Material.AIR);
+        return getNearestBlockInSight(player, range, materials);
     }
 }

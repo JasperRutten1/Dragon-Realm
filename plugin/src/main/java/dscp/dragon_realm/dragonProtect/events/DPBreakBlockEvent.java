@@ -10,11 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class DPBreakBlockEvent implements Listener {
-    private DragonProtect dragonProtect;
-
-    public DPBreakBlockEvent(DragonProtect dragonProtect){
-        this.dragonProtect = dragonProtect;
-    }
 
     @EventHandler
     public void breakBlockEvent(BlockBreakEvent event){

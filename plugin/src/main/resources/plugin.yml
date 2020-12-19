@@ -29,5 +29,7 @@ commands:
     description: set you fly speed
   dp:
     description: main command for dragon protect
+  ss:
+    description: spirit sword command
 
 

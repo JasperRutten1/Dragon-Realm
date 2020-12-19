@@ -3,20 +3,24 @@ package dscp.dragon_realm.kingdoms.relations;
 import dscp.dragon_realm.kingdoms.KingdomException;
 
 public enum Relation {
-    ENEMY(-2, "Enemy", "&4"),
-    AGGRESSIVE(-1, "Aggressive", "&c"),
-    NEUTRAL(0, "Neutral", "&e"),
-    FRIENDLY(1, "Friendly", "&a"),
-    ALLIED(2, "Allied", "&2");
+    ENEMY(-2, "Enemy", "&4", -2500),
+    AGGRESSIVE(-1, "Aggressive", "&c", -1500),
+    NEUTRAL(0, "Neutral", "&e", -500),
+    FRIENDLY(1, "Friendly", "&a", 1500),
+    HONORED(2, "Honored", "&2", 2500);
 
     int relInt;
     String relName;
     String color;
+    double neededScore;
 
-    Relation(int relInt, String relName, String color){
+    public static int BOUND = 500;
+
+    Relation(int relInt, String relName, String color, double neededScore){
         this.relInt = relInt;
         this.relName = relName;
         this.color = color;
+        this.neededScore = neededScore;
     }
 
     public int getRelInt() {
@@ -33,6 +37,10 @@ public enum Relation {
 
     public String getDisplayName(){
         return color + relName;
+    }
+
+    public double getNeededScore() {
+        return neededScore;
     }
 
     public Relation getRelationFromInt(int i){
@@ -92,6 +100,25 @@ public enum Relation {
 
     public boolean isLowestRelation(){
         return this == getLowestRelation();
+    }
+
+    public static Relation getRelationFromScore(double score){
+        Relation relation = NEUTRAL;
+        if(score < 0){ //negative score
+            for(Relation r : values()){
+                if(score <= r.neededScore && r.neededScore < relation.neededScore){
+                    relation = r;
+                }
+            }
+        }
+        else{ //positive score (strict)
+            for(Relation r : values()){
+                if(score >= r.neededScore && r.neededScore > relation.neededScore){
+                    relation = r;
+                }
+            }
+        }
+        return relation;
     }
 
 }

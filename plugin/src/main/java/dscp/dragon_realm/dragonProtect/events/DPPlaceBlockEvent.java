@@ -11,11 +11,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class
 DPPlaceBlockEvent implements Listener {
-    private DragonProtect dragonProtect;
-
-    public DPPlaceBlockEvent(DragonProtect dragonProtect){
-        this.dragonProtect = dragonProtect;
-    }
 
     @EventHandler
     public void onPlaceBlock(BlockPlaceEvent event){
