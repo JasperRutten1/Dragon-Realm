@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class FlySpeedCommand extends CustomCommand {
     public FlySpeedCommand() {
-        super("fly", Perms.ESSENTIALS_STAFF);
+        super("flyspeed", Perms.ESSENTIALS_STAFF);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class FlySpeedCommand extends CustomCommand {
                 player.setFlySpeed(speed);
                 commandReturn.addReturnMessage(ChatColor.AQUA + "Flight speed successfully set to " + speed);
             }
-            commandReturn.addReturnMessage(ChatColor.AQUA + "Your current flightspeed is " + player.getFlySpeed());
+            else commandReturn.addReturnMessage(ChatColor.AQUA + "Your current flightspeed is " + player.getFlySpeed());
         }
         catch (NumberFormatException e){
             throw new CustomCommandException("Argument must be a number.");

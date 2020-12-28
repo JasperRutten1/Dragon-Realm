@@ -34,8 +34,14 @@ public class ToggleEditMode extends CustomCommand {
                 return;
             }
             dp.toggleEditMode(target);
-            if(dp.isInEditMode(target)) DragonProtect.sendMessage(player, "Player is now in edit mode");
-            else DragonProtect.sendMessage(target, "Player is now out of edit mode");
+            if(dp.isInEditMode(target)){
+                DragonProtect.sendMessage(player, "Player is now in edit mode");
+                DragonProtect.sendMessage(target, "you are now in edit mode");
+            }
+            else{
+                DragonProtect.sendMessage(player, "Player is now out of edit mode");
+                DragonProtect.sendMessage(target, "you are now out of edit mode");
+            }
         }else{
             dp.toggleEditMode(player);
             if(dp.isInEditMode(player)) DragonProtect.sendMessage(player, "you are now in edit mode");
