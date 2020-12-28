@@ -4,30 +4,47 @@ import dscp.dragon_realm.commands.CommandReturn;
 import dscp.dragon_realm.commands.CustomCommand;
 import dscp.dragon_realm.commands.CustomCommandException;
 import dscp.dragon_realm.kingdoms.KingdomException;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class FeedCommand extends CustomCommand {
-    public FeedCommand(String permission) {
-        super(permission);
+    public FeedCommand() {
+        super("feed", Perms.ESSENTIALS_STAFF);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.-");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
-
-        //code
-        player.setSaturation(20);
-        player.setFoodLevel(20);
-
-        //return
-        return commandReturn;
+    public void parameters(CommandParams params) {
+        params.addParameter("target");
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        if(params.containsKey("target")){
+            Player target = Bukkit.getPlayer(params.get("target"));
+            if(target == null){
+                commandReturn.addReturnMessage(ChatColor.RED + "could not find player with this name");
+                return;
+            }
+            else{
+                target.setSaturation(20);
+                target.setFoodLevel(20);
+                commandReturn.addReturnMessage(ChatColor.GOLD + "Hunger restored for " + target.getName());
+            }
+        }
+        else{
+            player.setSaturation(20);
+            player.setFoodLevel(20);
+            commandReturn.addReturnMessage(ChatColor.GOLD + "Hunger restored!");
+        }
+
+    }
+
+    @Override
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

@@ -13,26 +13,35 @@ import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class UnAssignChunkFromProtectedZone extends CustomCommand {
-    public UnAssignChunkFromProtectedZone(String permission) {
-        super(permission);
+    public UnAssignChunkFromProtectedZone() {
+        super("dp unassign", Perms.DP_STAFF);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
+        params.addParameter("zone");
+        params.addParameter("radius");
+    }
 
-        //code
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+
+        if(!params.containsKey("zone")){
+            commandReturn.addReturnMessage(ChatColor.RED + "Missing arguments, usage: /dp unassign [(opt) radius]");
+            return;
+        }
+
         DragonProtect dp = Dragon_Realm.dragonProtect;
-        ProtectedZone pz = dp.getZone(args[1]);
+        ProtectedZone pz = dp.getZone(params.get("zone"));
         Chunk chunk = player.getLocation().getChunk();
 
         if(pz == null) throw new CustomCommandException("could not find zone with this name");
-        if(args.length > 2){
+        if(params.containsKey("radius")){
             try{
-                int radius = Integer.parseInt(args[2]);
+                int radius = Integer.parseInt(params.get("radius"));
                 int count = 0;
                 for(Chunk c : KingdomClaim.getChunksInRadius(chunk, radius)){
                     if(pz.removeChunkFromZone(c)) count++;
@@ -41,7 +50,7 @@ public class UnAssignChunkFromProtectedZone extends CustomCommand {
                         + ChatColor.GREEN + " chunks from zone");
             }
             catch (NumberFormatException ex){
-                throw new CustomCommandException("2nd argument must be a number");
+                throw new CustomCommandException("radius must be a number");
             }
         }
         else{
@@ -50,13 +59,10 @@ public class UnAssignChunkFromProtectedZone extends CustomCommand {
             }
             else throw new CustomCommandException("can not remove chunk, chunk is not assigned to zone");
         }
-
-        //return
-        return commandReturn;
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

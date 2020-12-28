@@ -12,33 +12,41 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class KingdomInviteAcceptCommand extends CustomCommand {
 
-    public KingdomInviteAcceptCommand(String permission) {
-        super(permission);
+    public KingdomInviteAcceptCommand() {
+        super("kingdom inviteaccept", Perms.KINGDOM_DEFAULT);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
-
-        //code
-        Kingdom kingdom = Kingdom.getKingdomFromName(args[1]);
-        if(kingdom == null) throw new CustomCommandException("Could not find this Kingdom.");
-        kingdom.inviteAcceptation(player);
-        commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully joined Kingdom.");
-        kingdom.sendMembersMessage(ChatColor.GOLD + "player '" + ChatColor.DARK_AQUA + player.getName() + ChatColor.GOLD + "' joined the Kingdom.");
-
-        //return
-        return commandReturn;
+    public void parameters(CommandParams params) {
+        params.addParameter("kingdom");
     }
 
     @Override
-    public String getHelp() {
-        return new CommandHelpGenerator("/kingdom inviteaccept [kingdom]", "Accept an invitation from a Kingdom.")
-                .addArgument("kingdom", "The name of the Kingdom you want to accept the invitation from.")
-                .generateHelp();
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+
+        if(!params.containsKey("kingdom")){
+            commandReturn.addReturnMessage(ChatColor.RED + "Missing argument, usage: /kingdom inviteaccept [kingdom]");
+            return;
+        }
+
+        try{
+            Kingdom kingdom = Kingdom.getKingdomFromName(params.get("kingdom"));
+            if(kingdom == null) throw new CustomCommandException("Could not find this Kingdom.");
+            kingdom.inviteAcceptation(player);
+            commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully joined Kingdom.");
+            kingdom.sendMembersMessage(ChatColor.GOLD + "player '" + ChatColor.DARK_AQUA + player.getName() + ChatColor.GOLD + "' joined the Kingdom.");
+        }
+        catch (KingdomException ex){
+            player.sendMessage(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

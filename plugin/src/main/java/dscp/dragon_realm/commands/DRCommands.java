@@ -2,110 +2,106 @@ package dscp.dragon_realm.commands;
 
 import dscp.dragon_realm.commands.customCommands.*;
 import dscp.dragon_realm.commands.customCommands.DragonProtect.*;
-import dscp.dragon_realm.commands.customCommands.essentials.FlyCommand;
-import dscp.dragon_realm.commands.customCommands.essentials.FlySpeedCommand;
-import dscp.dragon_realm.commands.customCommands.essentials.HealCommand;
+import dscp.dragon_realm.commands.customCommands.essentials.*;
 import dscp.dragon_realm.commands.customCommands.spiritSwords.SpiritSwordGive;
 import dscp.dragon_realm.commands.customCommands.spiritSwords.SpiritSwordInfo;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+
+import java.util.Arrays;
+import java.util.HashMap;
 
 public enum DRCommands {
-    KINGDOM("kingdom", new String[]{"overview"}, new KingdomCommand("dscp.dr.kingdom.default")),
-    KINGDOM_MAP("kingdom", new String[]{"map"}, new KingdomMapCommand("dscp.dr.kingdom.default")),
-    KINGDOM_CLAIM("kingdom", new String[]{"claim"}, new KingdomClaimCommand("dscp.dr.kingdom.default")),
-    KINGDOM_CREATE("kingdom", new String[]{"create"}, new KingdomCreateCommand("dscp.dr.kingdom.create")),
-    KINGDOM_SETTLEMENT_CREATE("kingdom", new String[]{"settlement", "create"}, new KingdomCreateSettlementCommand("dscp.dr.kingdom.default")),
-    KINGDOM_SETTLEMENT_REMOVE("kingdom", new String[]{"settlement", "remove"}, new KingdomCreateSettlementCommand("dscp.dr.kingdom.default")),
-    KINGDOM_REMOVE("kingdom", new String[]{"remove"}, new KingdomRemoveCommand("dscp.dr.kingdom.default")),
-    KINGDOM_INVITE("kingdom", new String[]{"invite"}, new KingdomInviteCommand("dscp.dr.kingdom.default")),
-    Kingdom_INVITEACCEPT("kingdom", new String[]{"acceptinvite"}, new KingdomInviteAcceptCommand("dscp.dr.kingdom.default")),
-    KINGDOM_GIVE_COINS("kingdom", new String[]{"coins", "give"} , new KingdomGiveCoinsCommand("dscp.dr.admin")),
-    KINGDOM_VAULT_COINS("kingdom", new String[]{"vault", "coins"}, new KingdomVaultCoinsCommand("dscp.dr.kingdom.default")),
-    KINGDOM_UNCLAIM("kingdom", new String[]{"unclaim"}, new KingdomUnclaimCommand("dscp.dr.kingdom.default")),
+    KINGDOM(new KingdomCommand()),
+    KINGDOM_CLAIM(new KingdomClaimCommand()),
+    KINGDOM_UNCLAIM(new KingdomUnclaimCommand()),
+    KINGDOM_CREATE(new KingdomCreateCommand()),
+    KINGDOM_REMOVE(new KingdomRemoveCommand()),
+    KINGDOM_MAP(new KingdomMapCommand()),
 
-    HEAL("heal", new String[]{}, new HealCommand("dscp.dr.mod")),
-    FEED("feed", new String[]{}, new HealCommand("dscp.dr.mod")),
-    FLY("fly", new String[]{}, new FlyCommand("dscp.dr.fly")),
-    FLY_SPEED("flyspeed", new String[]{}, new FlySpeedCommand("dscp.dr.fly")),
+    KINGDOM_INVITE(new KingdomInviteCommand()),
+    KINGDOM_INVITE_ACCEPT(new KingdomInviteAcceptCommand()),
 
-    CREATE_PROTECTED_ZONE("dp", new String[]{"zone", "create"}, new CreateProtectedZone("dscp.dp.zones")),
-    ASSIGN_CHUNK_TO_ZONE("dp", new String[]{"assign"}, new AssignChunkToProtectedZone("dscp.dp.zones")),
-    UN_ASSIGN_CHUNK_TO_ZONE("dp", new String[]{"unassign"}, new UnAssignChunkFromProtectedZone("dscp.dp.zones")),
-    TOGGLE_EDIT_MODE("dp", new String[]{"edit"}, new ToggleEditMode("dscp.dp.edit")),
-    LIST_PROTECTED_ZONES("dp", new String[]{"zone", "list"}, new ListProtectedZones("dscp.dp.zones")),
-    REMOVE_PROTECTED_ZONE("dp", new String[]{"zone", "remove"}, new RemoveProtectedZone("dscp.dp.zones")),
+    SETTLEMENT_CREATE(new KingdomCreateSettlementCommand()),
 
-    SPIRIT_SWORD_GIVE("ss", new String[]{"create"}, new SpiritSwordGive("dscp.dr.ss.create")),
-    SPIRIT_SWORD_INFO("ss", new String[]{"info"}, new SpiritSwordInfo("dscp.dr.ss.main"));
+    COINS_GIVE(new KingdomGiveCoinsCommand()),
 
-    String commandName;
-    String[] args;
-    CustomCommand command;
+    FEED(new FeedCommand()),
+    FLY(new FlyCommand()),
+    FLY_SPEED(new FlySpeedCommand()),
+    GOD(new GodCommand()),
+    HEAL(new HealCommand()),
 
-    DRCommands(String commandName, String[] args, CustomCommand command){
-        if(commandName == null)  throw new IllegalArgumentException("Command name can not be null.");
-        if(args == null) throw new IllegalArgumentException("Arguments can not be null.");
-        if(command == null) throw new IllegalArgumentException("Command can not be null.");
+    DP_ASSIGN(new AssignChunkToProtectedZone()),
+    DP_UNASSIGN(new UnAssignChunkFromProtectedZone()),
+    DP_ZONE_CREATE(new CreateProtectedZone()),
+    DP_ZONE_REMOVE(new RemoveProtectedZone()),
+    DP_ZONE_LIST(new ListProtectedZones()),
+    DP_EDIT(new ToggleEditMode()),
+    SS_GIVE(new SpiritSwordGive()),
+    SS_INFO(new SpiritSwordInfo());
 
-        this.commandName = commandName;
-        this.args = args;
+    private final CustomCommand command;
+
+    DRCommands(CustomCommand command){
         this.command = command;
     }
 
-    public CustomCommand getCommand() {
-        return command;
+    public CustomCommand getCommand(){
+        return this.command;
     }
 
-    public String getCommandName() {
-        return commandName;
-    }
-
-    public String[] getArgs() {
-        return args;
-    }
-
-    public boolean isCommand(String commandName, String[] args){
-        if(commandName == null)  throw new IllegalArgumentException("Command name can not be null.");
-        if(args == null) throw new IllegalArgumentException("Arguments can not be null.");
-
-        if(!this.commandName.equals(commandName)) return false;
-        try{
-            for(int i = 0 ; i < this.args.length ; i++){
-                if(!this.args[i].equals(args[i])) return false;
+    static public CustomCommand getCommandFromArgs(String[] args){
+        CustomCommand cmd = null;
+        for(DRCommands drc : values()){
+            CustomCommand command = drc.command;
+            if(isCommand(args, command)){
+                if(cmd == null){
+                    cmd = command;
+                    System.out.println(cmd);
+                }
+                else{
+                    if(cmd.getCommandArgs().length < command.getCommandArgs().length){
+                        cmd = command;
+                        System.out.println(cmd);
+                    }
+                }
             }
         }
-        catch (Exception e){
-            return false;
+        return cmd;
+    }
+
+    static private boolean isCommand(String[] args, CustomCommand command){
+        String[] commandArgs = command.getCommandArgs();
+        if(args.length < commandArgs.length) return false;
+
+        for(int i = 0 ; i < commandArgs.length ; i++){
+            if(!(args[i].equals(commandArgs[i]))) return false;
         }
         return true;
     }
 
-    public static void handleCommand(CommandSender sender, String commandName, String[] args){
-        if(sender == null) throw new IllegalArgumentException("Sender can not be null.");
-        if(commandName == null)  throw new IllegalArgumentException("Command name can not be null.");
-        if(args == null) throw new IllegalArgumentException("Arguments can not be null.");
-
-        try{
-            for(DRCommands drc : values()){
-                if(drc.isCommand(commandName, args)){
-                    drc.getCommand().executeCommand(sender, commandName, args).sendExceptionsOrMessages();
-                    return;
-                }
-            }
-        }
-        catch (ArrayIndexOutOfBoundsException e){
-            if(sender instanceof Player){
-                Player player = (Player) sender;
-                player.sendMessage(ChatColor.RED + "Missing arguments, type '/kingdom help' for more information.");
-            }
-            return;
+    static public void handleCommand(CommandSender sender, String commandName, String[] cmdArgs){
+        String[] args = new String[1 + cmdArgs.length];
+        args[0] = commandName;
+        for(int i = 0 ; i < cmdArgs.length ; i++){
+            args[1 + i] = cmdArgs[i];
         }
 
-        if(sender instanceof Player){
-            Player player = (Player) sender;
-            player.sendMessage(ChatColor.RED + "Unknown command, type '/kingdom help' for more information.");
+        System.out.println(Arrays.toString(args));
+        CustomCommand command = getCommandFromArgs(args);
+        if(command == null) return;
+
+        HashMap<String, String> params = new HashMap<>();
+        CustomCommand.CommandParams cmdParams = command.getParameters();
+        for(int i = 0 ; i < cmdParams.count() ; i++){
+            try{
+                params.put(cmdParams.getParameters().get(0), args[command.getCommandArgs().length + i]);
+            }
+            catch(Exception ex){
+                //
+            }
         }
+        System.out.println(params);
+        command.runCommand(sender, params);
     }
 }

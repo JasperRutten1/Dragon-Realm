@@ -14,18 +14,20 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class KingdomUnclaimCommand extends CustomCommand {
-    public KingdomUnclaimCommand(String permission) {
-        super(permission);
+    public KingdomUnclaimCommand() {
+        super("kingdom unclaim", Perms.KINGDOM_DEFAULT);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
 
-        //code
+    }
+
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
         if(kingdom == null) throw new CustomCommandException("You are not part of a Kingdom.");
         Chunk chunk = player.getLocation().getChunk();
@@ -43,13 +45,10 @@ public class KingdomUnclaimCommand extends CustomCommand {
             throw new CustomCommandException("This chunk is covered by a settlement, remove the settlement before trying again.");
         kingdom.getClaim().removeClaim(x, z);
         commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully removed claim on chunk.");
-
-        //return
-        return commandReturn;
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

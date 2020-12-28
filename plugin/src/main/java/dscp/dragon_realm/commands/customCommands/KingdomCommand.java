@@ -8,28 +8,34 @@ import dscp.dragon_realm.menus.KingdomOverviewMenu;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class KingdomCommand extends CustomCommand {
 
-    public KingdomCommand(String permission) {
-        super(permission);
+    public KingdomCommand() {
+        super("kingdom", Perms.KINGDOM_DEFAULT);
+    }
+
+    public String getHelp() {
+        return null;
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
+    public void parameters(CommandParams params) {
 
+    }
+
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
         if(kingdom != null)
             new KingdomOverviewMenu(kingdom).open(player);
         else throw new CustomCommandException("You are not in a Kingdom.");
 
-        return new CommandReturn(player);
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
-
 }

@@ -8,34 +8,36 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class FlySpeedCommand extends CustomCommand {
-    public FlySpeedCommand(String permission) {
-        super(permission);
+    public FlySpeedCommand() {
+        super("fly", Perms.ESSENTIALS_STAFF);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
+        params.addParameter("speed");
+    }
 
-        //code
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         try{
-            float speed = Float.parseFloat(args[0])/10;
-            if(speed > 10) throw new CustomCommandException("Maximum speed is 10.");
-            player.setFlySpeed(speed);
-            commandReturn.addReturnMessage(ChatColor.AQUA + "Flight speed successfully set to " + speed);
+            if(params.containsKey("speed")){
+                float speed = Float.parseFloat(params.get("speed"))/10;
+                if(speed > 10) throw new CustomCommandException("Maximum speed is 10.");
+                player.setFlySpeed(speed);
+                commandReturn.addReturnMessage(ChatColor.AQUA + "Flight speed successfully set to " + speed);
+            }
+            commandReturn.addReturnMessage(ChatColor.AQUA + "Your current flightspeed is " + player.getFlySpeed());
         }
         catch (NumberFormatException e){
             throw new CustomCommandException("Argument must be a number.");
         }
-
-        //return
-        return commandReturn;
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

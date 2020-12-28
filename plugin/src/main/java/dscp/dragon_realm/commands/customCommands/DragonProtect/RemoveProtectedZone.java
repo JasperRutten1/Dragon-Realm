@@ -10,29 +10,36 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class RemoveProtectedZone extends CustomCommand {
-    public RemoveProtectedZone(String permission) {
-        super(permission);
+    public RemoveProtectedZone() {
+        super("dp zone remove", Perms.DP_STAFF);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
+        params.addParameter("name");
+    }
 
-        //code
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        runForNonPlayer(player, commandReturn, params);
+    }
+
+    @Override
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+
+        if(!params.containsKey("name")){
+            commandReturn.addReturnMessage(ChatColor.RED + "Missing arguments, usage: /dp zone remove");
+            return;
+        }
+
+        String name = params.get("name");
+
         DragonProtect dp = Dragon_Realm.dragonProtect;
-        if(!dp.zoneExists(args[2])) throw new CustomCommandException("could not find zone with this name");
-        dp.removeZone(args[2]);
+        if(!dp.zoneExists(name)) throw new CustomCommandException("could not find zone with this name");
+        dp.removeZone(name);
         commandReturn.addReturnMessage(ChatColor.GREEN + "removed zone");
-
-        //return
-        return commandReturn;
-    }
-
-    @Override
-    public String getHelp() {
-        return null;
     }
 }

@@ -10,29 +10,28 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class KingdomVaultCoinsCommand extends CustomCommand {
-    public KingdomVaultCoinsCommand(String permission) {
-        super(permission);
+    public KingdomVaultCoinsCommand() {
+        super("vault", Perms.KINGDOM_DEFAULT);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
 
-        //code
+    }
+
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
         if(kingdom == null) throw new CustomCommandException("You are not in a Kingdom.");
         commandReturn.addReturnMessage(ChatColor.GREEN + "You currently have ⛃"
                 + kingdom.getVault().getCoins() + " coins.");
-
-        //return
-        return commandReturn;
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

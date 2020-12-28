@@ -13,27 +13,25 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class KingdomMapCommand extends CustomCommand {
-    public KingdomMapCommand(String permission) {
-        super(permission);
+    public KingdomMapCommand() {
+        super("kingdom map", Perms.KINGDOM_DEFAULT);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
 
-        //code
+    }
+
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         player.sendMessage(KingdomClaim.generateClaimMap(player));
-
-        //return
-        return commandReturn;
     }
 
     @Override
-    public String getHelp() {
-        return new CommandHelpGenerator("/kingdom map", "Get a map of chunks around you. You can see which chunks are unclaimed, as well as chunks that are claimed by your Kingdom, as well as other Kingdom's.")
-                .generateHelp();
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

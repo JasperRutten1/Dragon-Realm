@@ -2,7 +2,6 @@ package dscp.dragon_realm.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 public class CommandReturn {
     List<String> returnMessages;
     List<Exception> exceptionList;
-    CommandSender sneder;
+    CommandSender sender;
 
     /**
      * constructor for a CommandReturn object
@@ -19,7 +18,7 @@ public class CommandReturn {
     public CommandReturn(CommandSender sender){
         if(sender == null) throw new IllegalArgumentException("Player can not be null.");
 
-        this.sneder = sender;
+        this.sender = sender;
         this.returnMessages = new ArrayList<>();
         this.exceptionList = new ArrayList<>();
     }
@@ -54,7 +53,7 @@ public class CommandReturn {
         if(this.returnMessages.isEmpty()) return this;
 
         for(String message : this.returnMessages){
-            sneder.sendMessage(message);
+            sender.sendMessage(message);
         }
         return this;
     }
@@ -66,7 +65,7 @@ public class CommandReturn {
     public CommandReturn sendExceptionMessages(){
         if(exceptionList.isEmpty()) return this;
         for(Exception exception : this.exceptionList){
-            sneder.sendMessage(ChatColor.RED + exception.getMessage());
+            sender.sendMessage(ChatColor.RED + exception.getMessage());
         }
         return this;
     }
