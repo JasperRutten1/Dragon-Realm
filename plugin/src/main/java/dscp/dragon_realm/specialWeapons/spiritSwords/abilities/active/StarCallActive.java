@@ -1,6 +1,7 @@
 package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active;
 
 import dscp.dragon_realm.advancedParticles.AdvancedParticles;
+import dscp.dragon_realm.builders.BookBuilder;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -23,7 +24,8 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class StarCallActive extends ActiveAbility{
-    public static final int RANGE = 20;
+    public static final int RANGE = 15;
+    public static final int TIME = 5000;
 
     public static final ArrayList<StarCallStar> stars = new ArrayList<>();
 
@@ -45,7 +47,7 @@ public class StarCallActive extends ActiveAbility{
         Location spawnLocation = targetBlock.getLocation().add(new Random().nextInt(5),
                 new Random().nextInt(5) + 10, new Random().nextInt(5));
 
-        stars.add(new StarCallStar(System.currentTimeMillis() + 3000, spawnLocation, targetBlock.getLocation()));
+        stars.add(new StarCallStar(System.currentTimeMillis() + 5000, spawnLocation, targetBlock.getLocation()));
         setCooldown(player);
 
     }
@@ -82,6 +84,17 @@ public class StarCallActive extends ActiveAbility{
                 }
             }
         }
+    }
+
+    @Override
+    public void abilityInfo(BookBuilder.BookPageBuilder pageBuilder) {
+        pageBuilder.addLine("This ability will teleport a meteorite from space to collide at the targeted location")
+                .addLine("Calling down the meteorite takes some time, the direction it comes from is visible")
+                .addBlankLine()
+                .addLine("This ability does not destroy terrain")
+                .addBlankLine()
+                .addLine("Range: " + RANGE + " blocks.")
+                .addLine("Teleport time: " + ((int)TIME/1000) + " seconds");
     }
 
     public StarCallStar getStar(Fireball fireball){

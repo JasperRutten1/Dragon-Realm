@@ -2,6 +2,7 @@ package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active;
 
 import dscp.dragon_realm.Dragon_Realm;
 import dscp.dragon_realm.advancedParticles.AdvancedParticles;
+import dscp.dragon_realm.builders.BookBuilder;
 import dscp.dragon_realm.dragonProtect.ProtectedZone;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import org.bukkit.Bukkit;
@@ -72,6 +73,16 @@ public class GroundSlamActive extends ActiveAbility{
         }
     }
 
+    @Override
+    public void abilityInfo(BookBuilder.BookPageBuilder pageBuilder) {
+        pageBuilder.addLine("This ability will launch the holder in to the air.")
+                .addLine("When the holder then hits the ground, it will create a shock wave that will damage and knock away all other players in range")
+                .addBlankLine()
+                .addLine("A player that is closer to the center of the shock wave will receive more damage then a player further away from teh center")
+                .addBlankLine()
+                .addLine("Range: " + RANGE + " blocks.");
+    }
+
     private void groundSlam(Player player){
         ArrayList<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
         ArrayList<Player> inRangePlayers = new ArrayList<>();
@@ -88,18 +99,20 @@ public class GroundSlamActive extends ActiveAbility{
 
         for(Player p : inRangePlayers){
             if(!p.equals(player)){
-                double distance = player.getLocation().distance(p.getLocation());
-                Vector vector = p.getLocation().toVector().subtract(player.getLocation().toVector());
+                if(((Entity) p).isOnGround()){
+                    double distance = player.getLocation().distance(p.getLocation());
+                    Vector vector = p.getLocation().toVector().subtract(player.getLocation().toVector());
 
-                //knockback
-                vector.add(new Vector(0, 0.5, 0));
-                vector.normalize();
-                vector.multiply((RANGE - distance) + 1);
-                p.setVelocity(vector);
+                    //knockback
+                    vector.add(new Vector(0, 0.5, 0));
+                    vector.normalize();
+                    vector.multiply((RANGE - distance) + 1);
+                    p.setVelocity(vector);
 
-                //deal damage
-                double damage = (RANGE - distance) * DAMAGE_MULTIPLIER;
-                p.damage(damage);
+                    //deal damage
+                    double damage = (RANGE - distance) * DAMAGE_MULTIPLIER;
+                    p.damage(damage);
+                }
             }
         }
 

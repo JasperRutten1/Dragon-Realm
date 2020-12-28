@@ -1,5 +1,6 @@
 package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active;
 
+import dscp.dragon_realm.builders.BookBuilder;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -51,5 +52,12 @@ public class BlinkActive extends ActiveAbility{
     @Override
     public void repeatingCode(Player player) {
 
+    }
+
+    @Override
+    public void abilityInfo(BookBuilder.BookPageBuilder pageBuilder) {
+        pageBuilder.addLine("This ability bends space time around the holder displacing them to another location.")
+                .addBlankLine()
+                .addLine("The holder does not actually move, but reality does.");
     }
 }

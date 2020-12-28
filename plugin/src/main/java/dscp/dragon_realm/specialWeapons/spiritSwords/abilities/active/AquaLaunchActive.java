@@ -1,5 +1,6 @@
 package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active;
 
+import dscp.dragon_realm.builders.BookBuilder;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -43,4 +44,14 @@ public class AquaLaunchActive extends ActiveAbility{
     public void repeatingCode(Player player) {
 
     }
+
+    @Override
+    public void abilityInfo(BookBuilder.BookPageBuilder pageBuilder) {
+        pageBuilder
+            .addLine("This ability allows you to get a speed boost in water")
+            .addLine("Launching you in the direction you are looking in")
+            .addBlankLine()
+            .addLine("This ability requires you to be fully submerged ");
+    }
+
 }

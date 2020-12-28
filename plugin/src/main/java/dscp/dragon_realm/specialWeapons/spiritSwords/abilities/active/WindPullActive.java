@@ -1,6 +1,7 @@
 package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active;
 
 import dscp.dragon_realm.Dragon_Realm_API;
+import dscp.dragon_realm.builders.BookBuilder;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.ArmorStand;
@@ -50,5 +51,12 @@ public class WindPullActive extends ActiveAbility{
     @Override
     public void repeatingCode(Player player) {
 
+    }
+
+    @Override
+    public void abilityInfo(BookBuilder.BookPageBuilder pageBuilder) {
+        pageBuilder.addLine("This ability will create a gust of wind that will push a targeted entity towards the holder")
+                .addBlankLine()
+                .addLine("Range: " + RANGE + " blocks.");
     }
 }

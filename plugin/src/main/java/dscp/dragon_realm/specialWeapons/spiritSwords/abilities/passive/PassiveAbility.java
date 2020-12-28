@@ -1,8 +1,10 @@
 package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.passive;
 
+import dscp.dragon_realm.builders.BookBuilder;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSword;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.AbilityException;
+import dscp.dragon_realm.utils.BookDescription;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -12,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PassiveAbility implements Runnable, Listener {
+public abstract class PassiveAbility implements Runnable, Listener, BookDescription {
     private String name;
     private int ID;
     private long repeatDelay;
@@ -90,4 +92,15 @@ public abstract class PassiveAbility implements Runnable, Listener {
      * @param swordMeta the meta data of the sword item
      */
     public abstract void abilityCode(Player player, ItemStack sword, ItemMeta swordMeta);
+
+    @Override
+    public String bookPage() {
+        BookBuilder.BookPageBuilder pageBuilder = new BookBuilder.BookPageBuilder()
+                .addLine(this.element.getChatColor() + this.name)
+                .addBlankLine();
+        abilityInfo(pageBuilder);
+        return pageBuilder.build();
+    }
+
+    public abstract void abilityInfo(BookBuilder.BookPageBuilder pageBuilder);
 }

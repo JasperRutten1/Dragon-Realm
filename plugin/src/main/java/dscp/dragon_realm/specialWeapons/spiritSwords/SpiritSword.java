@@ -2,6 +2,8 @@ package dscp.dragon_realm.specialWeapons.spiritSwords;
 
 import dscp.dragon_realm.Dragon_Realm;
 import dscp.dragon_realm.ObjectIO;
+import dscp.dragon_realm.builders.BookBuilder;
+import dscp.dragon_realm.builders.TextBuilder;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active.SpiritSwordActiveAbility;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.passive.SpiritSwordPassiveAbility;
 import dscp.dragon_realm.utils.SoundEffect;
@@ -499,6 +501,60 @@ public class SpiritSword implements Serializable {
         if(meta == null) throw new IllegalArgumentException("meta can't be null");
         if(player == null) throw new IllegalArgumentException("player can't be null");
         return player.getUniqueId().equals(getPlayer(meta).getUniqueId());
+    }
+
+    public static ItemStack getInfoBook(){
+        BookBuilder book = new BookBuilder()
+                .setTitle(ChatColor.GOLD + "Spirit Swords")
+                .setAuthor(ChatColor.MAGIC + "Jaspy007")
+                .setLore("info book");
+
+        book.addPage(new BookBuilder.BookPageBuilder()
+                .addLine(ChatColor.GOLD + "Spirit Sword")
+                .addBlankLine()
+                .addLine(ChatColor.RESET + "This sword holds a spirit inside")
+                .addBlankLine()
+                .addLine("A spirit can be of one of the following elements:")
+        );
+
+        //passive abilities
+        for(SpiritElement element : SpiritElement.values()){
+            BookBuilder.BookPageBuilder pageBuilder = new BookBuilder.BookPageBuilder()
+                    .addLine(ChatColor.GOLD + element.getName() + " passive abilities:")
+                    .addBlankLine();
+
+            for(SpiritSwordPassiveAbility sspa : SpiritSwordPassiveAbility.getAbilitiesFromElement(element)){
+                    pageBuilder.addLine(sspa.getAbility().getName());
+            }
+
+            book.addPage(
+                    pageBuilder
+            );
+
+            for(SpiritSwordPassiveAbility sspa : SpiritSwordPassiveAbility.getAbilitiesFromElement(element)){
+                book.addPage(sspa.getAbility().bookPage());
+            }
+        }
+
+        for(SpiritElement element : SpiritElement.values()){
+            BookBuilder.BookPageBuilder pageBuilder = new BookBuilder.BookPageBuilder()
+                    .addLine(ChatColor.GOLD + element.getName() + " active abilities:")
+                    .addBlankLine();
+
+            for(SpiritSwordActiveAbility ssaa : SpiritSwordActiveAbility.getAbilitiesFromElement(element)){
+                pageBuilder.addLine(ssaa.getAbility().getName());
+            }
+
+            book.addPage(
+                    pageBuilder
+            );
+
+            for(SpiritSwordActiveAbility ssaa : SpiritSwordActiveAbility.getAbilitiesFromElement(element)){
+                book.addPage(ssaa.getAbility().bookPage());
+            }
+        }
+
+        return book.getBook();
     }
 
     @Override

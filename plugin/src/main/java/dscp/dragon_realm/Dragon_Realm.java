@@ -10,7 +10,6 @@ import dscp.dragon_realm.discord.ToDiscordEvents;
 import dscp.dragon_realm.dragonProtect.DragonProtect;
 import dscp.dragon_realm.kingdoms.Kingdom;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSword;
-import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSwordManager;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active.SpiritSwordActiveAbility;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.passive.SpiritSwordPassiveAbility;
 import dscp.dragon_realm.specialWeapons.spiritSwords.events.SpiritSwordEventManager;

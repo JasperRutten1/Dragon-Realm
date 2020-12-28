@@ -1,5 +1,6 @@
 package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.passive;
 
+import dscp.dragon_realm.builders.BookBuilder;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,5 +22,14 @@ public class GroundedPassive extends PassiveAbility{
             if(!player.isSneaking()) return;
             player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 40, 0, false, false));
         }
+    }
+
+    @Override
+    public void abilityInfo(BookBuilder.BookPageBuilder pageBuilder) {
+        pageBuilder.addLine("This ability channels a portion of incoming damage dealt to the holder in to the ground.")
+                .addBlankLine()
+                .addLine("This ability does not stack with resistance.")
+                .addBlankLine()
+                .addLine("Activate this ability by crouching over a dirt block.");
     }
 }

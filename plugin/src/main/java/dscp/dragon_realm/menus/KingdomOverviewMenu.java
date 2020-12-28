@@ -52,7 +52,7 @@ public class KingdomOverviewMenu extends Container {
                             .line("View Kingdom Relationships")
                     )
                     .build()
-            ).handler(e -> new KingdomRelationsMenu(this.kingdom).open(viewer));
+            );
 
             bp.slot(24).item(new ItemStackBuilder(Material.ACACIA_DOOR)
                     .name("&6&lSettlements")

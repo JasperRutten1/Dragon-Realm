@@ -1,5 +1,6 @@
 package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.passive;
 
+import dscp.dragon_realm.builders.BookBuilder;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.passive.PassiveAbility;
 import org.bukkit.Material;
@@ -23,5 +24,12 @@ public class WaterPressurePassive extends PassiveAbility {
         if(!(block.getType() == Material.WATER)) return;
         if(player.hasPotionEffect(PotionEffectType.REGENERATION)) return;
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, 0, false, false));
+    }
+
+    @Override
+    public void abilityInfo(BookBuilder.BookPageBuilder pageBuilder) {
+        pageBuilder.addLine("This ability converts the water pressure exerted on the holder in to energy that will heal the holder")
+                .addBlankLine()
+                .addLine("This ability does not stack with regeneration");
     }
 }

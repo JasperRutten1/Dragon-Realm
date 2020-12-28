@@ -1,5 +1,6 @@
 package dscp.dragon_realm.builders;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -12,9 +13,8 @@ public class BookBuilder {
     private BookMeta meta;
 
     public BookBuilder(){
-        ItemStack book = new ItemStack(Material.BOOK);
-        ItemMeta meta = book.getItemMeta();
-        if(meta instanceof BookMeta) this.meta = (BookMeta) meta;
+        ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+        this.meta = (BookMeta) book.getItemMeta();
     }
 
     public BookBuilder setTitle(String title) {
@@ -68,7 +68,7 @@ public class BookBuilder {
     }
 
     public ItemStack getBook(int amount){
-        ItemStack book = new ItemStack(Material.BOOK, amount);
+        ItemStack book = new ItemStack(Material.WRITTEN_BOOK, amount);
         book.setItemMeta(this.meta);
         return book;
     }
@@ -77,7 +77,7 @@ public class BookBuilder {
         return getBook(1);
     }
 
-    public class BookPageBuilder {
+    public static class BookPageBuilder {
         private ArrayList<String> lines;
 
         public BookPageBuilder(){
@@ -101,10 +101,14 @@ public class BookBuilder {
             return this;
         }
 
-        private String build(){
+        public BookPageBuilder addBlankLine(){
+            return addLine("");
+        }
+
+        public String build(){
             StringBuilder sb = new StringBuilder();
             for(String line : lines){
-                sb.append(line).append("\n");
+                sb.append(ChatColor.RESET).append(line).append("\n");
             }
             return sb.toString();
         }

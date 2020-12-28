@@ -6,6 +6,7 @@ import dscp.dragon_realm.commands.customCommands.essentials.FlyCommand;
 import dscp.dragon_realm.commands.customCommands.essentials.FlySpeedCommand;
 import dscp.dragon_realm.commands.customCommands.essentials.HealCommand;
 import dscp.dragon_realm.commands.customCommands.spiritSwords.SpiritSwordGive;
+import dscp.dragon_realm.commands.customCommands.spiritSwords.SpiritSwordInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -36,7 +37,8 @@ public enum DRCommands {
     LIST_PROTECTED_ZONES("dp", new String[]{"zone", "list"}, new ListProtectedZones("dscp.dp.zones")),
     REMOVE_PROTECTED_ZONE("dp", new String[]{"zone", "remove"}, new RemoveProtectedZone("dscp.dp.zones")),
 
-    SPIRIT_SWORD_GIVE("ss", new String[]{"create"}, new SpiritSwordGive("dscp.dr.ss.create"));
+    SPIRIT_SWORD_GIVE("ss", new String[]{"create"}, new SpiritSwordGive("dscp.dr.ss.create")),
+    SPIRIT_SWORD_INFO("ss", new String[]{"info"}, new SpiritSwordInfo("dscp.dr.ss.main"));
 
     String commandName;
     String[] args;

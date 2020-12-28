@@ -1,10 +1,12 @@
 package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active;
 
 import dscp.dragon_realm.Dragon_Realm;
+import dscp.dragon_realm.builders.BookBuilder;
 import dscp.dragon_realm.dragonProtect.DragonProtect;
 import dscp.dragon_realm.dragonProtect.ProtectedZone;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSword;
+import dscp.dragon_realm.utils.BookDescription;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public abstract class ActiveAbility implements Listener, Runnable {
+public abstract class ActiveAbility implements Listener, Runnable, BookDescription {
     private String name;
     private int ID;
     private SpiritElement element;
@@ -141,12 +143,25 @@ public abstract class ActiveAbility implements Listener, Runnable {
     public static void endCooldown(){
         for(Player player : Bukkit.getOnlinePlayers()){
             for(SpiritSwordActiveAbility ssaa : SpiritSwordActiveAbility.values()){
-                if(ssaa.ability.hasCooldown(player)){
+                if(ssaa.ability.cooldownMap.containsKey(player.getUniqueId())
+                        && ssaa.ability.cooldownMap.get(player.getUniqueId()) <=System.currentTimeMillis()){
                     ssaa.ability.cooldownMap.remove(player.getUniqueId());
                     player.sendMessage(ChatColor.GRAY + ssaa.ability.getName() + ": cooldown ended");
                 }
             }
         }
-
     }
+
+    @Override
+    public String bookPage() {
+         BookBuilder.BookPageBuilder builder = new BookBuilder.BookPageBuilder()
+                .addLine(this.getElement().getChatColor() + this.getName())
+                .addBlankLine();
+         abilityInfo(builder);
+         builder.addBlankLine()
+                 .addLine("cooldown: " + ((int) this.cooldown/1000) + "seconds");
+         return builder.build();
+    }
+
+    public abstract void abilityInfo(BookBuilder.BookPageBuilder pageBuilder);
 }

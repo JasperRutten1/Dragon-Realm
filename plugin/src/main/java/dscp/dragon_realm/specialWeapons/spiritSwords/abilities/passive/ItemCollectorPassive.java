@@ -1,5 +1,6 @@
 package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.passive;
 
+import dscp.dragon_realm.builders.BookBuilder;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -39,5 +40,12 @@ public class ItemCollectorPassive extends PassiveAbility{
                 }
             }
         }
+    }
+
+    @Override
+    public void abilityInfo(BookBuilder.BookPageBuilder pageBuilder) {
+        pageBuilder.addLine("This ability will push items on the ground towards the holder.")
+                .addBlankLine()
+                .addLine("range: " + RANGE + " blocks");
     }
 }

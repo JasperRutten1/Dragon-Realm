@@ -82,4 +82,12 @@ public enum SpiritSwordActiveAbility {
 
         return weightMap.getRandom();
     }
+
+    public static List<SpiritSwordActiveAbility> getAbilitiesFromElement(SpiritElement element){
+        List<SpiritSwordActiveAbility> abilities = new ArrayList<>();
+        for(SpiritSwordActiveAbility ssaa : values()){
+            if(ssaa.ability.getElement() == element) abilities.add(ssaa);
+        }
+        return abilities;
+    }
 }

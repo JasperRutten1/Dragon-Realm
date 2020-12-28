@@ -78,4 +78,12 @@ public enum SpiritSwordPassiveAbility {
         }
         return null;
     }
+
+    public static List<SpiritSwordPassiveAbility> getAbilitiesFromElement(SpiritElement element){
+        List<SpiritSwordPassiveAbility> abilities = new ArrayList<>();
+        for(SpiritSwordPassiveAbility sspa : values()){
+            if(sspa.getAbility().getElement() == element) abilities.add(sspa);
+        }
+        return abilities;
+    }
 }
