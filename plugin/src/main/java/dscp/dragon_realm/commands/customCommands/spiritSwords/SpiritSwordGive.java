@@ -5,30 +5,50 @@ import dscp.dragon_realm.commands.CustomCommand;
 import dscp.dragon_realm.commands.CustomCommandException;
 import dscp.dragon_realm.kingdoms.KingdomException;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSword;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class SpiritSwordGive extends CustomCommand {
-    public SpiritSwordGive(String permission) {
-        super(permission);
+    public SpiritSwordGive() {
+        super("ss give", Perms.SS_CREATE);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
-
-        //code
-        SpiritSword.createNewSpiritSword(player);
-        commandReturn.addReturnMessage("you received a spirit sword");
-
-        //return
-        return commandReturn;
+    public void parameters(CommandParams params) {
+        params.addParameter("target");
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        if(params.containsKey("target")){
+            giveTargetSword(commandReturn, params);
+        }else{
+            SpiritSword.createNewSpiritSword(player);
+            commandReturn.addReturnMessage("you received a spirit sword");
+        }
+    }
+
+    @Override
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        if(params.containsKey("target")){
+            giveTargetSword(commandReturn, params);
+        }else{
+            throw new CustomCommandException("can not give item to non player");
+        }
+    }
+
+    private void giveTargetSword(CommandReturn commandReturn, HashMap<String, String> params) {
+        Player target = Bukkit.getPlayer(params.get("target"));
+        if(target == null){
+            commandReturn.addReturnMessage(ChatColor.RED + "could not find player with this name");
+            return;
+        }
+        SpiritSword.createNewSpiritSword(target);
+        commandReturn.addReturnMessage(target.getName() + " received a spirit sword");
+        target.sendMessage("you received a spirit sword");
     }
 }

@@ -7,26 +7,25 @@ import dscp.dragon_realm.kingdoms.KingdomException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class GodCommand extends CustomCommand {
-    public GodCommand(String permission) {
-        super(permission);
+    public GodCommand() {
+        super("god", "dscp.dr.essentials.god");
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
-
-        //code
-        
-
-        //return
-        return commandReturn;
+    public void parameters(CommandParams params) {
+        params.addParameter("target");
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+
+    }
+
+    @Override
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+
     }
 }

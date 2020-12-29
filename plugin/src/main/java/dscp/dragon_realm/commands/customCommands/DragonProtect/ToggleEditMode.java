@@ -6,32 +6,51 @@ import dscp.dragon_realm.commands.CustomCommand;
 import dscp.dragon_realm.commands.CustomCommandException;
 import dscp.dragon_realm.dragonProtect.DragonProtect;
 import dscp.dragon_realm.kingdoms.KingdomException;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class ToggleEditMode extends CustomCommand {
-    public ToggleEditMode(String permission) {
-        super(permission);
+    public ToggleEditMode() {
+        super("dp edit", Perms.DP_EDIT);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
+        params.addParameter("target");
+    }
 
-        //code
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         DragonProtect dp = Dragon_Realm.dragonProtect;
-        dp.toggleEditMode(player);
-        if(dp.isInEditMode(player)) DragonProtect.sendMessage(player, "you are now in edit mode");
-        else DragonProtect.sendMessage(player, "you are now out of edit mode");
 
-        //return
-        return commandReturn;
+        if(params.containsKey("target")){
+            Player target = Bukkit.getPlayer(params.get("target"));
+            if(target == null){
+                commandReturn.addReturnMessage(ChatColor.RED + "Could not find this player");
+                return;
+            }
+            dp.toggleEditMode(target);
+            if(dp.isInEditMode(target)){
+                DragonProtect.sendMessage(player, "Player is now in edit mode");
+                DragonProtect.sendMessage(target, "you are now in edit mode");
+            }
+            else{
+                DragonProtect.sendMessage(player, "Player is now out of edit mode");
+                DragonProtect.sendMessage(target, "you are now out of edit mode");
+            }
+        }else{
+            dp.toggleEditMode(player);
+            if(dp.isInEditMode(player)) DragonProtect.sendMessage(player, "you are now in edit mode");
+            else DragonProtect.sendMessage(player, "you are now out of edit mode");
+        }
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

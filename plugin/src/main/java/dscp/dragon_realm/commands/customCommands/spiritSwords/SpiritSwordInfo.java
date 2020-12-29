@@ -8,27 +8,26 @@ import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSword;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class SpiritSwordInfo extends CustomCommand {
 
-    public SpiritSwordInfo(String permission) {
-        super(permission);
+    public SpiritSwordInfo() {
+        super("ss info", "dscp.ss.default");
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
 
-        //code
+    }
+
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         player.openBook(SpiritSword.getInfoBook());
-
-        //return
-        return commandReturn;
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

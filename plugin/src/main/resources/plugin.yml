@@ -13,6 +13,10 @@ commands:
     usage: /k
   settlement:
     description: used to manage settlements
+  vault:
+    description: acces you kingdom vault
+  coins:
+    description: coins command
   help:
     description: get help about commands
   test:

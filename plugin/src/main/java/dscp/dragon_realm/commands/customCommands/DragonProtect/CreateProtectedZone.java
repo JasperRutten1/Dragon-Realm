@@ -11,30 +11,37 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class CreateProtectedZone extends CustomCommand {
 
-    public CreateProtectedZone(String permission) {
-        super(permission);
+    public CreateProtectedZone() {
+        super("dp zone create", Perms.DP_STAFF);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
+        params.addParameter("name");
+    }
 
-        //code
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        runForNonPlayer(player, commandReturn, params);
+    }
+
+    @Override
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+
+        if(!params.containsKey("name")){
+            commandReturn.addReturnMessage(ChatColor.RED + "Missing arguments, usage: /dr zone create [name]");
+            return;
+        }
+
+        String name = params.get("name");
+
         DragonProtect dp = Dragon_Realm.dragonProtect;
-        if(dp.zoneExists(args[2])) throw new CustomCommandException("a zone with this name already exists");
-        dp.createNewZone(args[2]);
+        if(dp.zoneExists(name)) throw new CustomCommandException("a zone with this name already exists");
+        dp.createNewZone(name);
         commandReturn.addReturnMessage(ChatColor.GREEN + "created new protected zone \nassign chunks to it with /dp assign [zone name] [radius]");
-
-        //return
-        return commandReturn;
-    }
-
-    @Override
-    public String getHelp() {
-        return null;
     }
 }

@@ -10,23 +10,39 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class KingdomGiveCoinsCommand extends CustomCommand {
-    public KingdomGiveCoinsCommand(String permission) {
-        super(permission);
+    public KingdomGiveCoinsCommand() {
+        super("coins give", "dscp.dr.coins.give");
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
+        params.addParameter("kingdom");
+        params.addParameter("amount");
+    }
 
-        //code
-        Kingdom kingdom = Kingdom.getKingdomFromName(args[2]);
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        runForNonPlayer(player, commandReturn, params);
+    }
+
+    @Override
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        if(!params.containsKey("kingdom") || !params.containsKey("amount")){
+            commandReturn.addReturnMessage(ChatColor.RED + "Missing argument, usage: /coins give [kingdom] [amount]");
+            return;
+        }
+
+        String name = params.get("kingdom");
+        String amount = params.get("amount");
+
+        Kingdom kingdom = Kingdom.getKingdomFromName(name);
 
         if(kingdom == null) throw new CustomCommandException("Kingdom not found.");
         try{
-            int coins = Integer.parseInt(args[3]);
+            int coins = Integer.parseInt(amount);
             kingdom.getVault().addCoins(coins);
         }
         catch (NumberFormatException e){
@@ -36,13 +52,5 @@ public class KingdomGiveCoinsCommand extends CustomCommand {
             throw new CustomCommandException(e.getMessage());
         }
         commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully added coins.");
-
-        //return
-        return commandReturn;
-    }
-
-    @Override
-    public String getHelp() {
-        return null;
     }
 }

@@ -13,34 +13,38 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class KingdomRemoveCommand extends CustomCommand {
 
-    public KingdomRemoveCommand(String permission) {
-        super(permission);
+    public KingdomRemoveCommand() {
+        super("kingdom remove", Perms.KINGDOM_DEFAULT);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
 
-        //code
+    }
+
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
         if(kingdom == null) throw new CommandException("You are not a member of a Kingdom.");
         if(!kingdom.getMembers().getKing().getPlayerUUID().equals(player.getUniqueId()))
             throw new CommandException("Only the King can remove the Kingdom.");
 
-        Kingdom.removeKingdom(player).sendMembersMessage(ChatColor.GOLD + "This Kingdom has been removed.");
-        commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully removed Kingdom.");
+        try{
+            Kingdom.removeKingdom(player).sendMembersMessage(ChatColor.GOLD + "This Kingdom has been removed.");
+            commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully removed Kingdom.");
+        }
+        catch (KingdomException ex){
+            player.sendMessage(ex.getMessage());
+        }
 
-        //return
-        return commandReturn;
     }
 
     @Override
-    public String getHelp() {
-        return new CommandHelpGenerator("/kingdom remove", "Removes a Kingdom, can only be done by the King.")
-                .generateHelp();
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

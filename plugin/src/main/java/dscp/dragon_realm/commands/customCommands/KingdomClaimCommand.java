@@ -15,18 +15,20 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class KingdomClaimCommand extends CustomCommand {
-    public KingdomClaimCommand(String permission) {
-        super(permission);
+    public KingdomClaimCommand() {
+        super("kingdom claim", Perms.KINGDOM_DEFAULT);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
+        params.addParameter("range");
+    }
 
-        //code
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         if(!player.getWorld().getName().equals("world"))
             throw new CommandException("This command can only be performed in the overworld.");
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
@@ -37,36 +39,31 @@ public class KingdomClaimCommand extends CustomCommand {
         if(!member.hasPermission(KingdomMemberRank.KNIGHT))
             throw new CommandException("You need to have the rank of Knight or higher to perform this command.");
         Chunk chunk = player.getLocation().getChunk();
-        if(args.length == 1){
+
+        if(params.containsKey("range")) {
+            int r = 0;
+            int count = 0;
+            try {
+                r = Integer.parseInt(params.get("range"));
+            } catch (NumberFormatException e) {
+                throw new CustomCommandException("Radius must be a number.");
+            }
+            if (r > 5) throw new CustomCommandException("Radius can only be 5");
+            for (Chunk c : KingdomClaim.getChunksInRadius(chunk.getX(), chunk.getZ(), r)) {
+                if (kingdom.getClaim().claimChunk(c.getX(), c.getZ())) count++;
+            }
+            commandReturn.addReturnMessage(ChatColor.GREEN + "Claimed " + count + " Chunks");
+        }
+        else{
             if(KingdomClaim.isClaimed(chunk.getX(), chunk.getZ()))
                 throw new CommandException("Chunk is already claimed.");
             kingdom.getClaim().claimChunk(chunk.getX(), chunk.getZ());
             commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully claimed chunk.");
         }
-        else if(args.length == 2){
-            int r = 0;
-            int count = 0;
-            try{
-                r = Integer.parseInt(args[1]);
-            }
-            catch (NumberFormatException e){
-                throw new CustomCommandException("Second argument must be a number.");
-            }
-            if(r > 5) throw new CustomCommandException("Radius can only be 5");
-            for(Chunk c : KingdomClaim.getChunksInRadius(chunk.getX(), chunk.getZ(), r)){
-                if(kingdom.getClaim().claimChunk(c.getX(), c.getZ())) count++;
-            }
-            commandReturn.addReturnMessage(ChatColor.GREEN + "Claimed " + count + " Chunks");
-        }
-
-
-        //return
-        return commandReturn;
     }
 
     @Override
-    public String getHelp() {
-        return new CommandHelpGenerator("/kingdom claim", "Claim a chunk for your kingdom.")
-                .generateHelp();
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+
     }
 }

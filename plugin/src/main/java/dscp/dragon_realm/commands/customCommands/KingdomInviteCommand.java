@@ -13,25 +13,36 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class KingdomInviteCommand extends CustomCommand {
 
-    public KingdomInviteCommand(String permission) {
-        super(permission);
+    public KingdomInviteCommand() {
+        super("kingdom invite", Perms.KINGDOM_DEFAULT);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
+        params.addParameter("target");
+    }
+
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+
+        if(!params.containsKey("target")){
+            commandReturn.addReturnMessage(ChatColor.RED + "missing arguments, usage: /kingdom invite [player name]");
+            return;
+        }
+
+        String target = params.get("target");
 
         //get kingdom of inviting player
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
         if(kingdom == null) throw new CustomCommandException("Player is not part of a Kingdom.");
 
         //get player that will be invited
-        Player toInvite = Dragon_Realm_API.getPlayerFromName(args[1]);
-        if(toInvite == null) throw new CustomCommandException("Could not find player with name: " + args[1]);
+        Player toInvite = Dragon_Realm_API.getPlayerFromName(target);
+        if(toInvite == null) throw new CustomCommandException("Could not find player with name: " + target);
 
         //check if player is part of kingdom
         if(Kingdom.isMemberOfKingdom(toInvite)) throw new CustomCommandException("This player is already part of a Kingdom.");
@@ -39,15 +50,10 @@ public class KingdomInviteCommand extends CustomCommand {
         kingdom.invitePlayerToKingdom(player, toInvite);
 
         commandReturn.addReturnMessage(ChatColor.GREEN + "Successfully invited player to your Kingdom.");
-
-        //return
-        return commandReturn;
     }
 
     @Override
-    public String getHelp() {
-        return new CommandHelpGenerator("/kingdom invite [player]", "Invite a player to yor Kingdom.")
-                .addArgument("player", "The name of the player you want to invite.")
-                .generateHelp();
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

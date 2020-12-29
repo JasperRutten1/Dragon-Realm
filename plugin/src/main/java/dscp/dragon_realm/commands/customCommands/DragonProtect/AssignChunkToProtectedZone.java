@@ -14,26 +14,35 @@ import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class AssignChunkToProtectedZone extends CustomCommand {
-    public AssignChunkToProtectedZone(String permission) {
-        super(permission);
+    public AssignChunkToProtectedZone() {
+        super("dp assign", Perms.DP_STAFF);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
+        params.addParameter("zone");
+        params.addParameter("radius");
+    }
 
-        //code
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+
+        if(!params.containsKey("zone")){
+            commandReturn.addReturnMessage(ChatColor.RED + "missing arguments, usage: /dp assign [zone name] [(opt) radius]");
+            return;
+        }
+
         DragonProtect dp = Dragon_Realm.dragonProtect;
-        ProtectedZone pz = dp.getZone(Dragon_Realm_API.capitalizeFirstLetter(args[1]));
+        ProtectedZone pz = dp.getZone(Dragon_Realm_API.capitalizeFirstLetter(params.get("zone")));
         if(pz == null) throw new CustomCommandException("could not find zone with this name");
         Chunk chunk = player.getLocation().getChunk();
-        if(args.length > 2){
+        if(params.containsKey("range")){
             //range given
             try{
-                Integer radius = Integer.parseInt(args[2]);
+                Integer radius = Integer.parseInt(params.get("radius"));
                 if(radius > 15) throw new CustomCommandException("the maximum radius is 15");
                 int count = 0, fails = 0;
                 for(Chunk c : KingdomClaim.getChunksInRadius(chunk, radius)){
@@ -49,7 +58,7 @@ public class AssignChunkToProtectedZone extends CustomCommand {
                         + fails + ChatColor.RED + " chunks");
             }
             catch (NumberFormatException ex){
-                throw new CustomCommandException("2nd argument must be an number");
+                throw new CustomCommandException("range must be an number");
             }
         }
         else{
@@ -57,13 +66,10 @@ public class AssignChunkToProtectedZone extends CustomCommand {
             if(dp.getZone(chunk) != null) throw new CustomCommandException("this chunk is already assigned to another zone");
             pz.addChunkToZone(chunk);
         }
-
-        //return
-        return commandReturn;
     }
 
     @Override
-    public String getHelp() {
-        return null;
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        throw new CustomCommandException("player command");
     }
 }

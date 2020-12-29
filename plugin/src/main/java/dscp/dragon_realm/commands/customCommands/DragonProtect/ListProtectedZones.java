@@ -9,27 +9,26 @@ import dscp.dragon_realm.kingdoms.KingdomException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class ListProtectedZones extends CustomCommand {
-    public ListProtectedZones(String permission) {
-        super(permission);
+    public ListProtectedZones() {
+        super("dp zone list", Perms.DP_STAFF);
     }
 
     @Override
-    public CommandReturn runCommandCode(CommandSender sender, String commandName, String[] args) throws KingdomException, CustomCommandException {
-        if(!(sender instanceof Player)) throw new CustomCommandException("Sender must be of type player.");
-        Player player = (Player) sender;
-        CommandReturn commandReturn = new CommandReturn(player);
+    public void parameters(CommandParams params) {
 
-        //code
+    }
+
+    @Override
+    public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
+        runForNonPlayer(player, commandReturn, params);
+    }
+
+    @Override
+    public void runForNonPlayer(CommandSender sender, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         DragonProtect dp = Dragon_Realm.dragonProtect;
-        player.sendMessage(dp.listZones());
-
-        //return
-        return commandReturn;
-    }
-
-    @Override
-    public String getHelp() {
-        return null;
+        sender.sendMessage(dp.listZones());
     }
 }
