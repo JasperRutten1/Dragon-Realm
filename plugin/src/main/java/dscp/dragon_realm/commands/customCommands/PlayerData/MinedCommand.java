@@ -27,7 +27,7 @@ public class MinedCommand extends CustomCommand {
         if(dataContainer == null) return;
 
         ObjectData<Integer> diamondObjectData =
-                dataContainer.loadObjectFromContainer(DataContainerDataType.IntegerType, "diamonds-mined");
+                dataContainer.loadObjectDataFromContainer(DataContainerDataType.IntegerType, "diamonds-mined");
         int diamonds;
         if(diamondObjectData == null) diamonds = 0;
         else diamonds = diamondObjectData.getObject();

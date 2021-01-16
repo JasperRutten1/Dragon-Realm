@@ -1,6 +1,7 @@
 package dscp.dragon_realm.dataContainer;
 
 import com.google.common.primitives.Doubles;
+import dscp.dragon_realm.currency.PlayerWallet;
 import org.bukkit.entity.Player;
 
 import java.io.Serializable;
@@ -13,13 +14,14 @@ public interface DataContainerDataType<T> {
     BaseDataType<String> StringType = new BaseDataType<>(String.class, "Strings");
     BaseDataType<Long> LongType = new BaseDataType<>(Long.class, "Longs");
     BaseDataType<UUID> UUIDType = new BaseDataType<>(UUID.class, "UUID's");
-    BaseDataType<Player> PlayerType = new BaseDataType<>(Player.class, "Player");
+
+    BaseDataType<PlayerWallet> PlayerWalletType = new BaseDataType<>(PlayerWallet.class, "Player Wallet");
 
     Class<T> getType();
 
     String getName();
 
-    class BaseDataType<T> implements DataContainerDataType<T>, Serializable {
+    class BaseDataType<T extends Serializable> implements DataContainerDataType<T>, Serializable {
         private static final long serialVersionUID = -2391123945662368971L;
 
         private final Class<T> type;
