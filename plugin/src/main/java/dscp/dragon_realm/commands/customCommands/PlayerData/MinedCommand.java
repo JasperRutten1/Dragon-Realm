@@ -26,11 +26,11 @@ public class MinedCommand extends CustomCommand {
         PlayerDataContainer dataContainer = PlayerDataContainer.getPlayerData(player.getUniqueId());
         if(dataContainer == null) return;
 
-        ObjectData<Integer> diamondObjectData =
+        Integer diamondObjectData =
                 dataContainer.loadObjectFromContainer(DataContainerDataType.IntegerType, "diamonds-mined");
         int diamonds;
         if(diamondObjectData == null) diamonds = 0;
-        else diamonds = diamondObjectData.getObject();
+        else diamonds = diamondObjectData;
 
         player.sendMessage("diamonds mine: " + diamonds);
     }

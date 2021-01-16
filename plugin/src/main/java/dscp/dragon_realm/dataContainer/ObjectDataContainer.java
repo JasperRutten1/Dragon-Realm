@@ -1,5 +1,6 @@
 package dscp.dragon_realm.dataContainer;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class ObjectDataContainer implements Serializable{
     }
 
     public <T extends Serializable> void saveObjectToContainer(DataContainerDataType<T> dataType, String key, T object){
-        ObjectData<T> objectData = new ObjectData<T>(dataType, object);
+        ObjectData<T> objectData = new ObjectData<>(dataType, object);
         saveObjectDataToContainer(dataType, key, objectData);
     }
 
@@ -50,6 +51,16 @@ public class ObjectDataContainer implements Serializable{
         if(!this.dataMap.containsKey(dataType)) {
             this.dataMap.put(dataType, new HashMap<>());
         }
+    }
+
+    public <T extends Serializable> T removeObject(DataContainerDataType<T> dataType, String key){
+        if(dataMap.containsKey(dataType)){
+            ObjectData<?> objectData = dataMap.get(dataType).remove(key);
+            if(objectData == null) return null;
+            if(!dataType.getType().isInstance(objectData.getObject())) return null;
+            return dataType.getType().cast(objectData.getObject());
+        }
+        return null;
     }
 
     @Override

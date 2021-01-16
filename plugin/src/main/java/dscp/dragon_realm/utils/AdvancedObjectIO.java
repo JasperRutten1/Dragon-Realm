@@ -47,6 +47,9 @@ public class AdvancedObjectIO<T> {
                 e.printStackTrace();
                 throw new IOException("class not found");
             }
+            catch (EOFException e){
+                return null;
+            }
         }
         else return null;
     }

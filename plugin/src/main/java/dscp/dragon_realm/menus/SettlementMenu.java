@@ -79,7 +79,8 @@ public class SettlementMenu extends Container {
                 .lore(new LoreBuilder()
                     .blank()
                     .line("Price: ⛃" + Objects.requireNonNull(SettlementCosts.getCost(settlement.getLevel().getNextLevel())).getCoins())
-                    .line("Vault: ⛃" + settlement.getKingdom().getVault().getCoins())
+                    .line("Vault: ⛃" + settlement.getKingdom().getVault().getDefaultCurrency() + " "
+                            + settlement.getKingdom().getVault().getCurrencyType().getName())
                 )
                 .build()
             ).handler(e -> {

@@ -39,7 +39,8 @@ public class Settlement implements Serializable {
         //check if kingdom has enough coins
         SettlementCosts cost = SettlementCosts.getCost(SettlementLevel.getLevelFromInt(level));
         assert cost != null;
-        if(kingdom.getVault().getCoins() < cost.coins) throw new KingdomException("not enough coins");
+        if(kingdom.getVault().getCurrencyType().toCoins(kingdom.getVault().getDefaultCurrency()) < cost.coins)
+            throw new KingdomException("not enough coins");
 
         //check if there is already a settlement with this name
         for(Kingdom k : Kingdom.kingdoms){
@@ -64,7 +65,7 @@ public class Settlement implements Serializable {
                 addChunkToCovered(c.getX(), c.getZ());
             }
             //remove coins
-            kingdom.getVault().removeCoins(cost.coins);
+            kingdom.getVault().changeDefaultCurrency(-(int)cost.coins);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -157,7 +158,7 @@ public class Settlement implements Serializable {
         SettlementLevel nextLevel = this.level.getNextLevel();
         SettlementCosts settlementCosts = SettlementCosts.getCost(nextLevel);
         assert settlementCosts != null;
-        if(kingdom.getVault().getCoins() < settlementCosts.getCoins()) throw new KingdomException("not enough coins");
+        if(kingdom.getVault().getCurrencyType().toCoins(kingdom.getVault().getDefaultCurrency()) < settlementCosts.getCoins()) throw new KingdomException("not enough coins");
         int dia = (nextLevel.getLevel() * 2) + 1;
         if(!kingdom.getClaim().checkClaimedInRadius(centerX, centerZ, nextLevel.level))
             throw new KingdomException("kingdom must have " + dia + " x " + dia + " area claimed around center chunk");
@@ -165,13 +166,8 @@ public class Settlement implements Serializable {
             addChunkToCovered(c.getX(), c.getZ());
         }
 
-        try{
-            kingdom.getVault().removeCoins(settlementCosts.getCoins());
-        }
-        catch (VaultException e){
-            e.printStackTrace();
-            throw new KingdomException("could not remove coins, to few coins in vault");
-        }
+        kingdom.getVault().changeDefaultCurrency(-(int)settlementCosts.getCoins());
+
         this.level = nextLevel;
         return this;
     }

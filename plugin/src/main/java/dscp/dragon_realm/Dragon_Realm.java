@@ -1,6 +1,8 @@
 package dscp.dragon_realm;
 
 import dscp.dragon_realm.advancedParticles.AdvancedParticles;
+import dscp.dragon_realm.bounty.Bounty;
+import dscp.dragon_realm.bounty.BountyContainer;
 import dscp.dragon_realm.commands.DRCommands;
 import dscp.dragon_realm.customEnchants.CustomEnchants;
 import dscp.dragon_realm.customEnchants.CustomEnchantsCraftingRecipes;
@@ -78,6 +80,7 @@ public final class Dragon_Realm extends JavaPlugin {
         manager.registerEvents(new DiamondMineEvent(), this);
         SpiritSwordEventManager.registerEvents();
         DragonProtect.registerEvents();
+        BountyContainer.initialise();
     }
 
     public static void startUpDiscordEmbed(){
@@ -102,6 +105,7 @@ public final class Dragon_Realm extends JavaPlugin {
         DragonProtect.save();
         SpiritSword.saveSoulBindMap();
         PlayerDataContainer.unloadAllPlayerData();
+        BountyContainer.saveContainer();
     }
 
     public static Dragon_Realm getInstance() {

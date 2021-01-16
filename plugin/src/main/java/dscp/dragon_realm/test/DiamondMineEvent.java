@@ -19,17 +19,17 @@ public class DiamondMineEvent implements Listener {
 
         if(event.getBlock().getType() == Material.DIAMOND_ORE){
             System.out.println("diamond mined!");
-            ObjectData<Integer> data = container.loadObjectFromContainer(DataContainerDataType.IntegerType, "diamonds-mined");
+            Integer data = container.loadObjectFromContainer(DataContainerDataType.IntegerType, "diamonds-mined");
             Integer diamonds;
             if(data == null) {
                 diamonds = 0;
             }
             else{
-                diamonds = data.getObject();
+                diamonds = data;
             }
             diamonds++;
             container.saveObjectToContainer(DataContainerDataType.IntegerType, "diamonds-mined",
-                    new ObjectData<>(DataContainerDataType.IntegerType, diamonds));
+                    diamonds);
         }
     }
 }

@@ -8,19 +8,25 @@ import dscp.dragon_realm.utils.AdvancedObjectIO;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.UUID;
 
-public class BountyContainer extends ObjectDataContainer {
-    private static BountyContainer bounties;
+public class BountyContainer extends ObjectDataContainer implements Serializable {
+    private static final long serialVersionUID = 9151891114904718022L;
+
     private static File bountyFile = getBountyFile();
+    private static BountyContainer bounties = getBountyContainer();
 
     public BountyContainer(){
-
+        super();
     }
 
     private static BountyContainer getBountyContainer(){
-        AdvancedObjectIO<BountyContainer> objectIO = new AdvancedObjectIO<>(bountyFile);
+        AdvancedObjectIO<BountyContainer> objectIO = new AdvancedObjectIO<>(getBountyFile());
         try{
-            return objectIO.loadObject();
+            BountyContainer container = objectIO.loadObject();
+            if(container == null) return new BountyContainer();
+            else return container;
         } catch (IOException e) {
             e.printStackTrace();
             return new BountyContainer();
@@ -39,7 +45,41 @@ public class BountyContainer extends ObjectDataContainer {
         return file;
     }
 
-    private static void placeBounty(Bounty bounty){
-        bounties.saveObjectToContainer(DataContainerDataType.BountyType,bounty.getTargetUUID().toString(),bounty);
+    public static void placeBounty(Bounty bounty){
+        Bounty toSave = bounties.loadObjectFromContainer(DataContainerDataType.BountyType, bounty.getTargetUUID().toString());
+        if(toSave != null){
+            toSave.combineWith(bounty);
+        }
+        else{
+            toSave = bounty;
+        }
+        bounties.saveObjectToContainer(DataContainerDataType.BountyType, bounty.getTargetUUID().toString(), toSave);
+    }
+
+    public static Bounty getBountyForPlayer(UUID playerUUID){
+        return bounties.loadObjectFromContainer(DataContainerDataType.BountyType, playerUUID.toString());
+    }
+
+    public static boolean hasBounty(UUID playerUUID){
+        return getBountyForPlayer(playerUUID) != null;
+    }
+
+    public static void initialise(){
+        Dragon_Realm.instance.getServer().getPluginManager().registerEvents(new BountyEvent(), Dragon_Realm.instance);
+    }
+
+    public static void removeBounty(UUID player){
+        bounties.removeObject(DataContainerDataType.BountyType, player.toString());
+    }
+
+    public static void saveContainer(){
+        AdvancedObjectIO<BountyContainer> objectIO = new AdvancedObjectIO<>(bountyFile);
+        try{
+            objectIO.saveObject(bounties);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            return;
+        }
     }
 }

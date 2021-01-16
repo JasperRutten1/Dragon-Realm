@@ -3,6 +3,9 @@ package dscp.dragon_realm.commands;
 import dscp.dragon_realm.commands.customCommands.*;
 import dscp.dragon_realm.commands.customCommands.DragonProtect.*;
 import dscp.dragon_realm.commands.customCommands.PlayerData.MinedCommand;
+import dscp.dragon_realm.commands.customCommands.bounty.PlaceBountyCommand;
+import dscp.dragon_realm.commands.customCommands.currency.CheckCurrencyCommand;
+import dscp.dragon_realm.commands.customCommands.currency.GiveCoinsCommand;
 import dscp.dragon_realm.commands.customCommands.essentials.*;
 import dscp.dragon_realm.commands.customCommands.spiritSwords.SpiritSwordGive;
 import dscp.dragon_realm.commands.customCommands.spiritSwords.SpiritSwordInfo;
@@ -24,8 +27,6 @@ public enum DRCommands {
 
     SETTLEMENT_CREATE(new KingdomCreateSettlementCommand()),
 
-    COINS_GIVE(new KingdomGiveCoinsCommand()),
-
     FEED(new FeedCommand()),
     FLY(new FlyCommand()),
     FLY_SPEED(new FlySpeedCommand()),
@@ -41,7 +42,12 @@ public enum DRCommands {
     SS_GIVE(new SpiritSwordGive()),
     SS_INFO(new SpiritSwordInfo()),
 
-    PLAYER_DATA_MINED(new MinedCommand());
+    PLAYER_DATA_MINED(new MinedCommand()),
+
+    BOUNTY_PLACE(new PlaceBountyCommand()),
+
+    CURRENCY_GIVE(new GiveCoinsCommand()),
+    CURRENCY_CHECK(new CheckCurrencyCommand());
 
     private final CustomCommand command;
 
@@ -96,9 +102,10 @@ public enum DRCommands {
 
         HashMap<String, String> params = new HashMap<>();
         CustomCommand.CommandParams cmdParams = command.getParameters();
+        System.out.println("command params: " + cmdParams.getParameters());
         for(int i = 0 ; i < cmdParams.count() ; i++){
             try{
-                params.put(cmdParams.getParameters().get(0), args[command.getCommandArgs().length + i]);
+                params.put(cmdParams.getParameters().get(i), args[command.getCommandArgs().length + i]);
             }
             catch(Exception ex){
                 //

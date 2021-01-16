@@ -37,5 +37,9 @@ commands:
     description: spirit sword command
   pd:
     description: player data command
+  currency:
+    description: currency command
+  bounty:
+    description: bounty command
 
 
