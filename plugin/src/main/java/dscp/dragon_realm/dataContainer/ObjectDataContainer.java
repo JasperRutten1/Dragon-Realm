@@ -17,12 +17,17 @@ public class ObjectDataContainer implements Serializable{
         return dataMap;
     }
 
-    public <T extends Serializable> void saveObjectToContainer(DataContainerDataType<T> dataType, String key, ObjectData<T> objectData){
+    public <T extends Serializable> void saveObjectDataToContainer(DataContainerDataType<T> dataType, String key, ObjectData<T> objectData){
         createMapIfNotExist(dataType);
         this.dataMap.get(dataType).put(key, objectData);
     }
 
-    public <T extends Serializable> ObjectData<T> loadObjectFromContainer(DataContainerDataType<T> dataType, String key){
+    public <T extends Serializable> void saveObjectToContainer(DataContainerDataType<T> dataType, String key, T object){
+        ObjectData<T> objectData = new ObjectData<T>(dataType, object);
+        saveObjectDataToContainer(dataType, key, objectData);
+    }
+
+    public <T extends Serializable> ObjectData<T> loadObjectDataFromContainer(DataContainerDataType<T> dataType, String key){
         createMapIfNotExist(dataType);
         if(!this.dataMap.get(dataType).containsKey(key)){
             return null;
@@ -33,6 +38,12 @@ public class ObjectDataContainer implements Serializable{
              return new ObjectData<>(dataType, object);
         }
         else return null;
+    }
+
+    public <T extends Serializable> T loadObjectFromContainer(DataContainerDataType<T> dataType, String key){
+        ObjectData<T> objectData = loadObjectDataFromContainer(dataType, key);
+        if(objectData == null) return null;
+        else return objectData.getObject();
     }
 
     private <T extends Serializable> void createMapIfNotExist(DataContainerDataType<T> dataType){
