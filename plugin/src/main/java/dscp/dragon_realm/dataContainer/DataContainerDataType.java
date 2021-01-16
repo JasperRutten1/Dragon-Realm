@@ -1,6 +1,7 @@
 package dscp.dragon_realm.dataContainer;
 
 import com.google.common.primitives.Doubles;
+import dscp.dragon_realm.bounty.Bounty;
 import org.bukkit.entity.Player;
 
 import java.io.Serializable;
@@ -13,7 +14,7 @@ public interface DataContainerDataType<T> {
     BaseDataType<String> StringType = new BaseDataType<>(String.class, "Strings");
     BaseDataType<Long> LongType = new BaseDataType<>(Long.class, "Longs");
     BaseDataType<UUID> UUIDType = new BaseDataType<>(UUID.class, "UUID's");
-    BaseDataType<Player> PlayerType = new BaseDataType<>(Player.class, "Player");
+    BaseDataType<Bounty> BountyType = new BaseDataType<>(Bounty.class, "Bounty");
 
     Class<T> getType();
 
