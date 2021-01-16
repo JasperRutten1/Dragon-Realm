@@ -1,6 +1,7 @@
 package dscp.dragon_realm.kingdoms.relations;
 
 import dscp.dragon_realm.kingdoms.Kingdom;
+import dscp.dragon_realm.kingdoms.wars.WarManager;
 import org.bukkit.ChatColor;
 
 import java.io.Serializable;
@@ -14,11 +15,13 @@ public class KingdomRelations implements Serializable {
     private Map<Kingdom, Double> relations;
     private KingdomAlliance alliance;
     private Kingdom invitedKingdom;
+    private WarManager warManager;
 
     public KingdomRelations(Kingdom kingdom){
         if(kingdom == null) throw new IllegalArgumentException("kingdom can't be null");
         this.kingdom = kingdom;
         this.relations = new HashMap<>();
+        this.warManager = new WarManager(this.kingdom);
     }
 
     public void setAlliance(KingdomAlliance alliance) {
@@ -31,6 +34,10 @@ public class KingdomRelations implements Serializable {
 
     public KingdomAlliance getAlliance() {
         return alliance;
+    }
+
+    public WarManager getWarManager() {
+        return warManager;
     }
 
     //relations
@@ -61,6 +68,15 @@ public class KingdomRelations implements Serializable {
 
     public boolean hasAlliance(){
         return this.alliance != null;
+    }
+
+    public boolean alliedWith(Kingdom kingdom){
+        if(kingdom == null) throw new IllegalArgumentException("kingdom can't tbe null");
+        if(hasAlliance()){
+            if(this.kingdom.equals(kingdom)) return false;
+            return alliance.getKingdoms().contains(kingdom);
+        }
+        else return false;
     }
 
     public void createAllianceWith(Kingdom kingdom){

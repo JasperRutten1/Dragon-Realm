@@ -35,5 +35,7 @@ commands:
     description: main command for dragon protect
   ss:
     description: spirit sword command
+  pd:
+    description: player data command
 
 

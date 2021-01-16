@@ -5,6 +5,7 @@ import dscp.dragon_realm.commands.DRCommands;
 import dscp.dragon_realm.customEnchants.CustomEnchants;
 import dscp.dragon_realm.customEnchants.CustomEnchantsCraftingRecipes;
 import dscp.dragon_realm.customEnchants.events.EnchantsEvents;
+import dscp.dragon_realm.dataContainer.PlayerDataContainer;
 import dscp.dragon_realm.discord.DiscordWebhook;
 import dscp.dragon_realm.discord.ToDiscordEvents;
 import dscp.dragon_realm.dragonProtect.DragonProtect;
@@ -13,6 +14,7 @@ import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSword;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active.SpiritSwordActiveAbility;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.passive.SpiritSwordPassiveAbility;
 import dscp.dragon_realm.specialWeapons.spiritSwords.events.SpiritSwordEventManager;
+import dscp.dragon_realm.test.DiamondMineEvent;
 import dscp.dragon_realm.utils.Reflection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -73,9 +75,9 @@ public final class Dragon_Realm extends JavaPlugin {
         manager.registerEvents(Reflection.init(), this);
         manager.registerEvents(enchantsEvents, this);
         manager.registerEvents(new ToDiscordEvents(), this);
+        manager.registerEvents(new DiamondMineEvent(), this);
         SpiritSwordEventManager.registerEvents();
         DragonProtect.registerEvents();
-
     }
 
     public static void startUpDiscordEmbed(){
@@ -99,15 +101,7 @@ public final class Dragon_Realm extends JavaPlugin {
         Kingdom.saveKingdoms(new File(getDataFolder(), "kingdoms"));
         DragonProtect.save();
         SpiritSword.saveSoulBindMap();
-        try{
-            DiscordWebhook startUpWebhook = new DiscordWebhook(ToDiscordEvents.WEBHOOK_LINK);
-            startUpWebhook.setUsername("Dragon-Realm");
-            startUpWebhook.setContent("**Server shutting down**");
-            startUpWebhook.execute();
-        }
-        catch (IOException e){
-            System.out.println("Exception in sending discord webhook");
-        }
+        PlayerDataContainer.unloadAllPlayerData();
     }
 
     public static Dragon_Realm getInstance() {

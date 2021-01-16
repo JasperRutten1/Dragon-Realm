@@ -2,6 +2,7 @@ package dscp.dragon_realm.commands;
 
 import dscp.dragon_realm.commands.customCommands.*;
 import dscp.dragon_realm.commands.customCommands.DragonProtect.*;
+import dscp.dragon_realm.commands.customCommands.PlayerData.MinedCommand;
 import dscp.dragon_realm.commands.customCommands.essentials.*;
 import dscp.dragon_realm.commands.customCommands.spiritSwords.SpiritSwordGive;
 import dscp.dragon_realm.commands.customCommands.spiritSwords.SpiritSwordInfo;
@@ -38,7 +39,9 @@ public enum DRCommands {
     DP_ZONE_LIST(new ListProtectedZones()),
     DP_EDIT(new ToggleEditMode()),
     SS_GIVE(new SpiritSwordGive()),
-    SS_INFO(new SpiritSwordInfo());
+    SS_INFO(new SpiritSwordInfo()),
+
+    PLAYER_DATA_MINED(new MinedCommand());
 
     private final CustomCommand command;
 

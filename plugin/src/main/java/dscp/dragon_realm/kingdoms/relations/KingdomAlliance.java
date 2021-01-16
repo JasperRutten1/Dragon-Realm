@@ -1,6 +1,7 @@
 package dscp.dragon_realm.kingdoms.relations;
 
 import dscp.dragon_realm.kingdoms.Kingdom;
+import dscp.dragon_realm.kingdoms.wars.WarProposal;
 
 import java.io.Serializable;
 import java.util.*;
@@ -12,6 +13,7 @@ public class KingdomAlliance implements Serializable {
     private String name;
     private Map<Kingdom, Long> joinTimeMap;
     private Kingdom invitedKingdom;
+    private WarProposal warProposal;
 
     public static int MAXIMUM_MEMBERS = 4;
 
@@ -75,6 +77,31 @@ public class KingdomAlliance implements Serializable {
 
     public void removeInvitedKingdom(){
         this.invitedKingdom = null;
+    }
+
+    //war
+
+    public boolean atWar(){
+        for(Kingdom kingdom : kingdoms){
+            if(kingdom.getRelations().getWarManager().atWar()) return true;
+        }
+        return false;
+    }
+
+    public void setWarProposal(WarProposal warProposal) {
+        this.warProposal = warProposal;
+    }
+
+    public boolean hasWarProposal(){
+        return warProposal != null;
+    }
+
+    //broadcast
+
+    public void sendKingdomsMembersMessage(String message){
+        for(Kingdom k : kingdoms){
+            k.sendMembersMessage(message);
+        }
     }
 
     @Override

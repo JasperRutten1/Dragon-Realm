@@ -86,7 +86,9 @@ public abstract class CustomCommand {
         DP_STAFF("dscp.dp.staff"),
         DP_EDIT("dscp.dp.edit"),
 
-        SS_CREATE("dscp.ss.create");
+        SS_CREATE("dscp.dr.ss.create"),
+
+        PLAYER_DATA("dscp.dr.pd");
 
         String perm;
 
