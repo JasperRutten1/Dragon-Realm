@@ -2,7 +2,7 @@ package dscp.dragon_realm.dataContainer;
 
 import java.io.Serializable;
 
-public class ObjectData<T> implements Serializable{
+public class ObjectData<T extends Serializable> implements Serializable{
     private static final long serialVersionUID = 655489610473547016L;
 
     private T object;
