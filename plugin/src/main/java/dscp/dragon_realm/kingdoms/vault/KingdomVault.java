@@ -23,4 +23,6 @@ public class KingdomVault extends CurrencyContainer {
         super(DefaultCurrencyType.COINS);
         this.kingdom = kingdom;
     }
+
+
 }

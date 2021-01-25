@@ -34,4 +34,9 @@ public class CurrencyContainer implements Serializable {
         this.defaultCurrency += this.currencyType.fromCoins(coins);
         return this.defaultCurrency;
     }
+
+    public void transferDefaultTo(CurrencyContainer container, int coins){
+        container.changeDefaultCurrency(coins);
+        this.changeDefaultCurrency(-coins);
+    }
 }

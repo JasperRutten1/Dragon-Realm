@@ -65,7 +65,5 @@ public class BountyEvent implements Listener {
                 }
             }
         }
-
-
     }
 }
