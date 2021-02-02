@@ -1,4 +1,4 @@
-package dscp.dragon_realm.kingdoms.vault;
+package dscp.dragon_realm.kingdoms.bank;
 
 public class VaultException extends Exception{
     public VaultException(String message, Exception e){

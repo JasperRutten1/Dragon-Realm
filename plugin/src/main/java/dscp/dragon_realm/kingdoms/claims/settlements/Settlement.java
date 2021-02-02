@@ -1,13 +1,11 @@
 package dscp.dragon_realm.kingdoms.claims.settlements;
 
 import dscp.dragon_realm.Dragon_Realm_API;
-import dscp.dragon_realm.commands.customCommands.KingdomClaimCommand;
 import dscp.dragon_realm.kingdoms.Kingdom;
 import dscp.dragon_realm.kingdoms.KingdomException;
 import dscp.dragon_realm.kingdoms.claims.KingdomClaim;
 import dscp.dragon_realm.kingdoms.members.KingdomMember;
 import dscp.dragon_realm.kingdoms.members.KingdomMemberRank;
-import dscp.dragon_realm.kingdoms.vault.VaultException;
 import org.bukkit.Chunk;
 
 import java.io.Serializable;
@@ -36,12 +34,6 @@ public class Settlement implements Serializable {
         if(SettlementLevel.getLevelFromInt(level) == null)
             throw new IllegalArgumentException("unknown level");
 
-        //check if kingdom has enough coins
-        SettlementCosts cost = SettlementCosts.getCost(SettlementLevel.getLevelFromInt(level));
-        assert cost != null;
-        if(kingdom.getVault().getCurrencyType().toCoins(kingdom.getVault().getDefaultCurrency()) < cost.coins)
-            throw new KingdomException("not enough coins");
-
         //check if there is already a settlement with this name
         for(Kingdom k : Kingdom.kingdoms){
             if(kingdom.getClaim().hasSettlementWithName(name))
@@ -65,7 +57,6 @@ public class Settlement implements Serializable {
                 addChunkToCovered(c.getX(), c.getZ());
             }
             //remove coins
-            kingdom.getVault().changeDefaultCurrency(-(int)cost.coins);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -158,17 +149,9 @@ public class Settlement implements Serializable {
         SettlementLevel nextLevel = this.level.getNextLevel();
         SettlementCosts settlementCosts = SettlementCosts.getCost(nextLevel);
         assert settlementCosts != null;
-        if(kingdom.getVault().getCurrencyType().toCoins(kingdom.getVault().getDefaultCurrency()) < settlementCosts.getCoins()) throw new KingdomException("not enough coins");
-        int dia = (nextLevel.getLevel() * 2) + 1;
-        if(!kingdom.getClaim().checkClaimedInRadius(centerX, centerZ, nextLevel.level))
-            throw new KingdomException("kingdom must have " + dia + " x " + dia + " area claimed around center chunk");
-        for(Chunk c : KingdomClaim.getChunksInRadius(centerX, centerZ, nextLevel.getLevel())){
-            addChunkToCovered(c.getX(), c.getZ());
-        }
 
-        kingdom.getVault().changeDefaultCurrency(-(int)settlementCosts.getCoins());
 
-        this.level = nextLevel;
+
         return this;
     }
 

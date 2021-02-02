@@ -27,7 +27,7 @@ public class PlayerWallet extends CurrencyContainer{
     private static DefaultCurrencyType getKingdomCurrencyType(OfflinePlayer player){
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
         if(kingdom == null) return DefaultCurrencyType.COINS;
-        else return kingdom.getVault().getCurrencyType();
+        else return kingdom.getBank().getDefaultCurrencyType();
     }
 
     public static PlayerWallet getWalletFromPlayer(OfflinePlayer player){

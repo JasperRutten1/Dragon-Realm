@@ -12,10 +12,12 @@ import org.bukkit.entity.Player;
 public class KingdomOverviewMenu extends Container {
 
     private Kingdom kingdom;
+    private Container previousMenu;
 
-    public KingdomOverviewMenu(Kingdom kingdom) {
+    public KingdomOverviewMenu(Kingdom kingdom, Container previousMenu) {
         super("Kingdom Overview", 6);
         this.kingdom = kingdom;
+        this.previousMenu = previousMenu;
     }
 
     @Override
@@ -116,7 +118,12 @@ public class KingdomOverviewMenu extends Container {
             bp.slot(53).item(new ItemStackBuilder(Material.BARRIER)
                     .name("&c&lClose")
                     .build()
-            ).handler(e -> viewer.closeInventory());
+            ).handler(e -> {
+                if(previousMenu != null){
+                    previousMenu.open(viewer);
+                }
+                else viewer.closeInventory();
+            });
         }
         else{
             Kingdom viewerKingdom = Kingdom.getKingdomFromPlayer(viewer);

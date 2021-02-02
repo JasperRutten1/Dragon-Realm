@@ -5,8 +5,10 @@ import dscp.dragon_realm.commands.customCommands.DragonProtect.*;
 import dscp.dragon_realm.commands.customCommands.PlayerData.MinedCommand;
 import dscp.dragon_realm.commands.customCommands.bounty.PlaceBountyCommand;
 import dscp.dragon_realm.commands.customCommands.currency.CheckCurrencyCommand;
+import dscp.dragon_realm.commands.customCommands.currency.DropCoinsCommand;
 import dscp.dragon_realm.commands.customCommands.currency.GiveCoinsCommand;
 import dscp.dragon_realm.commands.customCommands.essentials.*;
+import dscp.dragon_realm.commands.customCommands.menus.PlayerMenuCommand;
 import dscp.dragon_realm.commands.customCommands.spiritSwords.SpiritSwordGive;
 import dscp.dragon_realm.commands.customCommands.spiritSwords.SpiritSwordInfo;
 import org.bukkit.command.CommandSender;
@@ -47,7 +49,10 @@ public enum DRCommands {
     BOUNTY_PLACE(new PlaceBountyCommand()),
 
     CURRENCY_GIVE(new GiveCoinsCommand()),
-    CURRENCY_CHECK(new CheckCurrencyCommand());
+    CURRENCY_CHECK(new CheckCurrencyCommand()),
+    CURRENCY_DROP(new DropCoinsCommand()),
+
+    Player_MENU(new PlayerMenuCommand());
 
     private final CustomCommand command;
 
