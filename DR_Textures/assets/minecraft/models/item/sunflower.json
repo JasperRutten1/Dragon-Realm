@@ -1,7 +1,7 @@
 {
-  "parent": "item/handheld",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "items/sunflower"
+    "layer0": "minecraft:block/sunflower_front"
   },
   "overrides": [
     {"predicate": {"custom_model_data":1111111}, "model": "item/coin"}

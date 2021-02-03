@@ -4,7 +4,7 @@ import dscp.dragon_realm.builders.ItemStackBuilder;
 import dscp.dragon_realm.builders.LoreBuilder;
 import dscp.dragon_realm.container.Blueprint;
 import dscp.dragon_realm.container.Container;
-import dscp.dragon_realm.currency.DroppedCoins;
+import dscp.dragon_realm.currency.DroppedCurrency;
 import dscp.dragon_realm.currency.PlayerWallet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -84,6 +84,7 @@ public class DropCoinsMenu extends Container {
                         .line("The amount of coins you are going to drop")
                         .line(wallet.getCurrencyType().fromCoins(this.coins) + " " + wallet.getCurrencyType().getName())
                 )
+                .customModelData(1111111)
                 .build()
         );
 
@@ -135,7 +136,7 @@ public class DropCoinsMenu extends Container {
                 .build()
         ).handler(e -> {
             if(wallet.getCurrencyType().toCoins(wallet.getDefaultCurrency()) >= this.coins && this.coins > 0){
-                DroppedCoins.dropCoinsNaturally(viewer.getLocation(), this.coins);
+                DroppedCurrency.dropCoinsNaturally(viewer.getLocation(), this.coins);
                 wallet.changeDefaultCurrency(-this.coins);
                 new DropCoinsMenu(this.previousMenu, this.coins).open(viewer);
             }

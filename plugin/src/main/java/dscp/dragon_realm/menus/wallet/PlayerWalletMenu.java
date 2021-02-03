@@ -10,6 +10,8 @@ import dscp.dragon_realm.kingdoms.Kingdom;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class PlayerWalletMenu extends Container {
     private Player player;
@@ -32,7 +34,7 @@ public class PlayerWalletMenu extends Container {
                     .name(ChatColor.GOLD + "" + wallet.getDefaultCurrency() + " " + wallet.getCurrencyType().getName())
                     .lore(new LoreBuilder()
                             .blank()
-                            .line(ChatColor.GRAY + "Default Currency.")
+                            .line(ChatColor.GRAY + "Default Currency")
                             .line(ChatColor.GRAY + "Used for trading and needed for upgrading your kingdom")
                             .blank()
                             .line(ChatColor.GRAY + "Currency type: " + wallet.getCurrencyType().getName())
@@ -40,22 +42,41 @@ public class PlayerWalletMenu extends Container {
                             .lineIf(ChatColor.GRAY + "Value in Coins: " + wallet.getCurrencyType().toCoins(wallet.getDefaultCurrency()),
                                     wallet.getCurrencyType() != DefaultCurrencyType.COINS)
                     )
+                    .customModelData(1111111)
                     .build()
             );
 
-            //rare currency
-            bp.slot(11).item(new ItemStackBuilder(Material.ENDER_EYE)
-                    .name(ChatColor.GRAY + "" + ChatColor.BOLD + "Not Implemented")
+            //ender dust
+            bp.slot(11).item(new ItemStackBuilder(Material.BLAZE_POWDER)
+                    .name(ChatColor.DARK_AQUA + "" + wallet.getEnderPowder() + " Ender Powder")
+                    .lore(new LoreBuilder()
+                            .blank()
+                            .line("Rare Recourse")
+                            .line("Used for special items and upgrading your kingdom")
+                            .blank()
+                            .line("You can only hold " + wallet.getEnderPowder_max() + " Ender Powder in your wallet")
+                            .line("This recourse can not be shared with other players")
+                    )
+                    .customModelData(1111111)
                     .build()
             );
 
-            //exotic currency
-            bp.slot(12).item(new ItemStackBuilder(Material.BLAZE_POWDER)
-                    .name(ChatColor.GRAY + "" + ChatColor.BOLD + "Not Implemented")
+            //dragon pearl
+            bp.slot(12).item(new ItemStackBuilder(Material.ENDER_EYE)
+                    .name(ChatColor.DARK_RED + "" + wallet.getDragonPearl() + " Dragon Pearl")
+                    .lore(new LoreBuilder()
+                            .blank()
+                            .line("Exotic Recourse")
+                            .line("Used for exotic items and upgrading your kingdom")
+                            .blank()
+                            .line("You can only hold " + wallet.getDragonPearl_max() + " Dragon Pearls in your wallet")
+                            .line("This recourse can not be shared with other players")
+                    )
+                    .customModelData(1111111)
                     .build()
             );
 
-            //drop currency
+            //drop coins
             bp.slot(14).item(new ItemStackBuilder(Material.HOPPER)
                     .name(ChatColor.GOLD + "Drop Coins")
                     .lore(new LoreBuilder()

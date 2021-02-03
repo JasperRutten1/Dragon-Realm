@@ -3,7 +3,7 @@ package dscp.dragon_realm.commands.customCommands.currency;
 import dscp.dragon_realm.commands.CommandReturn;
 import dscp.dragon_realm.commands.CustomCommand;
 import dscp.dragon_realm.commands.CustomCommandException;
-import dscp.dragon_realm.currency.DroppedCoins;
+import dscp.dragon_realm.currency.DroppedCurrency;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
@@ -19,6 +19,7 @@ public class DropCoinsCommand extends CustomCommand {
 
     @Override
     public void parameters(CommandParams params) {
+        params.addParameter("type");
         params.addParameter("amount");
         params.addParameter("x");
         params.addParameter("y");
@@ -44,6 +45,7 @@ public class DropCoinsCommand extends CustomCommand {
     }
 
     private void dropCoins(Location loc, HashMap<String, String> params) throws CustomCommandException{
+        if(!params.containsKey("type")) throw new CustomCommandException("Must specify currency type");
         if(!params.containsKey("amount")) throw new CustomCommandException("Must specify amount");
         Location location;
         if(params.containsKey("x")){
@@ -73,6 +75,22 @@ public class DropCoinsCommand extends CustomCommand {
         catch(NumberFormatException ex){
             throw new CustomCommandException("Amount must be number");
         }
-        DroppedCoins.dropCoinsNaturally(location, amount);
+        switch (params.get("type")){
+            case "coins":
+            case "coin":
+                DroppedCurrency.dropCoinsNaturally(location, amount);
+                break;
+            case "powder":
+            case "enderpowder":
+            case "ender_powder":
+                DroppedCurrency.dropEnderPowder(location, amount);
+                break;
+            case "pearl":
+            case "dragonpearl":
+            case "dragon_pearl":
+                DroppedCurrency.dropDragonPearl(location, amount);
+                break;
+        }
+
     }
 }

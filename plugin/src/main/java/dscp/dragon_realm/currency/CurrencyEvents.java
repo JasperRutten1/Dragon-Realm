@@ -33,10 +33,10 @@ public class CurrencyEvents implements Listener {
         ItemMeta meta = stack.getItemMeta();
         assert meta != null;
 
-        if(meta.getPersistentDataContainer().has(DroppedCoins.key, PersistentDataType.INTEGER)){
+        if(meta.getPersistentDataContainer().has(DroppedCurrency.coinsKey, PersistentDataType.INTEGER)){
             if(event.getEntity() instanceof Player){
                 Player player = (Player) event.getEntity();
-                int amount = meta.getPersistentDataContainer().get(DroppedCoins.key, PersistentDataType.INTEGER);
+                int amount = meta.getPersistentDataContainer().get(DroppedCurrency.coinsKey, PersistentDataType.INTEGER);
                 PlayerWallet wallet = PlayerWallet.getWalletFromPlayer(player);
 
                 event.setCancelled(true);
@@ -65,7 +65,7 @@ public class CurrencyEvents implements Listener {
             int dropChance = new Random().nextInt(100);
 
             if(dropChance <= DROP_CHANCE){
-                DroppedCoins.dropCoinsNaturally(entity.getLocation(), dropAmount);
+                DroppedCurrency.dropCoinsNaturally(entity.getLocation(), dropAmount);
             }
         }
     }
@@ -77,21 +77,22 @@ public class CurrencyEvents implements Listener {
         ItemMeta itemMeta = itemStack.getItemMeta();
         assert itemMeta != null;
 
-        if(itemMeta.getPersistentDataContainer().has(DroppedCoins.key, PersistentDataType.INTEGER)){
+        //coins
+        if(itemMeta.getPersistentDataContainer().has(DroppedCurrency.coinsKey, PersistentDataType.INTEGER)){
             Item target = event.getTarget();
             ItemStack targetStack = target.getItemStack();
             ItemMeta targetMeta = targetStack.getItemMeta();
             assert targetMeta != null;
 
-            if(targetMeta.getPersistentDataContainer().has(DroppedCoins.key, PersistentDataType.INTEGER)){
-                int total = itemMeta.getPersistentDataContainer().get(DroppedCoins.key, PersistentDataType.INTEGER)
-                        + targetMeta.getPersistentDataContainer().get(DroppedCoins.key, PersistentDataType.INTEGER);
+            if(targetMeta.getPersistentDataContainer().has(DroppedCurrency.coinsKey, PersistentDataType.INTEGER)){
+                int total = itemMeta.getPersistentDataContainer().get(DroppedCurrency.coinsKey, PersistentDataType.INTEGER)
+                        + targetMeta.getPersistentDataContainer().get(DroppedCurrency.coinsKey, PersistentDataType.INTEGER);
 
                 item.remove();
-                DroppedCoins.coinsArray.remove(item);
+                DroppedCurrency.coinsArray.remove(item);
                 target.remove();
-                DroppedCoins.coinsArray.remove(target);
-                DroppedCoins.dropCoins(target.getLocation(), total);
+                DroppedCurrency.coinsArray.remove(target);
+                DroppedCurrency.dropCoins(target.getLocation(), total);
                 event.setCancelled(true);
             }
         }
@@ -105,7 +106,7 @@ public class CurrencyEvents implements Listener {
             int dropAmount = (int) Math.ceil(wallet.getDefaultCurrencyInCoins() / 3);
             if(dropAmount < 1) return;
             wallet.changeDefaultCurrency(-dropAmount);
-            DroppedCoins.dropCoinsNaturally(player.getLocation(), dropAmount);
+            DroppedCurrency.dropCoinsNaturally(player.getLocation(), dropAmount);
         }
     }
 
@@ -113,13 +114,13 @@ public class CurrencyEvents implements Listener {
 
         @Override
         public void run() {
-            DroppedCoins.coinsArray.removeIf(item -> Bukkit.getEntity(item.getUniqueId()) == null);
+            DroppedCurrency.coinsArray.removeIf(item -> Bukkit.getEntity(item.getUniqueId()) == null);
 
             //merge coins
-            ArrayList<Item> coinsArray = new ArrayList<>(DroppedCoins.coinsArray);
+            ArrayList<Item> coinsArray = new ArrayList<>(DroppedCurrency.coinsArray);
             for(Item coins : coinsArray){
-                if(DroppedCoins.coinsArray.contains(coins)){
-                    ArrayList<Item> otherCoins = new ArrayList<>(DroppedCoins.coinsArray);
+                if(DroppedCurrency.coinsArray.contains(coins)){
+                    ArrayList<Item> otherCoins = new ArrayList<>(DroppedCurrency.coinsArray);
                     otherCoins.remove(coins);
                     ArrayList<Item> nearbyCoins = new ArrayList<>();
                     World world = coins.getWorld();
@@ -134,25 +135,25 @@ public class CurrencyEvents implements Listener {
 
                     if(nearbyCoins.size() >= 1){
                         //remove dropped coins from static array
-                        DroppedCoins.coinsArray.removeAll(nearbyCoins);
-                        DroppedCoins.coinsArray.remove(coins);
+                        DroppedCurrency.coinsArray.removeAll(nearbyCoins);
+                        DroppedCurrency.coinsArray.remove(coins);
 
                         //calculate total (and remove dropped coins from in game)
                         ItemMeta originalMeta = coins.getItemStack().getItemMeta();
                         assert originalMeta != null;
                         coins.remove();
 
-                        int total = originalMeta.getPersistentDataContainer().get(DroppedCoins.key, PersistentDataType.INTEGER);
+                        int total = originalMeta.getPersistentDataContainer().get(DroppedCurrency.coinsKey, PersistentDataType.INTEGER);
                         for(Item nearby : nearbyCoins){
                             ItemMeta nearbyMeta = nearby.getItemStack().getItemMeta();
                             assert nearbyMeta != null;
-                            total += nearbyMeta.getPersistentDataContainer().get(DroppedCoins.key, PersistentDataType.INTEGER);
+                            total += nearbyMeta.getPersistentDataContainer().get(DroppedCurrency.coinsKey, PersistentDataType.INTEGER);
                             nearby.remove();
                         }
 
                         //spawn new coin
                         Location loc = coins.getLocation();
-                        DroppedCoins.dropCoins(loc, total);
+                        DroppedCurrency.dropCoins(loc, total);
                     }
                 }
             }

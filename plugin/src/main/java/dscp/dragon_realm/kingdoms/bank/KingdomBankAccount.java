@@ -10,7 +10,7 @@ public class KingdomBankAccount extends CurrencyContainer {
     private UUID playerUUID;
 
     public KingdomBankAccount(UUID playerUUID, KingdomBank bank) {
-        super(bank.getDefaultCurrencyType());
+        super(bank.getDefaultCurrencyType(), 150, 25);
         this.bank = bank;
         this.playerUUID = playerUUID;
     }

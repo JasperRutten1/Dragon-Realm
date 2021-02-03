@@ -11,7 +11,7 @@ public class PlayerWallet extends CurrencyContainer{
     private UUID playerUUID;
 
     public PlayerWallet(OfflinePlayer player) {
-        super(getKingdomCurrencyType(player));
+        super(getKingdomCurrencyType(player), 25, 5);
         this.playerUUID = player.getUniqueId();
     }
 
