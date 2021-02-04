@@ -4,6 +4,7 @@ import dscp.dragon_realm.advancedParticles.AdvancedParticles;
 import dscp.dragon_realm.bounty.Bounty;
 import dscp.dragon_realm.bounty.BountyContainer;
 import dscp.dragon_realm.commands.DRCommands;
+import dscp.dragon_realm.currency.CurrencyEvents;
 import dscp.dragon_realm.customEnchants.CustomEnchants;
 import dscp.dragon_realm.customEnchants.CustomEnchantsCraftingRecipes;
 import dscp.dragon_realm.customEnchants.events.EnchantsEvents;
@@ -78,6 +79,7 @@ public final class Dragon_Realm extends JavaPlugin {
         manager.registerEvents(enchantsEvents, this);
         manager.registerEvents(new ToDiscordEvents(), this);
         manager.registerEvents(new DiamondMineEvent(), this);
+        manager.registerEvents(new CurrencyEvents(), this);
         SpiritSwordEventManager.registerEvents();
         DragonProtect.registerEvents();
         BountyContainer.initialise();
@@ -126,8 +128,6 @@ public final class Dragon_Realm extends JavaPlugin {
             System.out.println("exception in command");
             sender.sendMessage(ChatColor.RED + e.getMessage());
         }
-        Kingdom.saveKingdoms(new File(getDataFolder(), "kingdoms"));
-        Kingdom.moveRemovedKingdoms(new File(getDataFolder(), "kingdoms"), new File(getDataFolder(), "removed_kingdoms"));
         return true;
     }
 }

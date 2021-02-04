@@ -54,10 +54,7 @@ public class KingdomSettlementMenu extends Container {
             }
         }
 
-        bp.slot(44).item(new ItemStackBuilder(Material.BARRIER)
-            .name("&c&lReturn")
-            .build()
-        ).handler(e -> new KingdomOverviewMenu(kingdom).open(viewer));
+
     }
 
     @Override

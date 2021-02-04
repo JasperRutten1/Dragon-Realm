@@ -93,7 +93,7 @@ public class MemberMenu extends Container {
             });
         }
 
-        bp.slot(this.getSize() - 1).item(new ItemStackBuilder(Material.BARRIER)
+        bp.slot(26).item(new ItemStackBuilder(Material.BARRIER)
                 .name("&c&lReturn")
                 .build()
         ).handler(e -> new KingdomMembersMenu(member.getKingdom()).open(viewer));
