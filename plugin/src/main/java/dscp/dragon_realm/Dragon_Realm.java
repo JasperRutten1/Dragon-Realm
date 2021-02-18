@@ -1,9 +1,10 @@
 package dscp.dragon_realm;
 
+import dscp.dragon_realm.NPCs.merchants.MerchantEvents;
 import dscp.dragon_realm.advancedParticles.AdvancedParticles;
-import dscp.dragon_realm.bounty.Bounty;
 import dscp.dragon_realm.bounty.BountyContainer;
 import dscp.dragon_realm.commands.DRCommands;
+import dscp.dragon_realm.cosmetics.CosmeticsEvents;
 import dscp.dragon_realm.currency.CurrencyEvents;
 import dscp.dragon_realm.customEnchants.CustomEnchants;
 import dscp.dragon_realm.customEnchants.CustomEnchantsCraftingRecipes;
@@ -11,7 +12,7 @@ import dscp.dragon_realm.customEnchants.events.EnchantsEvents;
 import dscp.dragon_realm.dataContainer.PlayerDataContainer;
 import dscp.dragon_realm.discord.DiscordWebhook;
 import dscp.dragon_realm.discord.ToDiscordEvents;
-import dscp.dragon_realm.dragonProtect.DragonProtect;
+import dscp.dragon_realm.dragonProtect.areaProtect.DragonProtect;
 import dscp.dragon_realm.kingdoms.Kingdom;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSword;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active.SpiritSwordActiveAbility;
@@ -45,6 +46,7 @@ public final class Dragon_Realm extends JavaPlugin {
     public void onEnable() {
         instance = this;
         System.out.println("Dragon Realm Plugin is starting!");
+
         // register enchantments
         CustomEnchants.register();
 
@@ -59,10 +61,10 @@ public final class Dragon_Realm extends JavaPlugin {
 
         // initialising objects
         Kingdom.loadKingdoms(new File(getDataFolder(), "kingdoms"));
-        dragonProtect = DragonProtect.load();
         SpiritSword.loadSoulBindMap();
         SpiritSwordPassiveAbility.start();
-        SpiritSwordActiveAbility.start();;
+        SpiritSwordActiveAbility.start();
+        DragonProtect.onEnable();
 
         // initialising event objects
         try{
@@ -80,8 +82,9 @@ public final class Dragon_Realm extends JavaPlugin {
         manager.registerEvents(new ToDiscordEvents(), this);
         manager.registerEvents(new DiamondMineEvent(), this);
         manager.registerEvents(new CurrencyEvents(), this);
+        manager.registerEvents(new CosmeticsEvents(), this);
+        manager.registerEvents(new MerchantEvents(), this);
         SpiritSwordEventManager.registerEvents();
-        DragonProtect.registerEvents();
         BountyContainer.initialise();
     }
 
@@ -104,10 +107,10 @@ public final class Dragon_Realm extends JavaPlugin {
     @Override
     public void onDisable() {
         Kingdom.saveKingdoms(new File(getDataFolder(), "kingdoms"));
-        DragonProtect.save();
         SpiritSword.saveSoulBindMap();
         PlayerDataContainer.unloadAllPlayerData();
         BountyContainer.saveContainer();
+        DragonProtect.onDisable();
     }
 
     public static Dragon_Realm getInstance() {

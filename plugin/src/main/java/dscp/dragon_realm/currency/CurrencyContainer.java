@@ -45,6 +45,10 @@ public class CurrencyContainer implements Serializable {
         return this.defaultCurrency;
     }
 
+    public boolean hasEnoughDefault(int amount, DefaultCurrencyType type){
+        return type.toCoins(amount) <= getCurrencyType().toCoins(getDefaultCurrency());
+    }
+
     public int getDefaultCurrencyInCoins(){
         return this.currencyType.toCoins(this.defaultCurrency);
     }

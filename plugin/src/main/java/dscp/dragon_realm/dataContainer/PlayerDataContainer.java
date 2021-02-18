@@ -2,6 +2,7 @@ package dscp.dragon_realm.dataContainer;
 
 import dscp.dragon_realm.Dragon_Realm;
 import dscp.dragon_realm.utils.AdvancedObjectIO;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -22,7 +23,7 @@ public class PlayerDataContainer extends ObjectDataContainer{
         this.playerUUID = playerUUID;
     }
 
-    public PlayerDataContainer(Player player){
+    public PlayerDataContainer(OfflinePlayer player){
         this(player.getUniqueId());
     }
 

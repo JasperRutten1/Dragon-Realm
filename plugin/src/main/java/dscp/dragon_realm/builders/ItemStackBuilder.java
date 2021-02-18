@@ -27,6 +27,11 @@ public class ItemStackBuilder {
         this.meta = this.item.getItemMeta();
     }
 
+    public ItemStackBuilder(ItemStack stack){
+        this.item = stack;
+        this.meta = stack.getItemMeta();
+    }
+
     public ItemStackBuilder name(String name) {
         this.meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         return this;

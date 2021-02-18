@@ -3,7 +3,6 @@ package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active;
 import dscp.dragon_realm.Dragon_Realm;
 import dscp.dragon_realm.advancedParticles.AdvancedParticles;
 import dscp.dragon_realm.builders.BookBuilder;
-import dscp.dragon_realm.dragonProtect.ProtectedZone;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,15 +10,12 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
-import org.w3c.dom.ranges.Range;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class GroundSlamActive extends ActiveAbility{

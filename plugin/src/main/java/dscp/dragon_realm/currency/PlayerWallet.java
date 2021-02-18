@@ -15,10 +15,6 @@ public class PlayerWallet extends CurrencyContainer{
         this.playerUUID = player.getUniqueId();
     }
 
-    public boolean hasEnoughDefault(int amount, DefaultCurrencyType type){
-        return type.toCoins(amount) < getCurrencyType().toCoins(getDefaultCurrency());
-    }
-
     public void saveWallet(){
         PlayerDataContainer container = PlayerDataContainer.getPlayerData(playerUUID);
         container.saveObjectToContainer(DataContainerDataType.PlayerWalletType, "wallet", this);

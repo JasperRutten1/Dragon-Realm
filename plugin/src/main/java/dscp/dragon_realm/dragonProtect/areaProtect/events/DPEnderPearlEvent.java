@@ -1,8 +1,8 @@
-package dscp.dragon_realm.dragonProtect.events;
+package dscp.dragon_realm.dragonProtect.areaProtect.events;
 
 import dscp.dragon_realm.Dragon_Realm;
-import dscp.dragon_realm.dragonProtect.DragonProtect;
-import dscp.dragon_realm.dragonProtect.ProtectedZone;
+import dscp.dragon_realm.dragonProtect.areaProtect.DragonProtect;
+import dscp.dragon_realm.dragonProtect.areaProtect.ProtectedArea;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,12 +12,11 @@ public class DPEnderPearlEvent implements Listener {
     @EventHandler
     public void onEnderPearl(PlayerTeleportEvent event){
         Player player = event.getPlayer();
-        DragonProtect dp = Dragon_Realm.dragonProtect;
-        ProtectedZone pzFrom = dp.getZone(event.getFrom().getChunk());
+        ProtectedArea areaFrom = ProtectedArea.getArea(player.getLocation().getChunk());
         if(event.getTo() == null) return;
-        ProtectedZone pzTo = dp.getZone(event.getTo().getChunk());
+        ProtectedArea areaTo = ProtectedArea.getArea(event.getTo().getChunk());
 
-        if(!(pzFrom == null && pzTo == null)){
+        if(!(areaTo == null && areaFrom == null)){
             if(event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL ||
                     event.getCause() == PlayerTeleportEvent.TeleportCause.CHORUS_FRUIT){
                 event.setCancelled(true);

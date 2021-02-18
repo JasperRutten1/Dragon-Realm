@@ -43,5 +43,9 @@ commands:
     description: bounty command
   menu:
     description: open player menu
+  cosmetic:
+    description: cosmetic commands
+  npc:
+    description: spawn custom npc's
 
 

@@ -14,15 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class KingdomVault extends CurrencyContainer {
+public class KingdomVault {
     private static final long serialVersionUID = 5768758585003340606L;
 
     private Kingdom kingdom;
 
-    public KingdomVault(Kingdom kingdom) {
-        super(DefaultCurrencyType.COINS);
-        this.kingdom = kingdom;
-    }
+
 
 
 }

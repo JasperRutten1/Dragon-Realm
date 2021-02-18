@@ -1,8 +1,8 @@
-package dscp.dragon_realm.dragonProtect.events;
+package dscp.dragon_realm.dragonProtect.areaProtect.events;
 
 import dscp.dragon_realm.Dragon_Realm;
-import dscp.dragon_realm.dragonProtect.DragonProtect;
-import dscp.dragon_realm.dragonProtect.ProtectedZone;
+import dscp.dragon_realm.dragonProtect.areaProtect.DragonProtect;
+import dscp.dragon_realm.dragonProtect.areaProtect.ProtectedArea;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,11 +18,11 @@ DPPlaceBlockEvent implements Listener {
         Block block = event.getBlock();
 
         DragonProtect dp = Dragon_Realm.dragonProtect;
-        ProtectedZone pzBlock = dp.getZone(block.getChunk());
-        ProtectedZone pzPlayer = dp.getZone(player.getLocation().getChunk());
+        ProtectedArea areaBlock = ProtectedArea.getArea(block.getChunk());
+        ProtectedArea areaPlayer = ProtectedArea.getArea(player.getLocation().getChunk());
 
-        if(pzBlock == null && pzPlayer == null) return;
-        if(dp.isInEditMode(player)) return;
+        if(areaBlock == null && areaPlayer == null) return;
+        if(DragonProtect.isInEditMode(player)) return;
         event.setCancelled(true);
         if(player.hasPermission("dscp.dp.edit"))
             DragonProtect.sendMessage(player, "you must be in edit mode to place a block");

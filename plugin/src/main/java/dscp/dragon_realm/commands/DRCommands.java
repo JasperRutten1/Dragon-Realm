@@ -2,8 +2,10 @@ package dscp.dragon_realm.commands;
 
 import dscp.dragon_realm.commands.customCommands.*;
 import dscp.dragon_realm.commands.customCommands.DragonProtect.*;
+import dscp.dragon_realm.commands.customCommands.NPCs.SummonMerchantNPCCommand;
 import dscp.dragon_realm.commands.customCommands.PlayerData.MinedCommand;
 import dscp.dragon_realm.commands.customCommands.bounty.PlaceBountyCommand;
+import dscp.dragon_realm.commands.customCommands.cosmetics.GiveCosmeticTicketCommand;
 import dscp.dragon_realm.commands.customCommands.currency.CheckCurrencyCommand;
 import dscp.dragon_realm.commands.customCommands.currency.DropCoinsCommand;
 import dscp.dragon_realm.commands.customCommands.currency.GiveCoinsCommand;
@@ -35,14 +37,8 @@ public enum DRCommands {
     GOD(new GodCommand()),
     HEAL(new HealCommand()),
 
-    DP_ASSIGN(new AssignChunkToProtectedZone()),
-    DP_UNASSIGN(new UnAssignChunkFromProtectedZone()),
-    DP_ZONE_CREATE(new CreateProtectedZone()),
-    DP_ZONE_REMOVE(new RemoveProtectedZone()),
-    DP_ZONE_LIST(new ListProtectedZones()),
-    DP_EDIT(new ToggleEditMode()),
-    SS_GIVE(new SpiritSwordGive()),
-    SS_INFO(new SpiritSwordInfo()),
+    DP_CREATE_AREA(new DPCreateProtectedArea()),
+    DP_LIST_AREA(new DPListArea()),
 
     PLAYER_DATA_MINED(new MinedCommand()),
 
@@ -52,7 +48,11 @@ public enum DRCommands {
     CURRENCY_CHECK(new CheckCurrencyCommand()),
     CURRENCY_DROP(new DropCoinsCommand()),
 
-    Player_MENU(new PlayerMenuCommand());
+    Player_MENU(new PlayerMenuCommand()),
+
+    COSMETIC_TICKET(new GiveCosmeticTicketCommand()),
+
+    NPC_SUMMON_MERCHANT(new SummonMerchantNPCCommand());
 
     private final CustomCommand command;
 
