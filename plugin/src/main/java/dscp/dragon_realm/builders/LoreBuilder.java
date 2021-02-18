@@ -99,7 +99,7 @@ public class LoreBuilder {
      * @return self
      */
     public LoreBuilder lineIf(String line, boolean value) {
-        if(line != null && value) this.lines.add(ChatColor.translateAlternateColorCodes('&', lineColor + line));
+        if(value && line != null) this.lines.add(ChatColor.translateAlternateColorCodes('&', lineColor + line));
         return this;
     }
 

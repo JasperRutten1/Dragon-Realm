@@ -35,5 +35,17 @@ commands:
     description: main command for dragon protect
   ss:
     description: spirit sword command
+  pd:
+    description: player data command
+  currency:
+    description: currency command
+  bounty:
+    description: bounty command
+  menu:
+    description: open player menu
+  cosmetic:
+    description: cosmetic commands
+  npc:
+    description: spawn custom npc's
 
 

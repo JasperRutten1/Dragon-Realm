@@ -1,18 +1,24 @@
 package dscp.dragon_realm;
 
+import dscp.dragon_realm.NPCs.merchants.MerchantEvents;
 import dscp.dragon_realm.advancedParticles.AdvancedParticles;
+import dscp.dragon_realm.bounty.BountyContainer;
 import dscp.dragon_realm.commands.DRCommands;
+import dscp.dragon_realm.cosmetics.CosmeticsEvents;
+import dscp.dragon_realm.currency.CurrencyEvents;
 import dscp.dragon_realm.customEnchants.CustomEnchants;
 import dscp.dragon_realm.customEnchants.CustomEnchantsCraftingRecipes;
 import dscp.dragon_realm.customEnchants.events.EnchantsEvents;
+import dscp.dragon_realm.dataContainer.PlayerDataContainer;
 import dscp.dragon_realm.discord.DiscordWebhook;
 import dscp.dragon_realm.discord.ToDiscordEvents;
-import dscp.dragon_realm.dragonProtect.DragonProtect;
+import dscp.dragon_realm.dragonProtect.areaProtect.DragonProtect;
 import dscp.dragon_realm.kingdoms.Kingdom;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSword;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active.SpiritSwordActiveAbility;
 import dscp.dragon_realm.specialWeapons.spiritSwords.abilities.passive.SpiritSwordPassiveAbility;
 import dscp.dragon_realm.specialWeapons.spiritSwords.events.SpiritSwordEventManager;
+import dscp.dragon_realm.test.DiamondMineEvent;
 import dscp.dragon_realm.utils.Reflection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,6 +46,7 @@ public final class Dragon_Realm extends JavaPlugin {
     public void onEnable() {
         instance = this;
         System.out.println("Dragon Realm Plugin is starting!");
+
         // register enchantments
         CustomEnchants.register();
 
@@ -54,10 +61,10 @@ public final class Dragon_Realm extends JavaPlugin {
 
         // initialising objects
         Kingdom.loadKingdoms(new File(getDataFolder(), "kingdoms"));
-        dragonProtect = DragonProtect.load();
         SpiritSword.loadSoulBindMap();
         SpiritSwordPassiveAbility.start();
-        SpiritSwordActiveAbility.start();;
+        SpiritSwordActiveAbility.start();
+        DragonProtect.onEnable();
 
         // initialising event objects
         try{
@@ -73,9 +80,12 @@ public final class Dragon_Realm extends JavaPlugin {
         manager.registerEvents(Reflection.init(), this);
         manager.registerEvents(enchantsEvents, this);
         manager.registerEvents(new ToDiscordEvents(), this);
+        manager.registerEvents(new DiamondMineEvent(), this);
+        manager.registerEvents(new CurrencyEvents(), this);
+        manager.registerEvents(new CosmeticsEvents(), this);
+        manager.registerEvents(new MerchantEvents(), this);
         SpiritSwordEventManager.registerEvents();
-        DragonProtect.registerEvents();
-
+        BountyContainer.initialise();
     }
 
     public static void startUpDiscordEmbed(){
@@ -97,17 +107,10 @@ public final class Dragon_Realm extends JavaPlugin {
     @Override
     public void onDisable() {
         Kingdom.saveKingdoms(new File(getDataFolder(), "kingdoms"));
-        DragonProtect.save();
         SpiritSword.saveSoulBindMap();
-        try{
-            DiscordWebhook startUpWebhook = new DiscordWebhook(ToDiscordEvents.WEBHOOK_LINK);
-            startUpWebhook.setUsername("Dragon-Realm");
-            startUpWebhook.setContent("**Server shutting down**");
-            startUpWebhook.execute();
-        }
-        catch (IOException e){
-            System.out.println("Exception in sending discord webhook");
-        }
+        PlayerDataContainer.unloadAllPlayerData();
+        BountyContainer.saveContainer();
+        DragonProtect.onDisable();
     }
 
     public static Dragon_Realm getInstance() {
@@ -128,8 +131,6 @@ public final class Dragon_Realm extends JavaPlugin {
             System.out.println("exception in command");
             sender.sendMessage(ChatColor.RED + e.getMessage());
         }
-        Kingdom.saveKingdoms(new File(getDataFolder(), "kingdoms"));
-        Kingdom.moveRemovedKingdoms(new File(getDataFolder(), "kingdoms"), new File(getDataFolder(), "removed_kingdoms"));
         return true;
     }
 }

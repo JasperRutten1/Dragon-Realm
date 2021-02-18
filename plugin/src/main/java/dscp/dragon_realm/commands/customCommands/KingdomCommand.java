@@ -29,7 +29,7 @@ public class KingdomCommand extends CustomCommand {
     public void runForPlayer(Player player, CommandReturn commandReturn, HashMap<String, String> params) throws CustomCommandException {
         Kingdom kingdom = Kingdom.getKingdomFromPlayer(player);
         if(kingdom != null)
-            new KingdomOverviewMenu(kingdom).open(player);
+            new KingdomOverviewMenu(kingdom, null).open(player);
         else throw new CustomCommandException("You are not in a Kingdom.");
 
     }

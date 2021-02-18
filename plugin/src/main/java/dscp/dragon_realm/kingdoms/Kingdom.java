@@ -1,15 +1,18 @@
 package dscp.dragon_realm.kingdoms;
 
+import dscp.dragon_realm.Dragon_Realm;
 import dscp.dragon_realm.Dragon_Realm_API;
 import dscp.dragon_realm.ObjectIO;
 import dscp.dragon_realm.discord.DiscordKingdomWebhook;
+import dscp.dragon_realm.kingdoms.bank.KingdomBank;
 import dscp.dragon_realm.kingdoms.claims.KingdomClaim;
 import dscp.dragon_realm.kingdoms.claims.settlements.Settlement;
 import dscp.dragon_realm.kingdoms.members.KingdomMember;
 import dscp.dragon_realm.kingdoms.members.KingdomMemberRank;
 import dscp.dragon_realm.kingdoms.members.KingdomMembers;
 import dscp.dragon_realm.kingdoms.relations.KingdomRelations;
-import dscp.dragon_realm.kingdoms.vault.KingdomVault;
+import dscp.dragon_realm.kingdoms.bank.KingdomVault;
+import dscp.dragon_realm.utils.AdvancedObjectIO;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -36,10 +39,12 @@ public class Kingdom implements Serializable {
     private KingdomMembers members;
     private String name;
     private KingdomClaim claim;
-    private KingdomVault vault;
+    private KingdomBank bank;
     private KingdomRelations relations;
 
     private final Map<UUID, Long> joinInvitations = new HashMap<>();
+
+    public static final File kingdomsDir = getKingdomsDir();
 
     public Kingdom(String name, Player king){
         if(name == null) throw new IllegalArgumentException("name can't be null");
@@ -49,7 +54,7 @@ public class Kingdom implements Serializable {
         this.members = new KingdomMembers(this);
         this.members.addMember(king.getUniqueId(), KingdomMemberRank.KING);
         this.claim = new KingdomClaim(this);
-        this.vault = new KingdomVault(this);
+        this.bank = new KingdomBank(this);
         this.relations = new KingdomRelations(this);
     }
 
@@ -71,8 +76,8 @@ public class Kingdom implements Serializable {
         return joinInvitations;
     }
 
-    public KingdomVault getVault() {
-        return vault;
+    public KingdomBank getBank() {
+        return bank;
     }
 
     public KingdomRelations getRelations() {
@@ -115,7 +120,7 @@ public class Kingdom implements Serializable {
      * @throws KingdomException thrown if member is not part of a kingdom or if member isn't the king of his kingdom
      */
     public static Kingdom removeKingdom(Player player) throws KingdomException {
-        if (player == null) throw new IllegalArgumentException("player");
+        if(player == null) throw new IllegalArgumentException("player");
 
         Kingdom kingdom = getKingdomFromPlayer(player);
         if(kingdom == null) throw new KingdomException("you are not part of a kingdom");
@@ -124,7 +129,19 @@ public class Kingdom implements Serializable {
         if(!kingdom.getMembers().getKing().equals(member)) throw new KingdomException("only the king of the kingdom can remove the kingdom");
 
         kingdoms.remove(kingdom);
-        removedKingdoms.add(kingdom);
+        File toRemoveFile = new File(kingdomsDir, kingdom.getName() + ".dat");
+        try{
+            File removedKingdomDir = new File(Dragon_Realm.getInstance().getDataFolder(), "kingdoms_removed");
+            if(!removedKingdomDir.exists()) removedKingdomDir.mkdir();
+            File kingdomFile = new File(removedKingdomDir, kingdom.getName() + "-" + System.currentTimeMillis() + ".dat");
+            if(!kingdomFile.exists()) kingdomFile.createNewFile();
+            AdvancedObjectIO<Kingdom> io = new AdvancedObjectIO<>(kingdomFile);
+            io.saveObject(kingdom);
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+        toRemoveFile.delete();
         return kingdom;
     }
 
@@ -306,28 +323,12 @@ public class Kingdom implements Serializable {
         }
     }
 
-    // move removed kingdom files
-
-    public static void moveRemovedKingdoms(File kingdomsDir, File removedDir){
-        if(Kingdom.removedKingdoms == null || Kingdom.removedKingdoms.size() == 0){
-            return;
+    public static File getKingdomsDir(){
+        File dir = new File(Dragon_Realm.getInstance().getDataFolder(), "kingdoms");
+        if(!dir.exists() || !dir.isDirectory()){
+            dir.mkdir();
         }
-        if(!kingdomsDir.exists() || !kingdomsDir.isDirectory()){
-            kingdomsDir.mkdir();
-        }
-        if(!removedDir.exists() || !removedDir.isDirectory()){
-            removedDir.mkdir();
-        }
-        for(File file : Objects.requireNonNull(kingdomsDir.listFiles())){
-            for(Kingdom removedKingdom : removedKingdoms){
-                if(file.getName().equals(removedKingdom.name + ".dat")){
-                    file.delete();
-                    File kingdomFile = new File(removedDir, removedKingdom.getName() + ".dat");
-                    ObjectIO.writeObjectToFile(kingdomFile, removedKingdom);
-                }
-            }
-        }
-        removedKingdoms.clear();
+        return dir;
     }
 
     // equals and to hash override

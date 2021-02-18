@@ -1,15 +1,13 @@
 package dscp.dragon_realm.builders;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 /**
  * Creates itemstacks
@@ -29,6 +27,11 @@ public class ItemStackBuilder {
         this.meta = this.item.getItemMeta();
     }
 
+    public ItemStackBuilder(ItemStack stack){
+        this.item = stack;
+        this.meta = stack.getItemMeta();
+    }
+
     public ItemStackBuilder name(String name) {
         this.meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         return this;
@@ -36,6 +39,11 @@ public class ItemStackBuilder {
 
     public ItemStackBuilder lore(LoreBuilder lore) {
         this.meta.setLore(lore.build());
+        return this;
+    }
+
+    public ItemStackBuilder customModelData(int data){
+        this.meta.setCustomModelData(data);
         return this;
     }
 
@@ -81,6 +89,11 @@ public class ItemStackBuilder {
 
     public ItemStackBuilder setSkullOwner(OfflinePlayer player) {
         ((SkullMeta) meta).setOwningPlayer(player);
+        return this;
+    }
+
+    public <T, Z> ItemStackBuilder addPersistentData(NamespacedKey key, PersistentDataType<T, Z> dataType, Z data){
+        meta.getPersistentDataContainer().set(key, dataType, data);
         return this;
     }
 

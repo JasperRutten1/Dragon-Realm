@@ -2,8 +2,8 @@ package dscp.dragon_realm.specialWeapons.spiritSwords.abilities.active;
 
 import dscp.dragon_realm.Dragon_Realm;
 import dscp.dragon_realm.builders.BookBuilder;
-import dscp.dragon_realm.dragonProtect.DragonProtect;
-import dscp.dragon_realm.dragonProtect.ProtectedZone;
+import dscp.dragon_realm.dragonProtect.areaProtect.DragonProtect;
+import dscp.dragon_realm.dragonProtect.areaProtect.ProtectedArea;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritElement;
 import dscp.dragon_realm.specialWeapons.spiritSwords.SpiritSword;
 import dscp.dragon_realm.utils.BookDescription;
@@ -96,7 +96,7 @@ public abstract class ActiveAbility implements Listener, Runnable, BookDescripti
         if(!(SpiritSword.isSpiritSword(holdingItem))) return;
         if(!(SpiritSword.isOwner(meta, player))) return;
 
-        ProtectedZone pz = Dragon_Realm.dragonProtect.getZone(player.getLocation().getChunk());
+        ProtectedArea pz = ProtectedArea.getArea(player.getLocation().getChunk());
         if(pz != null){
             DragonProtect.sendMessage(player, "you can't use abilities here");
             return;
